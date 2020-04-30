@@ -1,3 +1,5 @@
+CREATE SEQUENCE IF NOT EXISTS note_id_seq;
+
 CREATE TABLE note (
     id SERIAL PRIMARY KEY,
     text TEXT

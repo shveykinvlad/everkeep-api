@@ -3,7 +3,6 @@ package com.everkeep.resource;
 import com.everkeep.IntegrationTest;
 import com.everkeep.data.TestData;
 import com.everkeep.dto.NoteDto;
-import com.everkeep.model.Note;
 import com.everkeep.repository.NoteRepository;
 import ma.glasnost.orika.MapperFacade;
 import org.junit.jupiter.api.AfterEach;
@@ -14,9 +13,7 @@ import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
-import org.springframework.http.ResponseEntity;
 
-import java.util.List;
 import java.util.Optional;
 
 @IntegrationTest

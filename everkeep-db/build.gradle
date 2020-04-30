@@ -11,4 +11,5 @@ flyway {
 
 dependencies {
     compile ("org.postgresql:postgresql")
+    compile("org.flywaydb:flyway-core")
 }
