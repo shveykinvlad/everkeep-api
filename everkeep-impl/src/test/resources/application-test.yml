@@ -1,0 +1,6 @@
+spring:
+  datasource:
+    url: jdbc:tc:postgresql://localhost:32770/sampledb
+    username: sampledb
+    password: sampledb
+    driver-class-name: org.testcontainers.jdbc.ContainerDatabaseDriver

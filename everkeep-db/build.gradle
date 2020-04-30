@@ -1,0 +1,14 @@
+plugins {
+    id 'org.flywaydb.flyway'
+}
+
+flyway {
+    url = 'jdbc:postgresql://localhost:5432/postgres'
+    user = 'everkeep'
+    password = 'everkeep'
+    schemas = ['everkeep']
+}
+
+dependencies {
+    compile ("org.postgresql:postgresql")
+}

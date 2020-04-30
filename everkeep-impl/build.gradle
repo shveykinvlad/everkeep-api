@@ -1,0 +1,20 @@
+plugins {
+    id 'org.springframework.boot'
+}
+
+dependencies {
+    compile (project(':everkeep-api'))
+    compile (project(':everkeep-db'))
+    implementation("org.springframework.boot:spring-boot-starter-web")
+    implementation("org.springframework.boot:spring-boot-starter-data-jpa")
+    compile("org.springframework.boot:spring-boot-devtools")
+    compile("org.projectlombok:lombok")
+    annotationProcessor("org.projectlombok:lombok")
+    compile("net.rakugakibox.spring.boot:orika-spring-boot-starter")
+    testImplementation("org.springframework.boot:spring-boot-starter-test")
+    testCompile("org.testcontainers:testcontainers")
+}
+
+test {
+    useJUnitPlatform()
+}
