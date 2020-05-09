@@ -21,5 +21,6 @@ public class Note {
     @SequenceGenerator(name = ID_SEQ, sequenceName = ID_SEQ, allocationSize = 1)
     private Long id;
 
+    private String title;
     private String text;
 }

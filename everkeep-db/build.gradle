@@ -4,9 +4,9 @@ plugins {
 
 flyway {
     url = 'jdbc:postgresql://localhost:5432/postgres'
-    user = 'everkeep'
-    password = 'everkeep'
-    schemas = ['everkeep']
+    user = 'postgres'
+    password = 'postgres'
+    schemas = ['public']
 }
 
 dependencies {
