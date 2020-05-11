@@ -31,7 +31,7 @@ public class NoteResourceTest {
     private MapperFacade mapper;
 
     private String getBasePath() {
-        return "http://localhost:" + port + "/note/";
+        return "http://localhost:" + port + "/api/notes/";
     }
 
     @AfterEach
@@ -55,7 +55,16 @@ public class NoteResourceTest {
 
         var actual = restTemplate.getForObject(getBasePath() + "/{id}", NoteDto.class, expected.getId());
 
-        Assertions.assertEquals(actual.getId(), expected.getId());
+        Assertions.assertEquals(expected.getId(), actual.getId());
+    }
+
+    @Test
+    public void getByTitle() {
+        var expected = noteRepository.saveAll(data.getNotes());
+
+        var actual = restTemplate.getForObject(getBasePath() + "/find/?title={title}", NoteDto[].class, expected.get(0).getTitle());
+
+        Assertions.assertEquals(expected.get(0).getTitle(), actual[0].getTitle());
     }
 
     @Test
@@ -81,7 +90,7 @@ public class NoteResourceTest {
                 .map(NoteDto::getText)
                 .orElse("");
 
-        Assertions.assertEquals(actualText, noteDto.getText());
+        Assertions.assertEquals(noteDto.getText(), actualText);
     }
 
     @Test

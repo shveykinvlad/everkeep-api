@@ -16,11 +16,14 @@ public class TestData {
     public List<Note> getNotes() {
         return Arrays.asList(
                 new Note()
-                        .setText("text"),
+                        .setText("text one")
+                        .setTitle("title one"),
                 new Note()
-                        .setText("text"),
+                        .setText("text two")
+                        .setTitle("title two"),
                 new Note()
-                        .setText("text"));
+                        .setText("text three")
+                        .setTitle("title three"));
     }
 
     public NoteDto getNoteDto() {

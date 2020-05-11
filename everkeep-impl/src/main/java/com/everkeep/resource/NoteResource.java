@@ -5,13 +5,15 @@ import com.everkeep.model.Note;
 import com.everkeep.service.NoteService;
 import lombok.RequiredArgsConstructor;
 import ma.glasnost.orika.MapperFacade;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
 @RestController
-@RequestMapping(path = "/note")
+@CrossOrigin
+@RequestMapping(path = "/api/notes")
 @RequiredArgsConstructor
 public class NoteResource implements NoteResourceApi {
 
@@ -26,6 +28,11 @@ public class NoteResource implements NoteResourceApi {
     @Override
     public NoteDto get(Long id) {
         return mapper.map(noteService.get(id), NoteDto.class);
+    }
+
+    @Override
+    public List<NoteDto> get(String title) {
+        return mapper.mapAsList(noteService.get(title), NoteDto.class);
     }
 
     @Override

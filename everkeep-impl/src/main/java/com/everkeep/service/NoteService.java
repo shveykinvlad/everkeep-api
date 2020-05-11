@@ -23,6 +23,10 @@ public class NoteService {
                 .orElseThrow(() -> new EntityNotFoundException("Note with id = " + id + " not found"));
     }
 
+    public List<Note> get(String title) {
+        return noteRepository.findByTitleContains(title);
+    }
+
     public Note save(Note note) {
         return noteRepository.save(note);
     }

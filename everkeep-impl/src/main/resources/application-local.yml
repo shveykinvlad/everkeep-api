@@ -4,3 +4,13 @@ spring:
     username: postgres
     password: postgres
     driverClassName: org.postgresql.Driver
+  flyway:
+    locations:
+      - classpath:/db/migration
+      - classpath:/db/testdata
+
+logging:
+  level:
+    org.hibernate.SQL: debug
+    org.hibernate.TYPE: trace
+    org.springframework.security: debug
