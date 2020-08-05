@@ -1,9 +1,7 @@
 package com.everkeep.resource;
 
-import com.everkeep.IntegrationTest;
-import com.everkeep.data.TestData;
-import com.everkeep.dto.NoteDto;
-import com.everkeep.repository.NoteRepository;
+import java.util.Optional;
+
 import ma.glasnost.orika.MapperFacade;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
@@ -14,10 +12,13 @@ import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
 
-import java.util.Optional;
+import com.everkeep.IntegrationTest;
+import com.everkeep.data.TestData;
+import com.everkeep.dto.NoteDto;
+import com.everkeep.repository.NoteRepository;
 
 @IntegrationTest
-public class NoteResourceTest {
+class NoteResourceTest {
 
     private final TestData data = new TestData();
 
@@ -41,7 +42,7 @@ public class NoteResourceTest {
 
 
     @Test
-    public void getAll() {
+    void getAll() {
         var expected = noteRepository.saveAll(data.getNotes());
 
         var actual = restTemplate.getForObject(getBasePath(), NoteDto[].class);
@@ -50,7 +51,7 @@ public class NoteResourceTest {
     }
 
     @Test
-    public void get() {
+    void get() {
         var expected = noteRepository.save(data.getNote());
 
         var actual = restTemplate.getForObject(getBasePath() + "/{id}", NoteDto.class, expected.getId());
@@ -59,7 +60,7 @@ public class NoteResourceTest {
     }
 
     @Test
-    public void getByTitle() {
+    void getByTitle() {
         var expected = noteRepository.saveAll(data.getNotes());
 
         var actual = restTemplate.getForObject(getBasePath() + "/find/?title={title}", NoteDto[].class, expected.get(0).getTitle());
@@ -68,7 +69,7 @@ public class NoteResourceTest {
     }
 
     @Test
-    public void save() {
+    void save() {
         var httpEntity = new HttpEntity<>(data.getNoteDto(), null);
 
         var expected = restTemplate.postForObject(getBasePath(), httpEntity, NoteDto.class);
@@ -79,7 +80,7 @@ public class NoteResourceTest {
     }
 
     @Test
-    public void update() {
+    void update() {
         var noteDto = mapper.map(noteRepository.save(data.getNote()), NoteDto.class);
         noteDto.setText("updated text");
         var httpEntity = new HttpEntity<>(noteDto, null);
@@ -94,7 +95,7 @@ public class NoteResourceTest {
     }
 
     @Test
-    public void delete() {
+    void delete() {
         var note = noteRepository.save(data.getNote());
 
         restTemplate.delete(getBasePath() + "/{id}", note.getId());

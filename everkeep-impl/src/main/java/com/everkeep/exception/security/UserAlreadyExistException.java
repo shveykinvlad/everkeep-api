@@ -1,4 +1,4 @@
-package com.everkeep.exception;
+package com.everkeep.exception.security;
 
 public class UserAlreadyExistException extends RuntimeException {
 

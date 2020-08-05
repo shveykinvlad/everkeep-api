@@ -1,12 +1,13 @@
 package com.everkeep.service;
 
-import com.everkeep.model.Note;
-import com.everkeep.repository.NoteRepository;
+import java.util.List;
+import javax.persistence.EntityNotFoundException;
+
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import javax.persistence.EntityNotFoundException;
-import java.util.List;
+import com.everkeep.model.Note;
+import com.everkeep.repository.NoteRepository;
 
 @Service
 @RequiredArgsConstructor

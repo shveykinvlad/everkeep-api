@@ -1,15 +1,16 @@
 package com.everkeep.resource;
 
-import com.everkeep.dto.NoteDto;
-import com.everkeep.model.Note;
-import com.everkeep.service.NoteService;
+import java.util.List;
+
 import lombok.RequiredArgsConstructor;
 import ma.glasnost.orika.MapperFacade;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.List;
+import com.everkeep.dto.NoteDto;
+import com.everkeep.model.Note;
+import com.everkeep.service.NoteService;
 
 @RestController
 @CrossOrigin

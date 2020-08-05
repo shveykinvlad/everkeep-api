@@ -11,7 +11,8 @@ CREATE SEQUENCE IF NOT EXISTS user_id_seq;
 CREATE TABLE users (
     id SERIAL PRIMARY KEY,
     password VARCHAR(255) NOT NULL,
-    email VARCHAR(255) NOT NULL UNIQUE
+    email VARCHAR(255) NOT NULL UNIQUE,
+    enabled BOOLEAN
 );
 
 CREATE SEQUENCE IF NOT EXISTS role_id_seq;
@@ -25,4 +26,13 @@ CREATE TABLE users_roles (
     user_id BIGINT,
     role_id BIGINT,
     PRIMARY KEY (user_id, role_id)
+);
+
+CREATE SEQUENCE IF NOT EXISTS verification_token_seq;
+
+CREATE TABLE verification_token (
+    id SERIAL PRIMARY KEY,
+    token VARCHAR(255) NOT NULL UNIQUE,
+    user_id BIGINT NOT NULL,
+    expiry_time TIMESTAMP NOT NULL
 );

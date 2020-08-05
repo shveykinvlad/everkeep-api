@@ -1,10 +1,10 @@
 package com.everkeep.data;
 
-import com.everkeep.dto.NoteDto;
-import com.everkeep.model.Note;
-
 import java.util.Arrays;
 import java.util.List;
+
+import com.everkeep.dto.NoteDto;
+import com.everkeep.model.Note;
 
 public class TestData {
 

@@ -1,6 +1,8 @@
-package com.everkeep.service;
+package com.everkeep.service.security;
 
-import com.everkeep.model.User;
+import java.util.Collection;
+import java.util.stream.Collectors;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -8,8 +10,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Service;
 
-import java.util.Collection;
-import java.util.stream.Collectors;
+import com.everkeep.model.security.User;
 
 @Service
 public class UserDetailsServiceImpl implements UserDetailsService {
@@ -32,7 +33,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         return new org.springframework.security.core.userdetails.User(
                 user.getEmail(),
                 user.getPassword(),
-                true,
+                user.isEnabled(),
                 true,
                 true,
                 true,

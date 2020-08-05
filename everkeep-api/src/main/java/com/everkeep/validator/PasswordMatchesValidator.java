@@ -1,10 +1,10 @@
 package com.everkeep.validator;
 
-import com.everkeep.annotation.PasswordMatches;
-import com.everkeep.dto.UserDto;
-
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
+
+import com.everkeep.annotation.PasswordMatches;
+import com.everkeep.dto.UserDto;
 
 public class PasswordMatchesValidator implements ConstraintValidator<PasswordMatches, UserDto> {
 

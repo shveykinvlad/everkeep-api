@@ -1,10 +1,11 @@
 package com.everkeep.dto;
 
-import com.everkeep.annotation.PasswordMatches;
-import lombok.Data;
-
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
+
+import lombok.Data;
+
+import com.everkeep.annotation.PasswordMatches;
 
 @Data
 @PasswordMatches

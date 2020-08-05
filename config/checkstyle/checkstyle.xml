@@ -53,10 +53,10 @@
                       value="Consider using special escape sequence instead of octal value or Unicode escaped value."/>
         </module>
         <module name="AbstractClassName">
-            <property name="severity" value="warning" />
-            <property name="ignoreName" value="false" />
-            <property name="ignoreModifier" value="false" />
-            <property name="format" value="^Abstract.+$" />
+            <property name="severity" value="warning"/>
+            <property name="ignoreName" value="false"/>
+            <property name="ignoreModifier" value="false"/>
+            <property name="format" value="^Abstract.+$"/>
         </module>
         <module name="AvoidEscapedUnicodeCharacters">
             <property name="allowEscapesForControlCharacters" value="true"/>
@@ -64,7 +64,7 @@
             <property name="allowNonPrintableEscapes" value="true"/>
         </module>
         <module name="AvoidStarImport">
-            <property name="severity" value="error" />
+            <property name="severity" value="error"/>
         </module>
         <module name="OneTopLevelClass"/>
         <module name="NoLineWrap">
@@ -76,9 +76,9 @@
                       value="LITERAL_TRY, LITERAL_FINALLY, LITERAL_IF, LITERAL_ELSE, LITERAL_SWITCH"/>
         </module>
         <module name="NeedBraces">
-            <property name="severity" value="error" />
-            <property name="allowSingleLineStatement" value="false" />
-            <property name="allowEmptyLoopBody" value="false" />
+            <property name="severity" value="error"/>
+            <property name="allowSingleLineStatement" value="false"/>
+            <property name="allowEmptyLoopBody" value="false"/>
             <property name="tokens" value="LITERAL_DO, LITERAL_ELSE, LITERAL_FOR, LITERAL_IF, LITERAL_WHILE"/>
         </module>
         <module name="LeftCurly">
@@ -140,17 +140,17 @@
         <module name="UpperEll"/>
         <module name="ModifierOrder"/>
         <module name="EmptyLineSeparator">
-            <property name="severity" value="error" />
-            <property name="allowNoEmptyLineBetweenFields" value="true" />
-            <property name="allowMultipleEmptyLines" value="true" />
-            <property name="allowMultipleEmptyLinesInsideClassMembers" value="true" />
+            <property name="severity" value="error"/>
+            <property name="allowNoEmptyLineBetweenFields" value="true"/>
+            <property name="allowMultipleEmptyLines" value="true"/>
+            <property name="allowMultipleEmptyLinesInsideClassMembers" value="true"/>
             <property name="tokens"
                       value="PACKAGE_DEF, IMPORT, STATIC_IMPORT, CLASS_DEF, INTERFACE_DEF, ENUM_DEF,
                     STATIC_INIT, INSTANCE_INIT, METHOD_DEF, CTOR_DEF, VARIABLE_DEF"/>
 
         </module>
         <module name="EqualsHashCode">
-            <property name="severity" value="error" />
+            <property name="severity" value="error"/>
         </module>
         <module name="SeparatorWrap">
             <property name="id" value="SeparatorWrapDot"/>
@@ -241,7 +241,7 @@
                      value="GenericWhitespace ''{0}'' is not preceded with whitespace."/>
         </module>
         <module name="Indentation">
-            <property name="severity" value="error" />
+            <property name="severity" value="error"/>
             <property name="basicOffset" value="4"/>
             <property name="braceAdjustment" value="0"/>
             <property name="caseIndent" value="4"/>
@@ -259,13 +259,13 @@
         <module name="OverloadMethodsDeclarationOrder"/>
         <module name="VariableDeclarationUsageDistance"/>
         <module name="CustomImportOrder">
-            <property name="severity" value="warning" />
-            <property name="thirdPartyPackageRegExp" value=".*" />
-            <property name="separateLineBetweenGroups" value="true" />
-            <property name="sortImportsInGroupAlphabetically" value="false" />
-            <property name="specialImportsRegExp" value="com.aem.amc" />
-            <property name="customImportOrderRules" value="STATIC###SPECIAL_IMPORTS###THIRD_PARTY_PACKAGE###STANDARD_JAVA_PACKAGE" />
-            <property name="standardPackageRegExp" value="^(java|javax)" />
+            <property name="severity" value="warning"/>
+            <property name="thirdPartyPackageRegExp" value=".*"/>
+            <property name="separateLineBetweenGroups" value="true"/>
+            <property name="sortImportsInGroupAlphabetically" value="false"/>
+            <property name="specialImportsRegExp" value="^com.everkeep\."/>
+            <property name="customImportOrderRules" value="STATIC###STANDARD_JAVA_PACKAGE###THIRD_PARTY_PACKAGE###SPECIAL_IMPORTS"/>
+            <property name="standardPackageRegExp" value="^(java|javax)"/>
         </module>
         <module name="MethodParamPad">
             <property name="tokens"
@@ -315,23 +315,23 @@
                       value="CLASS_DEF, INTERFACE_DEF, ENUM_DEF, METHOD_DEF, CTOR_DEF, VARIABLE_DEF"/>
         </module>
         <module name="JavadocMethod">
-            <property name="severity" value="error" />
-            <property name="validateThrows" value="false" />
-            <property name="allowMissingParamTags" value="true" />
-            <property name="scope" value="public" />
-            <property name="excludeScope" value="nothing" />
-            <property name="tokens" value="METHOD_DEF,CTOR_DEF,ANNOTATION_FIELD_DEF" />
-            <property name="allowMissingReturnTag" value="true" />
-            <property name="allowedAnnotations" value="Override,Test,Before,After" />
+            <property name="severity" value="error"/>
+            <property name="validateThrows" value="false"/>
+            <property name="allowMissingParamTags" value="true"/>
+            <property name="scope" value="public"/>
+            <property name="excludeScope" value="nothing"/>
+            <property name="tokens" value="METHOD_DEF,CTOR_DEF,ANNOTATION_FIELD_DEF"/>
+            <property name="allowMissingReturnTag" value="true"/>
+            <property name="allowedAnnotations" value="Override,Test,Before,After"/>
             <property name="tokens" value="METHOD_DEF, CTOR_DEF, ANNOTATION_FIELD_DEF"/>
         </module>
         <module name="JavadocType">
-            <property name="severity" value="warning" />
-            <property name="allowUnknownTags" value="false" />
-            <property name="scope" value="private" />
-            <property name="excludeScope" value="nothing" />
-            <property name="tokens" value="INTERFACE_DEF,CLASS_DEF,ENUM_DEF,ANNOTATION_DEF" />
-            <property name="allowMissingParamTags" value="false" />
+            <property name="severity" value="warning"/>
+            <property name="allowUnknownTags" value="false"/>
+            <property name="scope" value="private"/>
+            <property name="excludeScope" value="nothing"/>
+            <property name="tokens" value="INTERFACE_DEF,CLASS_DEF,ENUM_DEF,ANNOTATION_DEF"/>
+            <property name="allowMissingParamTags" value="false"/>
         </module>
         <module name="MissingJavadocMethod">
             <property name="scope" value="public"/>

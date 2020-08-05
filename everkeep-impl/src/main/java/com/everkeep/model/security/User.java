@@ -1,7 +1,7 @@
-package com.everkeep.model;
+package com.everkeep.model.security;
 
-import lombok.Data;
-
+import java.util.HashSet;
+import java.util.Set;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
@@ -12,8 +12,8 @@ import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
-import java.util.HashSet;
-import java.util.Set;
+
+import lombok.Data;
 
 @Data
 @Entity
@@ -30,6 +30,8 @@ public class User {
     private String password;
 
     private String email;
+
+    private boolean enabled = false;
 
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
