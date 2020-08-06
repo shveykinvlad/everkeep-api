@@ -26,7 +26,7 @@ public class UserService {
 
     public User register(UserDto userDto) {
         if (emailExist(userDto.getEmail())) {
-            throw new UserAlreadyExistException("There is an account with that email address: " + userDto.getEmail());
+            throw new UserAlreadyExistException("User already exist", userDto.getEmail());
         }
         User user = mapper.map(userDto, User.class);
         user.setPassword(passwordEncoder.encode(user.getPassword()));

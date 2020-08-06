@@ -10,6 +10,7 @@ dependencies {
     compile("org.springframework.boot:spring-boot-starter-security")
     compile("org.springframework.boot:spring-boot-starter-mail")
     compile("org.springframework.boot:spring-boot-devtools")
+    compile("org.springframework.boot:spring-boot-starter-actuator")
     compile("io.springfox:springfox-swagger2")
     compile("io.springfox:springfox-swagger-ui")
     compile("org.projectlombok:lombok")
@@ -17,6 +18,10 @@ dependencies {
     compile("net.rakugakibox.spring.boot:orika-spring-boot-starter")
     testImplementation("org.springframework.boot:spring-boot-starter-test")
     testCompile("org.testcontainers:postgresql")
+}
+
+springBoot {
+    buildInfo()
 }
 
 test {

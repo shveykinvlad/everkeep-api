@@ -17,4 +17,7 @@ public interface RegistrationResourceApi {
 
     @GetMapping("/confirm")
     void confirm(@RequestParam("token") String token);
+
+    @GetMapping("/resend")
+    void resend(@RequestParam("email") String email, HttpServletRequest request);
 }
