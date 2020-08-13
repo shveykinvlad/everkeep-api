@@ -32,7 +32,8 @@ CREATE SEQUENCE IF NOT EXISTS verification_token_seq;
 
 CREATE TABLE verification_token (
     id SERIAL PRIMARY KEY,
-    token VARCHAR(255) NOT NULL UNIQUE,
+    value VARCHAR(255) NOT NULL UNIQUE,
     user_id BIGINT NOT NULL,
-    expiry_time TIMESTAMP NOT NULL
+    expiry_time TIMESTAMP NOT NULL,
+    action VARCHAR(255) NOT NULL
 );

@@ -1,10 +1,8 @@
 package com.everkeep.service.security;
 
-import java.util.Collection;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -20,13 +18,13 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String email) {
-        User user = userService.get(email);
+        var user = userService.get(email);
 
         return buildUserForAuthentication(user);
     }
 
     private UserDetails buildUserForAuthentication(User user) {
-        Collection<GrantedAuthority> authorities = user.getRoles().stream()
+        var authorities = user.getRoles().stream()
                 .map(role -> new SimpleGrantedAuthority(role.getName()))
                 .collect(Collectors.toSet());
 

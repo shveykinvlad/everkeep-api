@@ -1,11 +1,13 @@
 package com.everkeep.service.security;
 
 import java.time.OffsetDateTime;
+import java.util.UUID;
 import javax.persistence.EntityNotFoundException;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import com.everkeep.enums.TokenAction;
 import com.everkeep.exception.security.VerificationTokenExpirationException;
 import com.everkeep.exception.security.VerificationTokenInvalidException;
 import com.everkeep.model.security.User;
@@ -20,19 +22,21 @@ public class VerificationService {
 
     private final VerificationTokenRepository verificationTokenRepository;
 
-    public void create(User user, String token) {
-        OffsetDateTime tokenExpiryTime = OffsetDateTime.now().plusDays(TOKEN_EXPIRY_DAYS);
-        VerificationToken verificationToken = new VerificationToken()
-                .setToken(token)
+    public VerificationToken create(User user, TokenAction tokenAction) {
+        var tokenValue = UUID.randomUUID().toString();
+        var tokenExpiryTime = OffsetDateTime.now().plusDays(TOKEN_EXPIRY_DAYS);
+        var verificationToken = new VerificationToken()
+                .setValue(tokenValue)
                 .setUser(user)
-                .setExpiryTime(tokenExpiryTime);
+                .setExpiryTime(tokenExpiryTime)
+                .setAction(tokenAction);
 
-        verificationTokenRepository.save(verificationToken);
+        return verificationTokenRepository.save(verificationToken);
     }
 
-    public VerificationToken get(String verificationToken) {
-        return verificationTokenRepository.findByToken(verificationToken)
-                .orElseThrow(() -> new EntityNotFoundException("VerificationToken " + verificationToken + " not found"));
+    public VerificationToken get(String value, TokenAction action) {
+        return verificationTokenRepository.findByValueAndAction(value, action)
+                .orElseThrow(() -> new EntityNotFoundException("VerificationToken " + value + " for action " + action + " not found"));
     }
 
     public void validateToken(VerificationToken verificationToken) {
@@ -40,7 +44,7 @@ public class VerificationService {
             throw new VerificationTokenInvalidException("Verification token is null");
         }
         if ((OffsetDateTime.now().isAfter(verificationToken.getExpiryTime()))) {
-            throw new VerificationTokenExpirationException("Verification token is expired", verificationToken.getToken());
+            throw new VerificationTokenExpirationException("Verification token is expired", verificationToken.getValue());
         }
     }
 }

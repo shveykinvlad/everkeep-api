@@ -2,6 +2,8 @@ package com.everkeep.model.security;
 
 import java.time.OffsetDateTime;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -12,6 +14,8 @@ import javax.persistence.SequenceGenerator;
 
 import lombok.Data;
 import lombok.experimental.Accessors;
+
+import com.everkeep.enums.TokenAction;
 
 @Entity
 @Data
@@ -25,11 +29,14 @@ public class VerificationToken {
     @SequenceGenerator(name = ID_SEQ, sequenceName = ID_SEQ, allocationSize = 1)
     private Long id;
 
-    private String token;
+    private String value;
 
     @ManyToOne(targetEntity = User.class, fetch = FetchType.EAGER)
     @JoinColumn(nullable = false, name = "user_id")
     private User user;
 
     private OffsetDateTime expiryTime;
+
+    @Enumerated(EnumType.STRING)
+    private TokenAction action;
 }

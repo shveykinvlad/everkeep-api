@@ -3,13 +3,12 @@ package com.everkeep.exception.security;
 import lombok.Getter;
 
 @Getter
-public class UserAlreadyEnabledException extends RuntimeException {
+public class UserAlreadyExistsException extends RuntimeException {
 
     private final String email;
 
-    public UserAlreadyEnabledException(String message, String email) {
+    public UserAlreadyExistsException(String message, String email) {
         super(message);
         this.email = email;
     }
 }
-
