@@ -2,6 +2,8 @@ package com.everkeep.resource;
 
 import java.util.List;
 
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.Authorization;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -16,22 +18,28 @@ import com.everkeep.dto.NoteDto;
 
 public interface NoteResourceApi {
 
+    @ApiOperation(value = "Get all notes", authorizations = @Authorization(value = "Bearer"))
     @GetMapping
     List<NoteDto> getAll();
 
+    @ApiOperation(value = "Get note by id", authorizations = @Authorization(value = "Bearer"))
     @GetMapping("/{id}")
     NoteDto get(@PathVariable("id") Long id);
 
+    @ApiOperation(value = "Get note by title", authorizations = @Authorization(value = "Bearer"))
     @GetMapping("/find")
     List<NoteDto> get(@RequestParam String title);
 
+    @ApiOperation(value = "Save note", authorizations = @Authorization(value = "Bearer"))
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     NoteDto save(@RequestBody NoteDto noteDto);
 
+    @ApiOperation(value = "Update note", authorizations = @Authorization(value = "Bearer"))
     @PutMapping("/{id}")
     NoteDto update(@RequestBody NoteDto noteDto);
 
+    @ApiOperation(value = "Delete note", authorizations = @Authorization(value = "Bearer"))
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     void delete(@PathVariable("id") Long id);

@@ -7,6 +7,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import ma.glasnost.orika.MapperFacade;
 import org.springframework.context.MessageSource;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -18,6 +20,7 @@ import com.everkeep.model.security.User;
 import com.everkeep.repository.security.RoleRepository;
 import com.everkeep.repository.security.UserRepository;
 import com.everkeep.service.MailSender;
+import com.everkeep.util.JwtTokenProvider;
 
 @Service
 @RequiredArgsConstructor
@@ -30,6 +33,8 @@ public class UserService {
     private final PasswordEncoder passwordEncoder;
     private final VerificationService verificationService;
     private final MailSender mailSender;
+    private final AuthenticationManager authenticationManager;
+    private final JwtTokenProvider jwtTokenProvider;
     private final MessageSource messageSource;
 
     public User get(String email) {
@@ -88,6 +93,13 @@ public class UserService {
         userRepository.save(user);
     }
 
+    public String authenticate(String email, String password) {
+        authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(email, password));
+        var user = get(email);
+
+        return jwtTokenProvider.generateToken(user);
+    }
+
     private void sendToken(User user, String applicationUrl) {
         var token = verificationService.create(user, TokenAction.ACCOUNT_CONFIRMATION);
         var subject = getDefaultMessage("user.activation.email.subject");
@@ -103,7 +115,7 @@ public class UserService {
     private User createUser(UserDto userDto) {
         var user = mapper.map(userDto, User.class);
         user.setPassword(passwordEncoder.encode(user.getPassword()));
-        user.getRoles().add(roleRepository.findByName("USER"));
+        user.getRoles().add(roleRepository.findByName("ROLE_USER"));
 
         return userRepository.save(user);
     }

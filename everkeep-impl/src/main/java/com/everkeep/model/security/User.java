@@ -2,6 +2,7 @@ package com.everkeep.model.security;
 
 import java.util.HashSet;
 import java.util.Set;
+import java.util.stream.Collectors;
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -17,8 +18,10 @@ import javax.persistence.Table;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.experimental.Accessors;
 
 @Data
+@Accessors(chain = true)
 @Entity
 @Table(name = "users")
 public class User {
@@ -53,4 +56,10 @@ public class User {
     )
     @EqualsAndHashCode.Exclude
     private Set<VerificationToken> tokens = new HashSet<>();
+
+    public Set<String> getRolesNames() {
+        return this.getRoles().stream()
+                .map(Role::getName)
+                .collect(Collectors.toSet());
+    }
 }

@@ -9,6 +9,8 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import com.everkeep.dto.AuthenticationRequest;
+import com.everkeep.dto.AuthenticationResponse;
 import com.everkeep.dto.UserDto;
 
 public interface UserResourceApi {
@@ -31,4 +33,7 @@ public interface UserResourceApi {
     @PutMapping("/password/change")
     void updatePassword(@RequestParam("token") String tokenValue,
                         @RequestBody @Valid UserDto userDto);
+
+    @PostMapping("/authenticate")
+    AuthenticationResponse authenticate(@RequestBody @Valid AuthenticationRequest authenticationRequest);
 }

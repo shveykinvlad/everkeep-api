@@ -8,12 +8,14 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.everkeep.dto.AuthenticationRequest;
+import com.everkeep.dto.AuthenticationResponse;
 import com.everkeep.dto.UserDto;
 import com.everkeep.service.security.UserService;
 
 @RestController
 @CrossOrigin
-@RequestMapping(path = "/api/user")
+@RequestMapping(path = "/api/users")
 @RequiredArgsConstructor
 public class UserResource implements UserResourceApi {
 
@@ -42,5 +44,13 @@ public class UserResource implements UserResourceApi {
     @Override
     public void updatePassword(String tokenValue, @Valid UserDto userDto) {
         userService.updatePassword(tokenValue, userDto.getEmail(), userDto.getPassword());
+    }
+
+    @Override
+    public AuthenticationResponse authenticate(@Valid AuthenticationRequest authenticationRequest) {
+        var jwt = userService.authenticate(authenticationRequest.getEmail(), authenticationRequest.getPassword());
+
+        return new AuthenticationResponse()
+                .setJwt(jwt);
     }
 }

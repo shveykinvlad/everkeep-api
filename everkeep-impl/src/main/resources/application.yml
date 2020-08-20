@@ -18,6 +18,10 @@ spring:
     username: everkeep@mail.ru
     password: keepever.keepever
 
+jwt:
+  secret: 'TVFX8dwOWzOQbMecjnnZ3foXeBVDZK0ItpdXxlz6IgGjVJNU4cTo3Evj7nIE0n'
+  expiration: 3600
+
 logging:
   level:
     org.hibernate.SQL: debug

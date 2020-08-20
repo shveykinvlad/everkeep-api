@@ -6,15 +6,18 @@ import javax.validation.constraints.NotBlank;
 import lombok.Data;
 
 import com.everkeep.annotation.PasswordMatches;
+import com.everkeep.annotation.ValidPassword;
 
 @Data
 @PasswordMatches
 public class UserDto {
 
     @NotBlank
+    @ValidPassword
     private String password;
 
     @NotBlank
+    @ValidPassword
     private String matchingPassword;
 
     @Email

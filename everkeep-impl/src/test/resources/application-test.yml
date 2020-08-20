@@ -4,6 +4,3 @@ spring:
     username: everkeep
     password: everkeep
     driver-class-name: org.testcontainers.jdbc.ContainerDatabaseDriver
-  security:
-    basic:
-      enabled: false

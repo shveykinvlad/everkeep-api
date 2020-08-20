@@ -3,8 +3,11 @@ package com.everkeep.data;
 import java.util.Arrays;
 import java.util.List;
 
+import com.everkeep.dto.AuthenticationRequest;
 import com.everkeep.dto.NoteDto;
 import com.everkeep.model.Note;
+import com.everkeep.model.security.Role;
+import com.everkeep.model.security.User;
 
 public class TestData {
 
@@ -29,5 +32,23 @@ public class TestData {
     public NoteDto getNoteDto() {
         return new NoteDto()
                 .setText("text");
+    }
+
+    public User getUser() {
+        return new User()
+                .setEmail("user@user.com")
+                .setPassword("$2a$10$gsBrwudDcRaiRpHAT/Jtl.jUFm4gUF9ahdlLWcW8UF4M18wIm6a9K") // user
+                .setEnabled(true);
+    }
+
+    public Role getUserRole() {
+        return new Role()
+                .setName("ROLE_USER");
+    }
+
+    public AuthenticationRequest getUserAuthenticationRequest() {
+        return new AuthenticationRequest()
+                .setEmail("user@user.com")
+                .setPassword("user");
     }
 }

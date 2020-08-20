@@ -1,7 +1,8 @@
 dependencies {
-    compile ("org.springframework.boot:spring-boot-starter-web")
-    compile ("jakarta.validation:jakarta.validation-api")
-    compile ("org.passay:passay")
-    compileOnly ("org.projectlombok:lombok")
-    annotationProcessor ("org.projectlombok:lombok")
+    compile "org.springframework.boot:spring-boot-starter-web"
+    compile "io.swagger:swagger-annotations"
+    compile "jakarta.validation:jakarta.validation-api"
+    compile "org.passay:passay"
+    compileOnly "org.projectlombok:lombok"
+    annotationProcessor "org.projectlombok:lombok"
 }
