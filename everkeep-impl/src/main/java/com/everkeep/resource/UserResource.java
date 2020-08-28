@@ -8,9 +8,9 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.everkeep.dto.AuthenticationRequest;
-import com.everkeep.dto.AuthenticationResponse;
-import com.everkeep.dto.UserDto;
+import com.everkeep.dto.AuthRequest;
+import com.everkeep.dto.AuthResponse;
+import com.everkeep.dto.RegistrationRequest;
 import com.everkeep.service.security.UserService;
 
 @RestController
@@ -22,8 +22,8 @@ public class UserResource implements UserResourceApi {
     private final UserService userService;
 
     @Override
-    public void register(UserDto userDto, HttpServletRequest request) {
-        userService.register(userDto, request.getContextPath());
+    public void register(RegistrationRequest registrationRequest, HttpServletRequest request) {
+        userService.register(registrationRequest, request.getContextPath());
     }
 
     @Override
@@ -42,15 +42,15 @@ public class UserResource implements UserResourceApi {
     }
 
     @Override
-    public void updatePassword(String tokenValue, @Valid UserDto userDto) {
-        userService.updatePassword(tokenValue, userDto.getEmail(), userDto.getPassword());
+    public void updatePassword(String tokenValue, @Valid RegistrationRequest registrationRequest) {
+        userService.updatePassword(tokenValue, registrationRequest.getEmail(), registrationRequest.getPassword());
     }
 
     @Override
-    public AuthenticationResponse authenticate(@Valid AuthenticationRequest authenticationRequest) {
-        var jwt = userService.authenticate(authenticationRequest.getEmail(), authenticationRequest.getPassword());
+    public AuthResponse authenticate(@Valid AuthRequest authRequest) {
+        var jwt = userService.authenticate(authRequest.getEmail(), authRequest.getPassword());
 
-        return new AuthenticationResponse()
+        return new AuthResponse()
                 .setJwt(jwt);
     }
 }

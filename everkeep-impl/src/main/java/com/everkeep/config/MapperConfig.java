@@ -5,7 +5,7 @@ import net.rakugakibox.spring.boot.orika.OrikaMapperFactoryConfigurer;
 import org.springframework.context.annotation.Configuration;
 
 import com.everkeep.dto.NoteDto;
-import com.everkeep.dto.UserDto;
+import com.everkeep.dto.RegistrationRequest;
 import com.everkeep.model.Note;
 import com.everkeep.model.security.User;
 
@@ -18,7 +18,7 @@ public class MapperConfig implements OrikaMapperFactoryConfigurer {
                 .byDefault()
                 .register();
 
-        mapperFactory.classMap(UserDto.class, User.class)
+        mapperFactory.classMap(RegistrationRequest.class, User.class)
                 .byDefault()
                 .register();
     }

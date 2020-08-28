@@ -7,7 +7,7 @@ import lombok.experimental.Accessors;
 
 @Data
 @Accessors(chain = true)
-public class AuthenticationRequest {
+public class AuthRequest {
 
     @NotEmpty
     private String email;

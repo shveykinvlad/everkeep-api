@@ -10,7 +10,7 @@ import com.everkeep.annotation.ValidPassword;
 
 @Data
 @PasswordMatches
-public class UserDto {
+public class RegistrationRequest {
 
     @NotBlank
     @ValidPassword

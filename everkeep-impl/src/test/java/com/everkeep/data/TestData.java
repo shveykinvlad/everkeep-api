@@ -3,7 +3,7 @@ package com.everkeep.data;
 import java.util.Arrays;
 import java.util.List;
 
-import com.everkeep.dto.AuthenticationRequest;
+import com.everkeep.dto.AuthRequest;
 import com.everkeep.dto.NoteDto;
 import com.everkeep.model.Note;
 import com.everkeep.model.security.Role;
@@ -46,8 +46,8 @@ public class TestData {
                 .setName("ROLE_USER");
     }
 
-    public AuthenticationRequest getUserAuthenticationRequest() {
-        return new AuthenticationRequest()
+    public AuthRequest getUserAuthenticationRequest() {
+        return new AuthRequest()
                 .setEmail("user@user.com")
                 .setPassword("user");
     }

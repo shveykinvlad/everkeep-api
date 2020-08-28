@@ -16,7 +16,7 @@ import org.springframework.http.MediaType;
 
 import com.everkeep.IntegrationTest;
 import com.everkeep.data.TestData;
-import com.everkeep.dto.AuthenticationResponse;
+import com.everkeep.dto.AuthResponse;
 import com.everkeep.dto.NoteDto;
 import com.everkeep.repository.NoteRepository;
 import com.everkeep.repository.security.RoleRepository;
@@ -140,7 +140,7 @@ class NoteResourceTest {
         createUser();
         var authenticationEntity = new HttpEntity<>(data.getUserAuthenticationRequest(), null);
         var authentication = restTemplate.postForObject(
-                getAuthenticationPath(), authenticationEntity, AuthenticationResponse.class);
+                getAuthenticationPath(), authenticationEntity, AuthResponse.class);
 
         return authentication.getJwt();
     }

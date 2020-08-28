@@ -9,14 +9,14 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import com.everkeep.dto.AuthenticationRequest;
-import com.everkeep.dto.AuthenticationResponse;
-import com.everkeep.dto.UserDto;
+import com.everkeep.dto.AuthRequest;
+import com.everkeep.dto.AuthResponse;
+import com.everkeep.dto.RegistrationRequest;
 
 public interface UserResourceApi {
 
-    @PostMapping
-    void register(@RequestBody @Valid UserDto userDto,
+    @PostMapping("/register")
+    void register(@RequestBody @Valid RegistrationRequest registrationRequest,
                   HttpServletRequest request);
 
     @GetMapping("/confirm")
@@ -32,8 +32,8 @@ public interface UserResourceApi {
 
     @PutMapping("/password/change")
     void updatePassword(@RequestParam("token") String tokenValue,
-                        @RequestBody @Valid UserDto userDto);
+                        @RequestBody @Valid RegistrationRequest registrationRequest);
 
     @PostMapping("/authenticate")
-    AuthenticationResponse authenticate(@RequestBody @Valid AuthenticationRequest authenticationRequest);
+    AuthResponse authenticate(@RequestBody @Valid AuthRequest authRequest);
 }

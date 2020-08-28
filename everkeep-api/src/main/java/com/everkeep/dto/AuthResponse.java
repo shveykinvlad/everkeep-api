@@ -5,7 +5,7 @@ import lombok.experimental.Accessors;
 
 @Data
 @Accessors(chain = true)
-public class AuthenticationResponse {
+public class AuthResponse {
 
     private String jwt;
 }

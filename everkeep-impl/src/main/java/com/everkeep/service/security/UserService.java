@@ -12,7 +12,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import com.everkeep.dto.UserDto;
+import com.everkeep.dto.RegistrationRequest;
 import com.everkeep.enums.TokenAction;
 import com.everkeep.exception.security.UserAlreadyEnabledException;
 import com.everkeep.exception.security.UserAlreadyExistsException;
@@ -46,11 +46,11 @@ public class UserService {
         return userRepository.save(user);
     }
 
-    public void register(UserDto userDto, String applicationUrl) {
-        if (userExists(userDto.getEmail())) {
-            throw new UserAlreadyExistsException("User already exist", userDto.getEmail());
+    public void register(RegistrationRequest registrationRequest, String applicationUrl) {
+        if (userExists(registrationRequest.getEmail())) {
+            throw new UserAlreadyExistsException("User already exist", registrationRequest.getEmail());
         }
-        var user = createUser(userDto);
+        var user = createUser(registrationRequest);
         sendToken(user, applicationUrl);
     }
 
@@ -112,8 +112,8 @@ public class UserService {
         return userRepository.findByEmail(email).isPresent();
     }
 
-    private User createUser(UserDto userDto) {
-        var user = mapper.map(userDto, User.class);
+    private User createUser(RegistrationRequest registrationRequest) {
+        var user = mapper.map(registrationRequest, User.class);
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         user.getRoles().add(roleRepository.findByName("ROLE_USER"));
 
