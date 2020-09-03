@@ -30,10 +30,13 @@ public interface UserResourceApi {
     void resetPassword(@RequestParam("email") String email,
                        HttpServletRequest request);
 
-    @PutMapping("/password/change")
+    @PutMapping("/password/update")
     void updatePassword(@RequestParam("token") String tokenValue,
                         @RequestBody @Valid RegistrationRequest registrationRequest);
 
     @PostMapping("/authenticate")
     AuthResponse authenticate(@RequestBody @Valid AuthRequest authRequest);
+
+    @PostMapping("/authenticate/refresh")
+    AuthResponse refreshAccessToken(@RequestBody @Valid String refreshToken);
 }

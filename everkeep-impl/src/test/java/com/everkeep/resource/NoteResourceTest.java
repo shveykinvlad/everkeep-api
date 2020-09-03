@@ -113,7 +113,7 @@ class NoteResourceTest {
     void delete() {
         var note = noteRepository.save(data.getNote());
 
-        var httpEntity = new HttpEntity(getAuthorizationHeader());
+        var httpEntity = new HttpEntity<>(getAuthorizationHeader());
         restTemplate.exchange(getBasePath() + "/{id}", HttpMethod.DELETE, httpEntity, NoteDto.class, note.getId());
 
         Assertions.assertTrue(noteRepository.findById(note.getId())

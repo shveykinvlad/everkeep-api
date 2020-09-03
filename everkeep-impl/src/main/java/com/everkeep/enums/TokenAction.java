@@ -2,6 +2,7 @@ package com.everkeep.enums;
 
 public enum TokenAction {
 
-    PASSWORD_UPDATE,
-    ACCOUNT_CONFIRMATION
+    UPDATE_PASSWORD,
+    CONFIRM_ACCOUNT,
+    REFRESH_ACCESS
 }

@@ -12,11 +12,13 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import com.everkeep.dto.AuthResponse;
 import com.everkeep.dto.RegistrationRequest;
 import com.everkeep.enums.TokenAction;
 import com.everkeep.exception.security.UserAlreadyEnabledException;
 import com.everkeep.exception.security.UserAlreadyExistsException;
 import com.everkeep.model.security.User;
+import com.everkeep.model.security.VerificationToken;
 import com.everkeep.repository.security.RoleRepository;
 import com.everkeep.repository.security.UserRepository;
 import com.everkeep.service.MailSender;
@@ -55,7 +57,7 @@ public class UserService {
     }
 
     public void confirm(String tokenValue) {
-        var verificationToken = verificationService.get(tokenValue, TokenAction.ACCOUNT_CONFIRMATION);
+        var verificationToken = verificationService.get(tokenValue, TokenAction.CONFIRM_ACCOUNT);
         verificationService.validateToken(verificationToken);
 
         var user = verificationToken.getUser();
@@ -68,7 +70,7 @@ public class UserService {
         if (user.isEnabled()) {
             throw new UserAlreadyEnabledException("User already enabled", user.getEmail());
         }
-        var token = verificationService.create(user, TokenAction.ACCOUNT_CONFIRMATION);
+        var token = verificationService.create(user, TokenAction.CONFIRM_ACCOUNT);
         var subject = getDefaultMessage("user.activation.email.subject");
         var message = getDefaultMessage("user.activation.email.message", applicationUrl, token.getValue());
 
@@ -77,15 +79,15 @@ public class UserService {
 
     public void resetPassword(String email, String applicationUrl) {
         var user = get(email);
-        var token = verificationService.create(user, TokenAction.PASSWORD_UPDATE);
+        var token = verificationService.create(user, TokenAction.UPDATE_PASSWORD);
         var subject = getDefaultMessage("user.password.reset.email.subject");
-        var message = getDefaultMessage("user.password.reset.email.message", token.getValue());
+        var message = getDefaultMessage("user.password.reset.email.message", email, token.getValue());
 
         mailSender.send(user.getEmail(), subject, message);
     }
 
     public void updatePassword(String tokenValue, String email, String password) {
-        var verificationToken = verificationService.get(tokenValue, TokenAction.PASSWORD_UPDATE);
+        var verificationToken = verificationService.get(tokenValue, TokenAction.UPDATE_PASSWORD);
         verificationService.validateToken(verificationToken);
 
         var user = get(email);
@@ -93,15 +95,20 @@ public class UserService {
         userRepository.save(user);
     }
 
-    public String authenticate(String email, String password) {
+    public AuthResponse authenticate(String email, String password) {
         authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(email, password));
         var user = get(email);
 
-        return jwtTokenProvider.generateToken(user);
+        var jwtToken = jwtTokenProvider.generateToken(user);
+        VerificationToken refreshToken = verificationService.create(user, TokenAction.REFRESH_ACCESS);
+
+        return new AuthResponse()
+                .setJwt(jwtToken)
+                .setRefreshTokenValue(refreshToken.getValue());
     }
 
     private void sendToken(User user, String applicationUrl) {
-        var token = verificationService.create(user, TokenAction.ACCOUNT_CONFIRMATION);
+        var token = verificationService.create(user, TokenAction.CONFIRM_ACCOUNT);
         var subject = getDefaultMessage("user.activation.email.subject");
         var message = getDefaultMessage("user.activation.email.message", applicationUrl, token.getValue());
 
@@ -122,5 +129,15 @@ public class UserService {
 
     private String getDefaultMessage(String code, Object... objects) {
         return messageSource.getMessage(code, objects, Locale.getDefault());
+    }
+
+    public AuthResponse refreshAccessToken(String refreshTokenValue) {
+        var verificationToken = verificationService.get(refreshTokenValue, TokenAction.REFRESH_ACCESS);
+        verificationService.validateToken(verificationToken);
+        var jwt = jwtTokenProvider.generateToken(verificationToken.getUser());
+
+        return new AuthResponse()
+                .setJwt(jwt)
+                .setRefreshTokenValue(refreshTokenValue);
     }
 }

@@ -8,4 +8,5 @@ import lombok.experimental.Accessors;
 public class AuthResponse {
 
     private String jwt;
+    private String refreshTokenValue;
 }

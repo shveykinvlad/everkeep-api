@@ -48,9 +48,11 @@ public class UserResource implements UserResourceApi {
 
     @Override
     public AuthResponse authenticate(@Valid AuthRequest authRequest) {
-        var jwt = userService.authenticate(authRequest.getEmail(), authRequest.getPassword());
+        return userService.authenticate(authRequest.getEmail(), authRequest.getPassword());
+    }
 
-        return new AuthResponse()
-                .setJwt(jwt);
+    @Override
+    public AuthResponse refreshAccessToken(@Valid String refreshToken) {
+        return userService.refreshAccessToken(refreshToken);
     }
 }
