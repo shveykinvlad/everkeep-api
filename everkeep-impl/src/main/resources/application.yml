@@ -20,7 +20,10 @@ spring:
 
 jwt:
   secret: 'TVFX8dwOWzOQbMecjnnZ3foXeBVDZK0ItpdXxlz6IgGjVJNU4cTo3Evj7nIE0n'
-  expiration: 3600
+  expiration: 60
+
+verificationToken:
+  expiration: 120
 
 logging:
   level:

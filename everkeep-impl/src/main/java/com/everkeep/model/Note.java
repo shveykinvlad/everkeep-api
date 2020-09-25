@@ -1,6 +1,9 @@
 package com.everkeep.model;
 
+import java.time.LocalDateTime;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -8,6 +11,8 @@ import javax.persistence.SequenceGenerator;
 
 import lombok.Data;
 import lombok.experimental.Accessors;
+
+import com.everkeep.enums.NotePriority;
 
 @Entity
 @Data
@@ -24,4 +29,9 @@ public class Note {
     private String title;
 
     private String text;
+
+    @Enumerated(EnumType.STRING)
+    private NotePriority priority;
+
+    private LocalDateTime endDate;
 }

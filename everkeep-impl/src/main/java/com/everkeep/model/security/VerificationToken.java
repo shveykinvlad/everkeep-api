@@ -39,4 +39,6 @@ public class VerificationToken {
 
     @Enumerated(EnumType.STRING)
     private TokenAction action;
+
+    private boolean active = true;
 }

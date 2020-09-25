@@ -77,7 +77,7 @@ class NoteResourceTest {
 
         var httpEntity = new HttpEntity<>(getAuthorizationHeader());
         var actual = restTemplate.exchange(
-                getBasePath() + "/find/?title={title}", HttpMethod.GET, httpEntity, NoteDto[].class, expected.get(0).getTitle());
+                getBasePath() + "/search/?title={title}", HttpMethod.GET, httpEntity, NoteDto[].class, expected.get(0).getTitle());
 
         Assertions.assertNotNull(actual.getBody());
         Assertions.assertEquals(expected.get(0).getTitle(), actual.getBody()[0].getTitle());

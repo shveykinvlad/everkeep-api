@@ -43,7 +43,7 @@ public class UserResource implements UserResourceApi {
 
     @Override
     public void updatePassword(String tokenValue, @Valid RegistrationRequest registrationRequest) {
-        userService.updatePassword(tokenValue, registrationRequest.getEmail(), registrationRequest.getPassword());
+        userService.updatePassword(tokenValue, registrationRequest.getPassword());
     }
 
     @Override

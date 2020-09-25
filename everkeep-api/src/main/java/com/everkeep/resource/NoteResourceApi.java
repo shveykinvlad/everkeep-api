@@ -27,7 +27,7 @@ public interface NoteResourceApi {
     NoteDto get(@PathVariable("id") Long id);
 
     @ApiOperation(value = "Get note by title", authorizations = @Authorization(value = "Bearer"))
-    @GetMapping("/find")
+    @GetMapping("/search")
     List<NoteDto> get(@RequestParam String title);
 
     @ApiOperation(value = "Save note", authorizations = @Authorization(value = "Bearer"))

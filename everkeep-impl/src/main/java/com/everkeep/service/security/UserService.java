@@ -57,8 +57,7 @@ public class UserService {
     }
 
     public void confirm(String tokenValue) {
-        var verificationToken = verificationService.get(tokenValue, TokenAction.CONFIRM_ACCOUNT);
-        verificationService.validateToken(verificationToken);
+        var verificationToken = verificationService.validateAndUtilize(tokenValue, TokenAction.CONFIRM_ACCOUNT);
 
         var user = verificationToken.getUser();
         user.setEnabled(true);
@@ -86,11 +85,10 @@ public class UserService {
         mailSender.send(user.getEmail(), subject, message);
     }
 
-    public void updatePassword(String tokenValue, String email, String password) {
-        var verificationToken = verificationService.get(tokenValue, TokenAction.UPDATE_PASSWORD);
-        verificationService.validateToken(verificationToken);
+    public void updatePassword(String tokenValue, String password) {
+        var verificationToken = verificationService.validateAndUtilize(tokenValue, TokenAction.UPDATE_PASSWORD);
 
-        var user = get(email);
+        var user = verificationToken.getUser();
         user.setPassword(passwordEncoder.encode(password));
         userRepository.save(user);
     }
@@ -104,7 +102,8 @@ public class UserService {
 
         return new AuthResponse()
                 .setJwt(jwtToken)
-                .setRefreshTokenValue(refreshToken.getValue());
+                .setRefreshTokenValue(refreshToken.getValue())
+                .setUserEmail(user.getEmail());
     }
 
     private void sendToken(User user, String applicationUrl) {
@@ -131,13 +130,16 @@ public class UserService {
         return messageSource.getMessage(code, objects, Locale.getDefault());
     }
 
-    public AuthResponse refreshAccessToken(String refreshTokenValue) {
-        var verificationToken = verificationService.get(refreshTokenValue, TokenAction.REFRESH_ACCESS);
-        verificationService.validateToken(verificationToken);
-        var jwt = jwtTokenProvider.generateToken(verificationToken.getUser());
+    public AuthResponse refreshAccessToken(String oldTokenValue) {
+        var oldToken = verificationService.validateAndUtilize(oldTokenValue, TokenAction.REFRESH_ACCESS);
+
+        var user = oldToken.getUser();
+        var jwt = jwtTokenProvider.generateToken(user);
+        var newToken = verificationService.create(user, TokenAction.REFRESH_ACCESS);
 
         return new AuthResponse()
                 .setJwt(jwt)
-                .setRefreshTokenValue(refreshTokenValue);
+                .setRefreshTokenValue(newToken.getValue())
+                .setUserEmail(user.getEmail());
     }
 }

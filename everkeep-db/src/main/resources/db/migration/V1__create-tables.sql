@@ -3,7 +3,9 @@ CREATE SEQUENCE IF NOT EXISTS note_id_seq;
 CREATE TABLE note (
     id SERIAL PRIMARY KEY,
     title VARCHAR(255),
-    text TEXT
+    text TEXT,
+    priority VARCHAR(255),
+    end_date TIMESTAMP WITHOUT TIME ZONE
 );
 
 CREATE SEQUENCE IF NOT EXISTS user_id_seq;
@@ -35,5 +37,6 @@ CREATE TABLE verification_token (
     value VARCHAR(255) NOT NULL UNIQUE,
     user_id BIGINT NOT NULL,
     expiry_time TIMESTAMP NOT NULL,
-    action VARCHAR(255) NOT NULL
+    action VARCHAR(255) NOT NULL,
+    active BOOLEAN DEFAULT TRUE NOT NULL
 );

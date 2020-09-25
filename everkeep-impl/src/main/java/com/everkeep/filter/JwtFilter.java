@@ -9,6 +9,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -19,6 +20,7 @@ import org.springframework.web.filter.OncePerRequestFilter;
 
 import com.everkeep.util.JwtTokenProvider;
 
+@Slf4j
 @Component
 @RequiredArgsConstructor
 public class JwtFilter extends OncePerRequestFilter {
@@ -33,9 +35,13 @@ public class JwtFilter extends OncePerRequestFilter {
 
         if (header != null) {
             var jwtToken = header.replace("Bearer ", "");
-            var authToken = getAuthToken(jwtToken);
-            authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(httpServletRequest));
-            SecurityContextHolder.getContext().setAuthentication(authToken);
+            try {
+                var authToken = getAuthToken(jwtToken);
+                authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(httpServletRequest));
+                SecurityContextHolder.getContext().setAuthentication(authToken);
+            } catch (Exception e) {
+                log.error("Authentication failed", e);
+            }
         }
 
         filterChain.doFilter(httpServletRequest, httpServletResponse);
