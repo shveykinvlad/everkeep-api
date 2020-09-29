@@ -22,7 +22,7 @@ Notes service
 * Authorization
 * Authentication
 * Reset/update password
-* JWT
+* Auth token
 * Refresh token
 * Verification token
 * Mail sender
