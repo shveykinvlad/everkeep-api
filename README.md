@@ -27,5 +27,6 @@ Notes service
 * Verification token
 * Mail sender
 * Integration tests
+* CRUD
 
 
