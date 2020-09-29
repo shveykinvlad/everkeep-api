@@ -18,6 +18,7 @@ Notes service
 * REST
 * Validation
 * Object mapping
+* Registration
 * Authorization
 * Authentication
 * Updating password
