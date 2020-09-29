@@ -21,7 +21,7 @@ Notes service
 * Registration
 * Authorization
 * Authentication
-* Updating password
+* Reset/update password
 * JWT
 * Refresh token
 * Verification token
