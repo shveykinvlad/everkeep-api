@@ -1,25 +1,24 @@
-plugins {
-    id 'io.spring.dependency-management' version '1.0.10.RELEASE' apply false
-    id 'org.springframework.boot' version '2.3.4.RELEASE' apply false
-    id "org.flywaydb.flyway" version "6.5.7" apply false
-    id "com.github.spotbugs" version "4.0.2"
-    id 'jacoco'
-    id 'checkstyle'
+buildscript {
+    repositories {
+        gradlePluginPortal()
+    }
+
+    dependencies {
+        classpath "org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}"
+        classpath "io.spring.gradle:dependency-management-plugin:${springDependencyManagementVersion}"
+        classpath "gradle.plugin.org.flywaydb:gradle-plugin-publishing:${flywayVersion}"
+        classpath "gradle.plugin.com.github.spotbugs.snom:spotbugs-gradle-plugin:${spotbugsVersion}"
+    }
 }
 
-ext {
-    springBootVersion = '2.3.4.RELEASE'
-    orikaVersion = '1.9.0'
-    testContainersPostgresqlVersion = '1.14.3'
-    flywayVersion = '6.5.7'
-    swaggerVersion = '3.0.0'
-    swaggerAnnotationsVersion = '1.6.2'
-    passayVersion = '1.6.0'
-    jsonwebtokenVersion = '0.11.2'
-}
+configure(subprojects) {
 
-configure(allprojects) { project ->
-    apply plugin: "io.spring.dependency-management"
+    apply plugin: 'java'
+    apply plugin: 'io.spring.dependency-management'
+    apply plugin: 'checkstyle'
+    apply plugin: 'com.github.spotbugs'
+    apply plugin: 'org.flywaydb.flyway'
+    apply plugin: 'jacoco'
 
     group 'com.evernote'
     version '1.0-SNAPSHOT'
@@ -46,13 +45,6 @@ configure(allprojects) { project ->
             mavenCentral()
         }
     }
-}
-
-configure(subprojects) { project ->
-    apply plugin: 'java'
-    apply plugin: 'checkstyle'
-    apply plugin: 'com.github.spotbugs'
-    apply plugin: 'jacoco'
 
     checkstyle {
         toolVersion = '8.31'
@@ -63,7 +55,7 @@ configure(subprojects) { project ->
     }
 
     jacoco {
-        toolVersion = "0.8.5"
+        toolVersion = '0.8.5'
         reportsDir = file("$buildDir/jacocoReportDir")
     }
 
