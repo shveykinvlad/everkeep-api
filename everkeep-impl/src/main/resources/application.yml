@@ -20,12 +20,7 @@ spring:
 
 jwt:
   secret: 'TVFX8dwOWzOQbMecjnnZ3foXeBVDZK0ItpdXxlz6IgGjVJNU4cTo3Evj7nIE0n'
-  expiration: 60
+  expirationTime: 60
 
 verificationToken:
-  expiration: 120
-
-logging:
-  level:
-    org.hibernate.SQL: debug
-    org.hibernate.TYPE: trace
+  expirationTime: 3600

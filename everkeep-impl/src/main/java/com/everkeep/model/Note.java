@@ -10,6 +10,7 @@ import javax.persistence.Id;
 import javax.persistence.SequenceGenerator;
 
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
 
 import com.everkeep.enums.NotePriority;
@@ -24,6 +25,7 @@ public class Note {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = ID_SEQ)
     @SequenceGenerator(name = ID_SEQ, sequenceName = ID_SEQ, allocationSize = 1)
+    @EqualsAndHashCode.Exclude
     private Long id;
 
     private String title;

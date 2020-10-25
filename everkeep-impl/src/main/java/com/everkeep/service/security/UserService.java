@@ -5,16 +5,16 @@ import javax.persistence.EntityNotFoundException;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import ma.glasnost.orika.MapperFacade;
 import org.springframework.context.MessageSource;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import com.everkeep.config.mapper.UserMapper;
+import com.everkeep.config.security.JwtTokenProvider;
 import com.everkeep.dto.AuthResponse;
 import com.everkeep.dto.RegistrationRequest;
-import com.everkeep.enums.TokenAction;
 import com.everkeep.exception.security.UserAlreadyEnabledException;
 import com.everkeep.exception.security.UserAlreadyExistsException;
 import com.everkeep.model.security.User;
@@ -22,7 +22,6 @@ import com.everkeep.model.security.VerificationToken;
 import com.everkeep.repository.security.RoleRepository;
 import com.everkeep.repository.security.UserRepository;
 import com.everkeep.service.MailSender;
-import com.everkeep.util.JwtTokenProvider;
 
 @Service
 @RequiredArgsConstructor
@@ -31,7 +30,7 @@ public class UserService {
 
     private final UserRepository userRepository;
     private final RoleRepository roleRepository;
-    private final MapperFacade mapper;
+    private final UserMapper userMapper;
     private final PasswordEncoder passwordEncoder;
     private final VerificationService verificationService;
     private final MailSender mailSender;
@@ -44,10 +43,6 @@ public class UserService {
                 .orElseThrow(() -> new EntityNotFoundException("User with email = " + email + " not found"));
     }
 
-    public User save(User user) {
-        return userRepository.save(user);
-    }
-
     public void register(RegistrationRequest registrationRequest, String applicationUrl) {
         if (userExists(registrationRequest.getEmail())) {
             throw new UserAlreadyExistsException("User already exist", registrationRequest.getEmail());
@@ -57,7 +52,7 @@ public class UserService {
     }
 
     public void confirm(String tokenValue) {
-        var verificationToken = verificationService.validateAndUtilize(tokenValue, TokenAction.CONFIRM_ACCOUNT);
+        var verificationToken = verificationService.validateAndUtilize(tokenValue, VerificationToken.Action.CONFIRM_ACCOUNT);
 
         var user = verificationToken.getUser();
         user.setEnabled(true);
@@ -69,7 +64,7 @@ public class UserService {
         if (user.isEnabled()) {
             throw new UserAlreadyEnabledException("User already enabled", user.getEmail());
         }
-        var token = verificationService.create(user, TokenAction.CONFIRM_ACCOUNT);
+        var token = verificationService.create(user, VerificationToken.Action.CONFIRM_ACCOUNT);
         var subject = getDefaultMessage("user.activation.email.subject");
         var message = getDefaultMessage("user.activation.email.message", applicationUrl, token.getValue());
 
@@ -78,7 +73,7 @@ public class UserService {
 
     public void resetPassword(String email, String applicationUrl) {
         var user = get(email);
-        var token = verificationService.create(user, TokenAction.UPDATE_PASSWORD);
+        var token = verificationService.create(user, VerificationToken.Action.UPDATE_PASSWORD);
         var subject = getDefaultMessage("user.password.reset.email.subject");
         var message = getDefaultMessage("user.password.reset.email.message", email, token.getValue());
 
@@ -86,7 +81,7 @@ public class UserService {
     }
 
     public void updatePassword(String tokenValue, String password) {
-        var verificationToken = verificationService.validateAndUtilize(tokenValue, TokenAction.UPDATE_PASSWORD);
+        var verificationToken = verificationService.validateAndUtilize(tokenValue, VerificationToken.Action.UPDATE_PASSWORD);
 
         var user = verificationToken.getUser();
         user.setPassword(passwordEncoder.encode(password));
@@ -98,16 +93,13 @@ public class UserService {
         var user = get(email);
 
         var jwtToken = jwtTokenProvider.generateToken(user);
-        VerificationToken refreshToken = verificationService.create(user, TokenAction.REFRESH_ACCESS);
+        VerificationToken refreshToken = verificationService.create(user, VerificationToken.Action.REFRESH_ACCESS);
 
-        return new AuthResponse()
-                .setJwt(jwtToken)
-                .setRefreshTokenValue(refreshToken.getValue())
-                .setUserEmail(user.getEmail());
+        return new AuthResponse(jwtToken, refreshToken.getValue(), user.getEmail());
     }
 
     private void sendToken(User user, String applicationUrl) {
-        var token = verificationService.create(user, TokenAction.CONFIRM_ACCOUNT);
+        var token = verificationService.create(user, VerificationToken.Action.CONFIRM_ACCOUNT);
         var subject = getDefaultMessage("user.activation.email.subject");
         var message = getDefaultMessage("user.activation.email.message", applicationUrl, token.getValue());
 
@@ -119,7 +111,7 @@ public class UserService {
     }
 
     private User createUser(RegistrationRequest registrationRequest) {
-        var user = mapper.map(registrationRequest, User.class);
+        var user = userMapper.map(registrationRequest);
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         user.getRoles().add(roleRepository.findByName("ROLE_USER"));
 
@@ -131,15 +123,12 @@ public class UserService {
     }
 
     public AuthResponse refreshAccessToken(String oldTokenValue) {
-        var oldToken = verificationService.validateAndUtilize(oldTokenValue, TokenAction.REFRESH_ACCESS);
+        var oldToken = verificationService.validateAndUtilize(oldTokenValue, VerificationToken.Action.REFRESH_ACCESS);
 
         var user = oldToken.getUser();
         var jwt = jwtTokenProvider.generateToken(user);
-        var newToken = verificationService.create(user, TokenAction.REFRESH_ACCESS);
+        var newToken = verificationService.create(user, VerificationToken.Action.REFRESH_ACCESS);
 
-        return new AuthResponse()
-                .setJwt(jwt)
-                .setRefreshTokenValue(newToken.getValue())
-                .setUserEmail(user.getEmail());
+        return new AuthResponse(jwt, newToken.getValue(), user.getEmail());
     }
 }

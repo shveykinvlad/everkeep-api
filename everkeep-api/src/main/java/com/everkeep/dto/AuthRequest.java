@@ -2,15 +2,14 @@ package com.everkeep.dto;
 
 import javax.validation.constraints.NotEmpty;
 
-import lombok.Data;
-import lombok.experimental.Accessors;
+import lombok.Value;
 
-@Data
-@Accessors(chain = true)
+@Value
 public class AuthRequest {
 
     @NotEmpty
-    private String email;
+    String email;
+
     @NotEmpty
-    private String password;
+    String password;
 }

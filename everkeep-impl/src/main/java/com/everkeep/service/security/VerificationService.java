@@ -8,9 +8,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
-import com.everkeep.enums.TokenAction;
 import com.everkeep.exception.security.VerificationTokenExpirationException;
-import com.everkeep.exception.security.VerificationTokenInvalidException;
 import com.everkeep.model.security.User;
 import com.everkeep.model.security.VerificationToken;
 import com.everkeep.repository.security.VerificationTokenRepository;
@@ -21,10 +19,10 @@ public class VerificationService {
 
     private final VerificationTokenRepository verificationTokenRepository;
 
-    @Value("${verificationToken.expiration}")
+    @Value("${verificationToken.expirationTime}")
     private long expirationSeconds;
 
-    public VerificationToken create(User user, TokenAction tokenAction) {
+    public VerificationToken create(User user, VerificationToken.Action tokenAction) {
         var tokenValue = UUID.randomUUID().toString();
         var tokenExpiryTime = OffsetDateTime.now().plusSeconds(expirationSeconds);
         var verificationToken = new VerificationToken()
@@ -36,29 +34,26 @@ public class VerificationService {
         return verificationTokenRepository.save(verificationToken);
     }
 
-    public VerificationToken get(String value, TokenAction action) {
+    public VerificationToken get(String value, VerificationToken.Action action) {
         return verificationTokenRepository.findByValueAndAction(value, action)
                 .orElseThrow(() -> new EntityNotFoundException("VerificationToken " + value + " for action " + action + " not found"));
     }
 
-    public VerificationToken utilize(VerificationToken verificationToken) {
-        verificationToken.setActive(false);
-        return verificationTokenRepository.save(verificationToken);
-    }
-
-    public VerificationToken validateAndUtilize(String value, TokenAction active) {
+    public VerificationToken validateAndUtilize(String value, VerificationToken.Action active) {
         var verificationToken = get(value, active);
         validateToken(verificationToken);
 
         return utilize(verificationToken);
     }
 
-    public void validateToken(VerificationToken verificationToken) {
-        if (verificationToken == null) {
-            throw new VerificationTokenInvalidException("Verification token is null");
-        }
+    private void validateToken(VerificationToken verificationToken) {
         if ((OffsetDateTime.now().isAfter(verificationToken.getExpiryTime()))) {
             throw new VerificationTokenExpirationException("Verification token is expired", verificationToken.getValue());
         }
+    }
+
+    private VerificationToken utilize(VerificationToken verificationToken) {
+        verificationToken.setActive(false);
+        return verificationTokenRepository.save(verificationToken);
     }
 }

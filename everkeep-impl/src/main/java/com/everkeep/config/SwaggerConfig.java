@@ -17,15 +17,6 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
 @EnableSwagger2
 public class SwaggerConfig {
 
-    static final String[] SWAGGER_URLS = new String[]{
-            "/v2/api-docs",
-            "/configuration/ui",
-            "/swagger-resources/**",
-            "/configuration/security",
-            "/swagger-ui.html",
-            "/webjars/**"
-    };
-
     @Bean
     public Docket api() {
         return new Docket(DocumentationType.SWAGGER_2)

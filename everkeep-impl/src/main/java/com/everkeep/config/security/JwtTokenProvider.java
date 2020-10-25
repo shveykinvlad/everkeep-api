@@ -1,4 +1,4 @@
-package com.everkeep.util;
+package com.everkeep.config.security;
 
 import static java.nio.charset.StandardCharsets.UTF_16;
 
@@ -11,18 +11,16 @@ import java.util.Map;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
-import org.springframework.beans.factory.annotation.Value;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
 import com.everkeep.model.security.User;
 
 @Component
+@RequiredArgsConstructor
 public class JwtTokenProvider {
 
-    @Value("${jwt.secret}")
-    private String secret;
-    @Value("${jwt.expiration}")
-    private String expirationTime;
+    private final JwtProperties jwtProperties;
 
     public String extractUsername(String authToken) {
         return getClaimsFromToken(authToken)
@@ -30,7 +28,7 @@ public class JwtTokenProvider {
     }
 
     public Claims getClaimsFromToken(String authToken) {
-        var key = Base64.getEncoder().encodeToString(secret.getBytes(UTF_16));
+        var key = Base64.getEncoder().encodeToString(jwtProperties.getSecret().getBytes(UTF_16));
         return Jwts.parserBuilder()
                 .setSigningKey(key)
                 .build()
@@ -42,7 +40,7 @@ public class JwtTokenProvider {
         Map<String, Object> claims = new HashMap<>();
         claims.put("roles", user.getRolesNames());
 
-        var expirationSeconds = Long.parseLong(expirationTime);
+        var expirationSeconds = Long.parseLong(jwtProperties.getExpirationTime());
         var creationDate = Date.from(OffsetDateTime.now().toInstant());
         var expirationDate = Date.from(OffsetDateTime.now().plusSeconds(expirationSeconds).toInstant());
 
@@ -51,7 +49,7 @@ public class JwtTokenProvider {
                 .setSubject(user.getEmail())
                 .setIssuedAt(creationDate)
                 .setExpiration(expirationDate)
-                .signWith(Keys.hmacShaKeyFor(secret.getBytes(UTF_16)))
+                .signWith(Keys.hmacShaKeyFor(jwtProperties.getSecret().getBytes(UTF_16)))
                 .compact();
     }
 }

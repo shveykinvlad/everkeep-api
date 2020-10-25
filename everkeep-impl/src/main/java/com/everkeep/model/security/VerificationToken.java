@@ -13,9 +13,8 @@ import javax.persistence.ManyToOne;
 import javax.persistence.SequenceGenerator;
 
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
-
-import com.everkeep.enums.TokenAction;
 
 @Entity
 @Data
@@ -27,6 +26,7 @@ public class VerificationToken {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = ID_SEQ)
     @SequenceGenerator(name = ID_SEQ, sequenceName = ID_SEQ, allocationSize = 1)
+    @EqualsAndHashCode.Exclude
     private Long id;
 
     private String value;
@@ -38,7 +38,13 @@ public class VerificationToken {
     private OffsetDateTime expiryTime;
 
     @Enumerated(EnumType.STRING)
-    private TokenAction action;
+    private Action action;
 
     private boolean active = true;
+
+    public enum Action {
+        UPDATE_PASSWORD,
+        CONFIRM_ACCOUNT,
+        REFRESH_ACCESS
+    }
 }

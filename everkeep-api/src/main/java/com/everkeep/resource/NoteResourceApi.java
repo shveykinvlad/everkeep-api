@@ -1,6 +1,7 @@
 package com.everkeep.resource;
 
 import java.util.List;
+import javax.validation.Valid;
 
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.Authorization;
@@ -33,11 +34,11 @@ public interface NoteResourceApi {
     @ApiOperation(value = "Save note", authorizations = @Authorization(value = "Bearer"))
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    NoteDto save(@RequestBody NoteDto noteDto);
+    NoteDto save(@RequestBody @Valid NoteDto noteDto);
 
     @ApiOperation(value = "Update note", authorizations = @Authorization(value = "Bearer"))
     @PutMapping("/{id}")
-    NoteDto update(@RequestBody NoteDto noteDto);
+    NoteDto update(@RequestBody @Valid NoteDto noteDto);
 
     @ApiOperation(value = "Delete note", authorizations = @Authorization(value = "Bearer"))
     @DeleteMapping("/{id}")

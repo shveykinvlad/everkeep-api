@@ -1,13 +1,11 @@
 package com.everkeep.dto;
 
-import lombok.Data;
-import lombok.experimental.Accessors;
+import lombok.Value;
 
-@Data
-@Accessors(chain = true)
+@Value
 public class AuthResponse {
 
-    private String jwt;
-    private String refreshTokenValue;
-    private String userEmail;
+    String jwt;
+    String refreshTokenValue;
+    String userEmail;
 }

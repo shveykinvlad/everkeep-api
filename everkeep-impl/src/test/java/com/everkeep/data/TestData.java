@@ -1,6 +1,5 @@
 package com.everkeep.data;
 
-import java.util.Arrays;
 import java.util.List;
 
 import com.everkeep.dto.AuthRequest;
@@ -13,11 +12,12 @@ public class TestData {
 
     public Note getNote() {
         return new Note()
-                .setText("text");
+                .setText("text")
+                .setTitle("title");
     }
 
     public List<Note> getNotes() {
-        return Arrays.asList(
+        return List.of(
                 new Note()
                         .setText("text one")
                         .setTitle("title one"),
@@ -30,8 +30,10 @@ public class TestData {
     }
 
     public NoteDto getNoteDto() {
-        return new NoteDto()
-                .setText("text");
+        return NoteDto.builder()
+                .text("text")
+                .title("title")
+                .build();
     }
 
     public User getUser() {
@@ -47,8 +49,6 @@ public class TestData {
     }
 
     public AuthRequest getUserAuthenticationRequest() {
-        return new AuthRequest()
-                .setEmail("user@user.com")
-                .setPassword("user");
+        return new AuthRequest("user@user.com", "user");
     }
 }

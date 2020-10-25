@@ -3,13 +3,12 @@ package com.everkeep.resource;
 import java.util.List;
 
 import lombok.RequiredArgsConstructor;
-import ma.glasnost.orika.MapperFacade;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.everkeep.config.mapper.NoteMapper;
 import com.everkeep.dto.NoteDto;
-import com.everkeep.model.Note;
 import com.everkeep.service.NoteService;
 
 @RestController
@@ -19,37 +18,37 @@ import com.everkeep.service.NoteService;
 public class NoteResource implements NoteResourceApi {
 
     private final NoteService noteService;
-    private final MapperFacade mapper;
+    private final NoteMapper mapper;
 
     @Override
     public List<NoteDto> getAll() {
-        return mapper.mapAsList(noteService.getAll(), NoteDto.class);
+        return mapper.map(noteService.getAll());
     }
 
     @Override
     public NoteDto get(Long id) {
-        return mapper.map(noteService.get(id), NoteDto.class);
+        return mapper.map(noteService.get(id));
     }
 
     @Override
     public List<NoteDto> get(String title) {
-        return mapper.mapAsList(noteService.get(title), NoteDto.class);
+        return mapper.map(noteService.get(title));
     }
 
     @Override
     public NoteDto save(NoteDto noteDto) {
-        var note = mapper.map(noteDto, Note.class);
+        var note = mapper.map(noteDto);
         note = noteService.save(note);
 
-        return mapper.map(note, NoteDto.class);
+        return mapper.map(note);
     }
 
     @Override
     public NoteDto update(NoteDto noteDto) {
-        var note = mapper.map(noteDto, Note.class);
+        var note = mapper.map(noteDto);
         note = noteService.update(note);
 
-        return mapper.map(note, NoteDto.class);
+        return mapper.map(note);
     }
 
     @Override

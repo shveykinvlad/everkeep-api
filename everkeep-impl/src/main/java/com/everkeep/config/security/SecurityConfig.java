@@ -1,4 +1,4 @@
-package com.everkeep.config;
+package com.everkeep.config.security;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -15,9 +15,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
-
-import com.everkeep.filter.JwtAuthenticationEntryPoint;
-import com.everkeep.filter.JwtFilter;
 
 @Configuration
 public class SecurityConfig extends WebSecurityConfigurerAdapter implements WebMvcConfigurer {
@@ -45,7 +42,12 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter implements WebM
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
                 .authorizeRequests()
-                .antMatchers(SwaggerConfig.SWAGGER_URLS).permitAll()
+                .antMatchers("/v2/api-docs",
+                        "/configuration/ui",
+                        "/swagger-resources/**",
+                        "/configuration/**",
+                        "/swagger-ui.html",
+                        "/webjars/**").permitAll()
                 .antMatchers(HttpMethod.OPTIONS, "/**").permitAll()
                 .antMatchers("/api/users/**").permitAll()
                 .antMatchers("/api/notes").hasRole("USER")

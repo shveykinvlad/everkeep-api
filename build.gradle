@@ -8,6 +8,7 @@ buildscript {
         classpath "io.spring.gradle:dependency-management-plugin:${springDependencyManagementVersion}"
         classpath "gradle.plugin.org.flywaydb:gradle-plugin-publishing:${flywayVersion}"
         classpath "gradle.plugin.com.github.spotbugs.snom:spotbugs-gradle-plugin:${spotbugsVersion}"
+        classpath "io.freefair.gradle:lombok-plugin:${lombokPluginVersion}"
     }
 }
 
@@ -19,6 +20,7 @@ configure(subprojects) {
     apply plugin: 'com.github.spotbugs'
     apply plugin: 'org.flywaydb.flyway'
     apply plugin: 'jacoco'
+    apply plugin: 'io.freefair.lombok'
 
     group 'com.evernote'
     version '1.0-SNAPSHOT'
@@ -29,7 +31,8 @@ configure(subprojects) {
         }
 
         dependencies {
-            dependency "net.rakugakibox.spring.boot:orika-spring-boot-starter:${orikaVersion}"
+            dependency "org.mapstruct:mapstruct:${mapstructVersion}"
+            dependency "org.mapstruct:mapstruct-processor:${mapstructVersion}"
             dependency "org.testcontainers:postgresql:${testContainersPostgresqlVersion}"
             dependency "org.flywaydb:flyway-core:${flywayVersion}"
             dependency "io.springfox:springfox-swagger-ui:${swaggerVersion}"
@@ -57,6 +60,10 @@ configure(subprojects) {
     jacoco {
         toolVersion = '0.8.5'
         reportsDir = file("$buildDir/jacocoReportDir")
+    }
+
+    lombok {
+        config['lombok.anyConstructor.addConstructorProperties'] = 'true'
     }
 
     sourceCompatibility = JavaVersion.VERSION_14

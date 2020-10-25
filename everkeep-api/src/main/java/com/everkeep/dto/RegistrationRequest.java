@@ -3,24 +3,24 @@ package com.everkeep.dto;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 
-import lombok.Data;
+import lombok.Value;
 
 import com.everkeep.annotation.PasswordMatches;
 import com.everkeep.annotation.ValidPassword;
 
-@Data
+@Value
 @PasswordMatches
 public class RegistrationRequest {
 
     @NotBlank
     @ValidPassword
-    private String password;
+    String password;
 
     @NotBlank
     @ValidPassword
-    private String matchingPassword;
+    String matchingPassword;
 
     @Email
     @NotBlank
-    private String email;
+    String email;
 }

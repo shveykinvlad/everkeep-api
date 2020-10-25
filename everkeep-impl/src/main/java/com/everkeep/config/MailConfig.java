@@ -1,31 +1,25 @@
 package com.everkeep.config;
 
-import lombok.Data;
-import org.springframework.boot.context.properties.ConfigurationProperties;
+import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
 
 @Configuration
-@ConfigurationProperties(prefix = "spring.mail")
-@Data
+@RequiredArgsConstructor
 public class MailConfig {
 
-    private String host;
-    private Integer port;
-    private String protocol;
-    private String username;
-    private String password;
+    private final MailProperties mailProperties;
 
     @Bean
     public JavaMailSender javaMailSender() {
         var mailSender = new JavaMailSenderImpl();
-        mailSender.setHost(host);
-        mailSender.setPort(port);
-        mailSender.setProtocol(protocol);
-        mailSender.setUsername(username);
-        mailSender.setPassword(password);
+        mailSender.setHost(mailProperties.getHost());
+        mailSender.setPort(mailProperties.getPort());
+        mailSender.setProtocol(mailProperties.getProtocol());
+        mailSender.setUsername(mailProperties.getUsername());
+        mailSender.setPassword(mailProperties.getPassword());
 
         return mailSender;
     }

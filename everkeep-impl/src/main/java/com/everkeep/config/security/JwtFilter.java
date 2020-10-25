@@ -1,4 +1,4 @@
-package com.everkeep.filter;
+package com.everkeep.config.security;
 
 import java.io.IOException;
 import java.util.List;
@@ -18,8 +18,6 @@ import org.springframework.security.web.authentication.WebAuthenticationDetailsS
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
-import com.everkeep.util.JwtTokenProvider;
-
 @Slf4j
 @Component
 @RequiredArgsConstructor
@@ -31,15 +29,15 @@ public class JwtFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest httpServletRequest,
                                     HttpServletResponse httpServletResponse,
                                     FilterChain filterChain) throws ServletException, IOException {
-        var header = httpServletRequest.getHeader(HttpHeaders.AUTHORIZATION);
+        var authHeader = httpServletRequest.getHeader(HttpHeaders.AUTHORIZATION);
 
-        if (header != null) {
-            var jwtToken = header.replace("Bearer ", "");
+        if (authHeader != null) {
+            var jwtToken = authHeader.replace("Bearer ", "");
             try {
                 var authToken = getAuthToken(jwtToken);
                 authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(httpServletRequest));
                 SecurityContextHolder.getContext().setAuthentication(authToken);
-            } catch (Exception e) {
+            } catch (RuntimeException e) {
                 log.error("Authentication failed", e);
             }
         }

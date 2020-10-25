@@ -3,24 +3,24 @@ package com.everkeep.dto;
 import java.time.LocalDateTime;
 import javax.validation.constraints.NotBlank;
 
-import lombok.Data;
-import lombok.experimental.Accessors;
+import lombok.Builder;
+import lombok.Value;
 
 import com.everkeep.enums.NotePriority;
 
-@Data
-@Accessors(chain = true)
+@Value
+@Builder
 public class NoteDto {
 
-    private Long id;
+    Long id;
 
     @NotBlank
-    private String title;
+    String title;
 
     @NotBlank
-    private String text;
+    String text;
 
-    private NotePriority priority;
+    NotePriority priority;
 
-    private LocalDateTime endDate;
+    LocalDateTime endDate;
 }

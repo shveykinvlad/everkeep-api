@@ -2,7 +2,6 @@ package com.everkeep.resource;
 
 import java.util.Optional;
 
-import ma.glasnost.orika.MapperFacade;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -15,6 +14,7 @@ import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
 
 import com.everkeep.IntegrationTest;
+import com.everkeep.config.mapper.NoteMapper;
 import com.everkeep.data.TestData;
 import com.everkeep.dto.AuthResponse;
 import com.everkeep.dto.NoteDto;
@@ -38,7 +38,7 @@ class NoteResourceTest {
     @Autowired
     private RoleRepository roleRepository;
     @Autowired
-    private MapperFacade mapper;
+    private NoteMapper noteMapper;
 
     @AfterEach
     void tearDown() {
@@ -95,18 +95,22 @@ class NoteResourceTest {
 
     @Test
     void update() {
-        var noteDto = mapper.map(noteRepository.save(data.getNote()), NoteDto.class);
-        noteDto.setText("updated text");
+        var noteDto = noteMapper.map(noteRepository.save(data.getNote()));
+        var updatedNoteDto = NoteDto.builder()
+                .id(noteDto.getId())
+                .title(noteDto.getTitle())
+                .text("updated text")
+                .build();
 
-        var httpEntity = new HttpEntity<>(noteDto, getAuthorizationHeader());
+        var httpEntity = new HttpEntity<>(updatedNoteDto, getAuthorizationHeader());
         var actual = restTemplate.exchange(
-                getBasePath() + "/{id}", HttpMethod.PUT, httpEntity, NoteDto.class, noteDto.getId());
+                getBasePath() + "/{id}", HttpMethod.PUT, httpEntity, NoteDto.class, updatedNoteDto.getId());
         var actualText = Optional.ofNullable(actual)
                 .map(HttpEntity::getBody)
                 .map(NoteDto::getText)
                 .orElse("");
 
-        Assertions.assertEquals(noteDto.getText(), actualText);
+        Assertions.assertEquals(updatedNoteDto.getText(), actualText);
     }
 
     @Test

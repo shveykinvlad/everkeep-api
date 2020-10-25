@@ -9,11 +9,11 @@ Notes service
 * JWT
 * PostgreSQL
 * Flyway
-* Testcontainers
+* TestContainers
 * Docker
 * Swagger
 * Lombok
-* Orika
+* MapStruct
 ## Functionality
 * REST
 * Validation
