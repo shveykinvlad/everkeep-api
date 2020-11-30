@@ -1,29 +1,26 @@
-package com.everkeep.resource;
+package com.everkeep.controller;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.validation.Valid;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.everkeep.dto.AuthRequest;
 import com.everkeep.dto.AuthResponse;
 import com.everkeep.dto.RegistrationRequest;
-import com.everkeep.service.security.UserService;
+import com.everkeep.service.UserService;
 
 @RestController
-@CrossOrigin
 @RequestMapping(path = "/api/users")
 @RequiredArgsConstructor
-public class UserResource implements UserResourceApi {
+public class UserController implements UserControllerApi {
 
     private final UserService userService;
 
     @Override
-    public void register(RegistrationRequest registrationRequest, HttpServletRequest request) {
-        userService.register(registrationRequest, request.getContextPath());
+    public void register(RegistrationRequest registrationRequest, HttpServletRequest httpRequest) {
+        userService.register(registrationRequest.getEmail(), registrationRequest.getPassword());
     }
 
     @Override
@@ -33,26 +30,26 @@ public class UserResource implements UserResourceApi {
 
     @Override
     public void resendToken(String email, HttpServletRequest request) {
-        userService.resendToken(email, request.getContextPath());
+        userService.resendToken(email);
     }
 
     @Override
     public void resetPassword(String email, HttpServletRequest request) {
-        userService.resetPassword(email, request.getContextPath());
+        userService.resetPassword(email);
     }
 
     @Override
-    public void updatePassword(String tokenValue, @Valid RegistrationRequest registrationRequest) {
+    public void updatePassword(String tokenValue, RegistrationRequest registrationRequest) {
         userService.updatePassword(tokenValue, registrationRequest.getPassword());
     }
 
     @Override
-    public AuthResponse authenticate(@Valid AuthRequest authRequest) {
+    public AuthResponse authenticate(AuthRequest authRequest) {
         return userService.authenticate(authRequest.getEmail(), authRequest.getPassword());
     }
 
     @Override
-    public AuthResponse refreshAccessToken(@Valid String refreshToken) {
+    public AuthResponse refreshAccessToken(String refreshToken) {
         return userService.refreshAccessToken(refreshToken);
     }
 }

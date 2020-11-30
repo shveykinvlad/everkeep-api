@@ -12,8 +12,8 @@ dependencies {
     compile "org.springframework.boot:spring-boot-devtools"
     compile "org.springframework.boot:spring-boot-starter-actuator"
     compile "org.springframework.boot:spring-boot-starter-validation"
-    compile "io.springfox:springfox-swagger2"
-    compile "io.springfox:springfox-swagger-ui"
+    compile "org.springframework.security:spring-security-data"
+    compile "org.springdoc:springdoc-openapi-ui"
     compile "io.jsonwebtoken:jjwt-api"
     runtime "io.jsonwebtoken:jjwt-impl"
     runtime "io.jsonwebtoken:jjwt-jackson"
@@ -21,6 +21,7 @@ dependencies {
     annotationProcessor "org.mapstruct:mapstruct-processor"
     testAnnotationProcessor "org.mapstruct:mapstruct-processor"
     testImplementation "org.springframework.boot:spring-boot-starter-test"
+    testImplementation "org.springframework.security:spring-security-test"
     testCompile "org.testcontainers:postgresql"
 }
 
@@ -28,6 +29,7 @@ springBoot {
     buildInfo()
 }
 
-test {
-    useJUnitPlatform()
+compileJava {
+    options.compilerArgs += "-Amapstruct.defaultComponentModel=spring"
+    options.compilerArgs += "-Amapstruct.unmappedTargetPolicy=IGNORE"
 }

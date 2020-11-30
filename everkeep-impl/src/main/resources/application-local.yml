@@ -14,3 +14,8 @@ logging:
     org.hibernate.SQL: debug
     org.hibernate.TYPE: trace
     org.springframework.security: debug
+
+integration:
+  uiUrl: http://localhost:4200
+  serverUrl: http://localhost:8080
+

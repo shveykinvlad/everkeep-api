@@ -1,4 +1,4 @@
-package com.everkeep.model.security;
+package com.everkeep.model;
 
 import java.util.Collection;
 import java.util.HashSet;
@@ -24,10 +24,10 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-@Data
-@Accessors(chain = true)
 @Entity
 @Table(name = "users")
+@Data
+@Accessors(chain = true)
 public class User implements UserDetails {
 
     private static final String ID_SEQ = "user_id_seq";

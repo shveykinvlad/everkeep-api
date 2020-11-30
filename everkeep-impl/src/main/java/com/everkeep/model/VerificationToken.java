@@ -1,4 +1,4 @@
-package com.everkeep.model.security;
+package com.everkeep.model;
 
 import java.time.OffsetDateTime;
 import javax.persistence.Entity;
@@ -33,6 +33,7 @@ public class VerificationToken {
 
     @ManyToOne(targetEntity = User.class, fetch = FetchType.EAGER)
     @JoinColumn(nullable = false, name = "user_id")
+    @EqualsAndHashCode.Exclude
     private User user;
 
     private OffsetDateTime expiryTime;
@@ -43,7 +44,7 @@ public class VerificationToken {
     private boolean active = true;
 
     public enum Action {
-        UPDATE_PASSWORD,
+        RESET_PASSWORD,
         CONFIRM_ACCOUNT,
         REFRESH_ACCESS
     }

@@ -1,6 +1,0 @@
-spring:
-  datasource:
-    url: jdbc:tc:postgresql://localhost:32770/everkeep
-    username: everkeep
-    password: everkeep
-    driver-class-name: org.testcontainers.jdbc.ContainerDatabaseDriver

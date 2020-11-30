@@ -1,15 +1,15 @@
 package com.everkeep.dto;
 
-import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotBlank;
 
 import lombok.Value;
 
 @Value
 public class AuthRequest {
 
-    @NotEmpty
+    @NotBlank
     String email;
 
-    @NotEmpty
+    @NotBlank
     String password;
 }

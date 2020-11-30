@@ -18,7 +18,6 @@ configure(subprojects) {
     apply plugin: 'io.spring.dependency-management'
     apply plugin: 'checkstyle'
     apply plugin: 'com.github.spotbugs'
-    apply plugin: 'org.flywaydb.flyway'
     apply plugin: 'jacoco'
     apply plugin: 'io.freefair.lombok'
 
@@ -35,9 +34,7 @@ configure(subprojects) {
             dependency "org.mapstruct:mapstruct-processor:${mapstructVersion}"
             dependency "org.testcontainers:postgresql:${testContainersPostgresqlVersion}"
             dependency "org.flywaydb:flyway-core:${flywayVersion}"
-            dependency "io.springfox:springfox-swagger-ui:${swaggerVersion}"
-            dependency "io.springfox:springfox-swagger2:${swaggerVersion}"
-            dependency "io.swagger:swagger-annotations:${swaggerAnnotationsVersion}"
+            dependency "org.springdoc:springdoc-openapi-ui:${springdocVersion}"
             dependency "org.passay:passay:${passayVersion}"
             dependency "io.jsonwebtoken:jjwt-api:${jsonwebtokenVersion}"
             dependency "io.jsonwebtoken:jjwt-impl:${jsonwebtokenVersion}"
@@ -49,23 +46,60 @@ configure(subprojects) {
         }
     }
 
+    sourceCompatibility = JavaVersion.VERSION_14
+    targetCompatibility = JavaVersion.VERSION_14
+
+    lombok {
+        config['lombok.anyConstructor.addConstructorProperties'] = 'true'
+    }
+
     checkstyle {
-        toolVersion = '8.31'
+        toolVersion = '8.36'
+        ignoreFailures = false
     }
 
     spotbugs {
         excludeFilter = file('../config/spotbugs/spotbugs-exclude.xml')
     }
 
+    test {
+        useJUnitPlatform()
+    }
+
     jacoco {
         toolVersion = '0.8.5'
-        reportsDir = file("$buildDir/jacocoReportDir")
     }
 
-    lombok {
-        config['lombok.anyConstructor.addConstructorProperties'] = 'true'
+    def jacocoExclude = [
+            'com/everkeep/config/mapper/*',
+    ]
+
+    jacocoTestCoverageVerification {
+        afterEvaluate {
+            getClassDirectories().setFrom(classDirectories.files.collect {
+                fileTree(dir: it, exclude: jacocoExclude)
+            })
+        }
+
+        violationRules {
+            rule {
+                limit {
+                    counter = 'BRANCH'
+                    value = 'COVEREDRATIO'
+                    minimum = 0.8
+                }
+            }
+        }
     }
 
-    sourceCompatibility = JavaVersion.VERSION_14
-    targetCompatibility = JavaVersion.VERSION_14
+    jacocoTestReport {
+        afterEvaluate {
+            getClassDirectories().setFrom(classDirectories.files.collect {
+                fileTree(dir: it, exclude: jacocoExclude)
+            })
+        }
+    }
+
+    jacocoTestCoverageVerification.dependsOn jacocoTestReport
+    check.dependsOn jacocoTestCoverageVerification
 }

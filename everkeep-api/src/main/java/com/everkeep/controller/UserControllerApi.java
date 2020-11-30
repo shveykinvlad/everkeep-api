@@ -1,4 +1,4 @@
-package com.everkeep.resource;
+package com.everkeep.controller;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
@@ -13,7 +13,7 @@ import com.everkeep.dto.AuthRequest;
 import com.everkeep.dto.AuthResponse;
 import com.everkeep.dto.RegistrationRequest;
 
-public interface UserResourceApi {
+public interface UserControllerApi {
 
     @PostMapping("/register")
     void register(@RequestBody @Valid RegistrationRequest registrationRequest,

@@ -1,10 +1,11 @@
-package com.everkeep.resource;
+package com.everkeep.controller;
 
+import java.security.Principal;
 import java.util.List;
 import javax.validation.Valid;
 
-import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.Authorization;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -17,30 +18,30 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 
 import com.everkeep.dto.NoteDto;
 
-public interface NoteResourceApi {
+public interface NoteControllerApi {
 
-    @ApiOperation(value = "Get all notes", authorizations = @Authorization(value = "Bearer"))
+    @Operation(summary = "Get all notes", security = @SecurityRequirement(name = "Bearer"))
     @GetMapping
-    List<NoteDto> getAll();
+    List<NoteDto> getAll(Principal principal);
 
-    @ApiOperation(value = "Get note by id", authorizations = @Authorization(value = "Bearer"))
+    @Operation(summary = "Get note by id", security = @SecurityRequirement(name = "Bearer"))
     @GetMapping("/{id}")
     NoteDto get(@PathVariable("id") Long id);
 
-    @ApiOperation(value = "Get note by title", authorizations = @Authorization(value = "Bearer"))
+    @Operation(summary = "Get note by title", security = @SecurityRequirement(name = "Bearer"))
     @GetMapping("/search")
     List<NoteDto> get(@RequestParam String title);
 
-    @ApiOperation(value = "Save note", authorizations = @Authorization(value = "Bearer"))
+    @Operation(summary = "Save note", security = @SecurityRequirement(name = "Bearer"))
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     NoteDto save(@RequestBody @Valid NoteDto noteDto);
 
-    @ApiOperation(value = "Update note", authorizations = @Authorization(value = "Bearer"))
+    @Operation(summary = "Update note", security = @SecurityRequirement(name = "Bearer"))
     @PutMapping("/{id}")
     NoteDto update(@RequestBody @Valid NoteDto noteDto);
 
-    @ApiOperation(value = "Delete note", authorizations = @Authorization(value = "Bearer"))
+    @Operation(summary = "Delete note", security = @SecurityRequirement(name = "Bearer"))
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     void delete(@PathVariable("id") Long id);

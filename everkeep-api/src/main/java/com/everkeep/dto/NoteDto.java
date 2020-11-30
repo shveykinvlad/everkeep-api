@@ -1,7 +1,7 @@
 package com.everkeep.dto;
 
-import java.time.LocalDateTime;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 
 import lombok.Builder;
 import lombok.Value;
@@ -20,7 +20,6 @@ public class NoteDto {
     @NotBlank
     String text;
 
+    @NotNull
     NotePriority priority;
-
-    LocalDateTime endDate;
 }

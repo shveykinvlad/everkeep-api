@@ -4,5 +4,6 @@ public enum NotePriority {
 
     HIGH,
     MEDIUM,
-    LOW
+    LOW,
+    NONE
 }

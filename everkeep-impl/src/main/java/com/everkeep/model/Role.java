@@ -1,4 +1,4 @@
-package com.everkeep.model.security;
+package com.everkeep.model;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -11,10 +11,10 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
 
-@Data
-@Accessors(chain = true)
 @Entity
 @Table(name = "roles")
+@Data
+@Accessors(chain = true)
 public class Role {
 
     private static final String ID_SEQ = "role_id_seq";

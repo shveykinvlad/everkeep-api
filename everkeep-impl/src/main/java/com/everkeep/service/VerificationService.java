@@ -1,4 +1,4 @@
-package com.everkeep.service.security;
+package com.everkeep.service;
 
 import java.time.OffsetDateTime;
 import java.util.UUID;
@@ -8,10 +8,10 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
-import com.everkeep.exception.security.VerificationTokenExpirationException;
-import com.everkeep.model.security.User;
-import com.everkeep.model.security.VerificationToken;
-import com.everkeep.repository.security.VerificationTokenRepository;
+import com.everkeep.exception.VerificationTokenExpirationException;
+import com.everkeep.model.User;
+import com.everkeep.model.VerificationToken;
+import com.everkeep.repository.VerificationTokenRepository;
 
 @Service
 @RequiredArgsConstructor
@@ -19,12 +19,12 @@ public class VerificationService {
 
     private final VerificationTokenRepository verificationTokenRepository;
 
-    @Value("${verificationToken.expirationTime}")
-    private long expirationSeconds;
+    @Value("${verificationToken.expirationTimeSec}")
+    private long expirationTimeSec;
 
     public VerificationToken create(User user, VerificationToken.Action tokenAction) {
         var tokenValue = UUID.randomUUID().toString();
-        var tokenExpiryTime = OffsetDateTime.now().plusSeconds(expirationSeconds);
+        var tokenExpiryTime = OffsetDateTime.now().plusSeconds(expirationTimeSec);
         var verificationToken = new VerificationToken()
                 .setValue(tokenValue)
                 .setUser(user)

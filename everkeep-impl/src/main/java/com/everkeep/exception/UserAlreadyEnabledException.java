@@ -1,4 +1,4 @@
-package com.everkeep.exception.security;
+package com.everkeep.exception;
 
 import lombok.Getter;
 

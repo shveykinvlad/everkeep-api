@@ -1,6 +1,4 @@
-package com.everkeep.config.security;
-
-import javax.validation.constraints.NotEmpty;
+package com.everkeep.config;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -9,14 +7,12 @@ import org.springframework.boot.context.properties.ConstructorBinding;
 import org.springframework.validation.annotation.Validated;
 
 @Getter
+@ConfigurationProperties(prefix = "integration")
 @Validated
-@ConfigurationProperties("jwt")
 @ConstructorBinding
 @RequiredArgsConstructor
-public class JwtProperties {
+public class IntegrationProperties {
 
-    @NotEmpty
-    private final String secret;
-    @NotEmpty
-    private final String expirationTimeSec;
+    private final String uiUrl;
+    private final String serverUrl;
 }

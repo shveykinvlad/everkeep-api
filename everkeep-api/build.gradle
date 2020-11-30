@@ -1,6 +1,6 @@
 dependencies {
     compile "org.springframework.boot:spring-boot-starter-web"
-    compile "io.swagger:swagger-annotations"
+    compile "org.springdoc:springdoc-openapi-ui"
     compile "jakarta.validation:jakarta.validation-api"
     compile "org.passay:passay"
     compileOnly "org.projectlombok:lombok"

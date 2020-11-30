@@ -1,11 +1,11 @@
-package com.everkeep.repository.security;
+package com.everkeep.repository;
 
 import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
-import com.everkeep.model.security.User;
+import com.everkeep.model.User;
 
 @Repository
 public interface UserRepository extends JpaRepository<User, Long> {

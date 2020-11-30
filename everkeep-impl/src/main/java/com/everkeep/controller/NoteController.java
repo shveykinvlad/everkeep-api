@@ -1,9 +1,9 @@
-package com.everkeep.resource;
+package com.everkeep.controller;
 
+import java.security.Principal;
 import java.util.List;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -12,16 +12,15 @@ import com.everkeep.dto.NoteDto;
 import com.everkeep.service.NoteService;
 
 @RestController
-@CrossOrigin
 @RequestMapping(path = "/api/notes")
 @RequiredArgsConstructor
-public class NoteResource implements NoteResourceApi {
+public class NoteController implements NoteControllerApi {
 
     private final NoteService noteService;
     private final NoteMapper mapper;
 
     @Override
-    public List<NoteDto> getAll() {
+    public List<NoteDto> getAll(Principal principal) {
         return mapper.map(noteService.getAll());
     }
 
