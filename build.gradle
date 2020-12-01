@@ -8,7 +8,6 @@ buildscript {
         classpath "io.spring.gradle:dependency-management-plugin:${springDependencyManagementVersion}"
         classpath "gradle.plugin.org.flywaydb:gradle-plugin-publishing:${flywayVersion}"
         classpath "gradle.plugin.com.github.spotbugs.snom:spotbugs-gradle-plugin:${spotbugsVersion}"
-        classpath "io.freefair.gradle:lombok-plugin:${lombokPluginVersion}"
     }
 }
 
@@ -19,7 +18,6 @@ configure(subprojects) {
     apply plugin: 'checkstyle'
     apply plugin: 'com.github.spotbugs'
     apply plugin: 'jacoco'
-    apply plugin: 'io.freefair.lombok'
 
     group 'com.evernote'
     version '1.0-SNAPSHOT'
@@ -32,6 +30,7 @@ configure(subprojects) {
         dependencies {
             dependency "org.mapstruct:mapstruct:${mapstructVersion}"
             dependency "org.mapstruct:mapstruct-processor:${mapstructVersion}"
+            dependency "org.projectlombok:lombok:${lombokVersion}"
             dependency "org.testcontainers:postgresql:${testContainersPostgresqlVersion}"
             dependency "org.flywaydb:flyway-core:${flywayVersion}"
             dependency "org.springdoc:springdoc-openapi-ui:${springdocVersion}"
@@ -48,10 +47,6 @@ configure(subprojects) {
 
     sourceCompatibility = JavaVersion.VERSION_14
     targetCompatibility = JavaVersion.VERSION_14
-
-    lombok {
-        config['lombok.anyConstructor.addConstructorProperties'] = 'true'
-    }
 
     checkstyle {
         toolVersion = '8.36'

@@ -13,7 +13,7 @@ public class TestConfig {
 
     @Bean
     public JdbcDatabaseContainer<?> jdbcDatabaseContainer() {
-        JdbcDatabaseContainer<?> databaseContainer = new PostgreSQLContainer<>();
+        var databaseContainer = new PostgreSQLContainer<>();
         databaseContainer.start();
         return databaseContainer;
     }

@@ -5,7 +5,6 @@ import static java.nio.charset.StandardCharsets.UTF_16;
 import java.time.OffsetDateTime;
 import java.util.Base64;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.Map;
 
 import io.jsonwebtoken.Claims;
@@ -32,9 +31,7 @@ public class JwtTokenProvider {
     }
 
     public String generateToken(User user) {
-        Map<String, Object> claims = new HashMap<>();
-        claims.put("roles", user.getRolesNames());
-
+        var claims = Map.of("roles", user.getRolesNames());
         var expirationSeconds = Long.parseLong(jwtProperties.getExpirationTimeSec());
         var creationDate = Date.from(OffsetDateTime.now().toInstant());
         var expirationDate = Date.from(OffsetDateTime.now().plusSeconds(expirationSeconds).toInstant());
