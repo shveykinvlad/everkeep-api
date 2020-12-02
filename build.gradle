@@ -19,7 +19,7 @@ configure(subprojects) {
     apply plugin: 'com.github.spotbugs'
     apply plugin: 'jacoco'
 
-    group 'com.evernote'
+    group 'com.everkeep'
     version '1.0-SNAPSHOT'
 
     dependencyManagement {
