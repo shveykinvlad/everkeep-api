@@ -25,6 +25,7 @@ dependencies {
     testImplementation "org.springframework.boot:spring-boot-starter-test"
     testImplementation "org.springframework.security:spring-security-test"
     testCompile "org.testcontainers:postgresql"
+    testCompile "com.icegreen:greenmail"
 }
 
 springBoot {

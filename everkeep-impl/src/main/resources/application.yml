@@ -1,11 +1,4 @@
 spring:
-  aop:
-    proxy-target-class: false
-  datasource:
-    url: jdbc:postgresql://postgres:5432/postgres
-    username: postgres
-    password: postgres
-    driverClassName: org.postgresql.Driver
   jpa:
     open-in-view: false
     hibernate:
@@ -14,11 +7,11 @@ spring:
     properties:
       hibernate.format_sql: true
   mail:
-    host: smtp.mail.ru
-    port: 465
-    protocol: smtps
-    username: everkeep@mail.ru
-    password: keepever.keepever
+    host: ${MAIL_HOST}
+    port: ${MAIL_PORT}
+    protocol: ${MAIL_PROTOCOL}
+    username: ${MAIL_USERNAME}
+    password: ${MAIL_PASSWORD}
 
 springdoc:
   swagger-ui:
@@ -27,7 +20,7 @@ springdoc:
     - com.everkeep
 
 jwt:
-  secret: 'TVFX8dwOWzOQbMecjnnZ3foXeBVDZK0ItpdXxlz6IgGjVJNU4cTo3Evj7nIE0n'
+  secret: ${JWT_SECRET}
   expirationTimeSec: 900 # 15 minutes
 
 verificationToken:
