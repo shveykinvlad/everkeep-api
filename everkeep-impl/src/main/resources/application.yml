@@ -7,11 +7,11 @@ spring:
     properties:
       hibernate.format_sql: true
   mail:
-    host: ${MAIL_HOST}
-    port: ${MAIL_PORT}
-    protocol: ${MAIL_PROTOCOL}
-    username: ${MAIL_USERNAME}
-    password: ${MAIL_PASSWORD}
+    host: ${SPRING_MAIL_HOST}
+    port: ${SPRING_MAIL_PORT}
+    protocol: ${SPRING_MAIL_PROTOCOL}
+    username: ${SPRING_MAIL_USERNAME}
+    password: ${SPRING_MAIL_PASSWORD}
 
 springdoc:
   swagger-ui:
