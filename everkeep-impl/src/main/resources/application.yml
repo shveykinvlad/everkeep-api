@@ -28,7 +28,7 @@ springdoc:
 
 jwt:
   secret: 'TVFX8dwOWzOQbMecjnnZ3foXeBVDZK0ItpdXxlz6IgGjVJNU4cTo3Evj7nIE0n'
-  expirationTimeSec: 3153600000
+  expirationTimeSec: 900 # 15 minutes
 
 verificationToken:
-  expirationTimeSec: 3153600000
+  expirationTimeSec: 2592000 # 1 month

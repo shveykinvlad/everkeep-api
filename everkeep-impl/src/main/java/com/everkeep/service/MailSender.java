@@ -21,8 +21,8 @@ public class MailSender {
     private final MessageSource messageSource;
 
     public void sendUserConfirmationMail(String mailTo, String tokenValue) {
-        var subject = getDefaultMessage("user.activation.email.subject");
-        var message = getDefaultMessage("user.activation.email.message", integrationProperties.getServerUrl(), tokenValue);
+        var subject = getDefaultMessage("user.confirm.email.subject");
+        var message = getDefaultMessage("user.confirm.email.message", integrationProperties.getUiUrl(), tokenValue);
 
         send(mailTo, subject, message);
     }

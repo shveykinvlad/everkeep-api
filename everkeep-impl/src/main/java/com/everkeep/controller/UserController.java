@@ -1,7 +1,5 @@
 package com.everkeep.controller;
 
-import javax.servlet.http.HttpServletRequest;
-
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -19,7 +17,7 @@ public class UserController implements UserControllerApi {
     private final UserService userService;
 
     @Override
-    public void register(RegistrationRequest registrationRequest, HttpServletRequest httpRequest) {
+    public void register(RegistrationRequest registrationRequest) {
         userService.register(registrationRequest.getEmail(), registrationRequest.getPassword());
     }
 
@@ -29,12 +27,12 @@ public class UserController implements UserControllerApi {
     }
 
     @Override
-    public void resendToken(String email, HttpServletRequest request) {
+    public void resendToken(String email) {
         userService.resendToken(email);
     }
 
     @Override
-    public void resetPassword(String email, HttpServletRequest request) {
+    public void resetPassword(String email) {
         userService.resetPassword(email);
     }
 

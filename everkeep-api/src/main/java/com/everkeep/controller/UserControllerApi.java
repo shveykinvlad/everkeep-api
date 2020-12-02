@@ -1,6 +1,5 @@
 package com.everkeep.controller;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
 import org.springframework.web.bind.annotation.GetMapping;
@@ -16,19 +15,16 @@ import com.everkeep.dto.RegistrationRequest;
 public interface UserControllerApi {
 
     @PostMapping("/register")
-    void register(@RequestBody @Valid RegistrationRequest registrationRequest,
-                  HttpServletRequest request);
+    void register(@RequestBody @Valid RegistrationRequest registrationRequest);
 
     @GetMapping("/confirm")
     void confirm(@RequestParam("token") String tokenValue);
 
     @GetMapping("/confirm/resend")
-    void resendToken(@RequestParam("email") String email,
-                     HttpServletRequest request);
+    void resendToken(@RequestParam("email") String email);
 
     @GetMapping("/password/reset")
-    void resetPassword(@RequestParam("email") String email,
-                       HttpServletRequest request);
+    void resetPassword(@RequestParam("email") String email);
 
     @PutMapping("/password/update")
     void updatePassword(@RequestParam("token") String tokenValue,

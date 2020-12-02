@@ -14,5 +14,4 @@ import org.springframework.validation.annotation.Validated;
 public class IntegrationProperties {
 
     private final String uiUrl;
-    private final String serverUrl;
 }

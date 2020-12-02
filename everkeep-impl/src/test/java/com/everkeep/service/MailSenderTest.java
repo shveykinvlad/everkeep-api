@@ -30,7 +30,7 @@ class MailSenderTest extends AbstractTest {
 
     private static final String MAIL_TO = "mailTo@example.com";
     private static final String MAIL_FROM = "mailFrom@example.com";
-    private static final String SERVER_URL = "http://localhost";
+    private static final String UI_URL = "http://localhost";
     private static final String TOKEN_VALUE = "tokenValue";
 
     @Autowired
@@ -55,10 +55,10 @@ class MailSenderTest extends AbstractTest {
     void sendUserConfirmationMail() {
         var mailTo = MAIL_TO;
         var mailFrom = MAIL_FROM;
-        var serverUrl = SERVER_URL;
+        var uiUrl = UI_URL;
         var tokenValue = TOKEN_VALUE;
 
-        when(integrationProperties.getServerUrl()).thenReturn(serverUrl);
+        when(integrationProperties.getUiUrl()).thenReturn(uiUrl);
         when(mailProperties.getUsername()).thenReturn(mailFrom);
         mailSender.sendUserConfirmationMail(mailTo, tokenValue);
 
@@ -66,9 +66,9 @@ class MailSenderTest extends AbstractTest {
         Assertions.assertAll(() -> {
             var actual = mailCaptor.getValue();
             Assertions.assertEquals(mailFrom, actual.getFrom());
-            Assertions.assertEquals("User activation", actual.getSubject());
+            Assertions.assertEquals("Email confirmation", actual.getSubject());
             Assertions.assertEquals(MessageFormat.format(
-                    "{0}/api/users/confirm?token={1}", serverUrl, tokenValue), actual.getText());
+                    "{0}/users/confirm?token={1}", uiUrl, tokenValue), actual.getText());
             Assertions.assertArrayEquals(new String[]{mailTo}, actual.getTo());
         });
     }
@@ -77,7 +77,7 @@ class MailSenderTest extends AbstractTest {
     void sendResetPasswordMail() {
         var mailTo = MAIL_TO;
         var mailFrom = MAIL_FROM;
-        var uiUrl = SERVER_URL;
+        var uiUrl = UI_URL;
         var tokenValue = TOKEN_VALUE;
 
         when(integrationProperties.getUiUrl()).thenReturn(uiUrl);
