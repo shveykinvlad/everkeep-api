@@ -15,6 +15,9 @@ logging:
     org.hibernate.TYPE: trace
     org.springframework.security: debug
 
+jwt:
+  secret: TVFX8dwOWzOQbMecjnnZ3foXeBVDZK0ItpdXxlz6IgGjVJNU4cTo3Evj7nIE0n
+
 integration:
   uiUrl: http://localhost:4200
 
