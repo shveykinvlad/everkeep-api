@@ -3,11 +3,16 @@ spring:
     url: jdbc:postgresql://localhost:5432/postgres
     username: postgres
     password: postgres
-    driverClassName: org.postgresql.Driver
   flyway:
     locations:
       - classpath:/db/migration
       - classpath:/db/testdata
+  mail:
+    host: localhost
+    username: username
+    password: password
+    port: 465
+    protocol: smtp
 
 logging:
   level:
