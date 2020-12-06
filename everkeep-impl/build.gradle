@@ -19,7 +19,6 @@ dependencies {
     runtime "io.jsonwebtoken:jjwt-jackson"
     implementation "org.mapstruct:mapstruct"
     annotationProcessor "org.mapstruct:mapstruct-processor"
-    testAnnotationProcessor "org.mapstruct:mapstruct-processor"
     compileOnly "org.projectlombok:lombok"
     annotationProcessor "org.projectlombok:lombok"
     testImplementation "org.springframework.boot:spring-boot-starter-test"
