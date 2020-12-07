@@ -1,6 +1,5 @@
 package com.everkeep.controller;
 
-import java.security.Principal;
 import java.util.List;
 import javax.validation.Valid;
 
@@ -22,7 +21,7 @@ public interface NoteControllerApi {
 
     @Operation(summary = "Get all notes", security = @SecurityRequirement(name = "Bearer"))
     @GetMapping
-    List<NoteDto> getAll(Principal principal);
+    List<NoteDto> getAll();
 
     @Operation(summary = "Get note by id", security = @SecurityRequirement(name = "Bearer"))
     @GetMapping("/{id}")

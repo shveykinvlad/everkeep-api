@@ -1,6 +1,5 @@
 package com.everkeep.controller;
 
-import java.security.Principal;
 import java.util.List;
 
 import lombok.RequiredArgsConstructor;
@@ -20,7 +19,7 @@ public class NoteController implements NoteControllerApi {
     private final NoteMapper mapper;
 
     @Override
-    public List<NoteDto> getAll(Principal principal) {
+    public List<NoteDto> getAll() {
         return mapper.map(noteService.getAll());
     }
 

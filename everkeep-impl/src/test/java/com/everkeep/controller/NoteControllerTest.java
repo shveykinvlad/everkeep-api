@@ -7,7 +7,6 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
@@ -28,8 +27,6 @@ class NoteControllerTest extends AbstractIntegrationTest {
             + "eyJyb2xlcyI6WyJST0xFX1VTRVIiXSwic3ViIjoidXNlckB1c2VyLmNvbSIsImlhdCI6MTYwNjU5MDYwMSwiZXhwIjo0NzYwMTkwNjAxfQ."
             + "6dhRZKmVBsxzpC0oEVcp_7dH0-kazdzKO8RSNd0s0ebwgQltxUoTvZKpjCCgsT-5gZKbQgHi_-U_F2BW7Q4Tkg";
 
-    @Autowired
-    private TestRestTemplate restTemplate;
     @Autowired
     private NoteRepository noteRepository;
     @Autowired
@@ -142,14 +139,17 @@ class NoteControllerTest extends AbstractIntegrationTest {
                 new Note()
                         .setText("text one")
                         .setTitle("title one")
+                        .setPriority(NotePriority.LOW)
                         .setUsername(USERNAME),
                 new Note()
                         .setText("text two")
                         .setTitle("title two")
+                        .setPriority(NotePriority.MEDIUM)
                         .setUsername(USERNAME),
                 new Note()
                         .setText("text three")
                         .setTitle("title three")
+                        .setPriority(NotePriority.HIGH)
                         .setUsername(USERNAME));
     }
 
@@ -158,6 +158,7 @@ class NoteControllerTest extends AbstractIntegrationTest {
                 .setId(1L)
                 .setText("text")
                 .setTitle("title")
+                .setPriority(NotePriority.NONE)
                 .setUsername(USERNAME);
     }
 
@@ -165,7 +166,7 @@ class NoteControllerTest extends AbstractIntegrationTest {
         return NoteDto.builder()
                 .text("text")
                 .title("title")
-                .priority(NotePriority.LOW)
+                .priority(NotePriority.NONE)
                 .build();
     }
 }
