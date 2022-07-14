@@ -1,13 +1,14 @@
 package com.everkeep.service;
 
 import javax.persistence.EntityNotFoundException;
+import java.time.Clock;
 import java.time.OffsetDateTime;
 import java.util.UUID;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+import com.everkeep.config.properties.VerificationTokenProperties;
 import com.everkeep.exception.VerificationTokenExpirationException;
 import com.everkeep.model.User;
 import com.everkeep.model.VerificationToken;
@@ -18,13 +19,13 @@ import com.everkeep.repository.VerificationTokenRepository;
 public class VerificationTokenService {
 
     private final VerificationTokenRepository verificationTokenRepository;
-
-    @Value("${verificationToken.expirationTimeSec}")
-    private long expirationTimeSec;
+    private final VerificationTokenProperties verificationTokenProperties;
+    private final Clock clock;
 
     public VerificationToken create(User user, VerificationToken.Action tokenAction) {
         var value = UUID.randomUUID().toString();
-        var expiryTime = OffsetDateTime.now().plusSeconds(expirationTimeSec);
+        var expiryTime = OffsetDateTime.now(clock)
+                .plusSeconds(verificationTokenProperties.getExpiryDuration().getSeconds());
         var token = VerificationToken.builder()
                 .value(value)
                 .user(user)

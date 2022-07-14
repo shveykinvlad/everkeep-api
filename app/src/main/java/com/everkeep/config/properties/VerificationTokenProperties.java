@@ -1,6 +1,5 @@
 package com.everkeep.config.properties;
 
-import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import java.time.Duration;
 
@@ -12,13 +11,11 @@ import org.springframework.validation.annotation.Validated;
 
 @Getter
 @Validated
-@ConfigurationProperties("jwt")
+@ConfigurationProperties("verification-token")
 @ConstructorBinding
 @RequiredArgsConstructor
-public class JwtProperties {
+public class VerificationTokenProperties {
 
-    @NotEmpty
-    private final String secret;
     @NotNull
     private final Duration expiryDuration;
 }

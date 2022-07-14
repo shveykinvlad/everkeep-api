@@ -23,10 +23,10 @@ springdoc:
 
 jwt:
   secret: ${JWT_SECRET}
-  expirationTimeSec: ${JWT_EXPIRATION_TIME_SEC:900} # 15 minutes
+  expiry-duration: ${JWT_EXPIRY_DURATION:PT15M}
 
-verificationToken:
-  expirationTimeSec: ${VERIFICATION_TOKEN_EXPIRATION_TIME_SEC:2592000} # 1 month
+verification-token:
+  expiry-duration: ${VERIFICATION_TOKEN_EXPIRY_DURATION_SEC:P30D}
 
 integration:
   uiUrl: ${INTEGRATION_UI_URL}

@@ -33,9 +33,9 @@ public class JwtTokenProvider {
 
     public String generateToken(User user) {
         var claims = Map.of("roles", user.getRolesNames());
-        var expirationSeconds = Long.parseLong(jwtProperties.getExpirationTimeSec());
         var creationDate = Date.from(OffsetDateTime.now(clock).toInstant());
-        var expirationDate = Date.from(OffsetDateTime.now(clock).plusSeconds(expirationSeconds).toInstant());
+        var expirationDate = Date.from(OffsetDateTime.now(clock)
+                .plusSeconds(jwtProperties.getExpiryDuration().getSeconds()).toInstant());
 
         return Jwts.builder()
                 .setClaims(claims)

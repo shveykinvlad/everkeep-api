@@ -6,11 +6,13 @@ import org.springframework.context.annotation.Configuration;
 import com.everkeep.config.properties.IntegrationProperties;
 import com.everkeep.config.properties.JwtProperties;
 import com.everkeep.config.properties.MailProperties;
+import com.everkeep.config.properties.VerificationTokenProperties;
 
 @EnableConfigurationProperties({
         JwtProperties.class,
         MailProperties.class,
-        IntegrationProperties.class
+        IntegrationProperties.class,
+        VerificationTokenProperties.class
 })
 @Configuration
 public class PropertiesConfig {

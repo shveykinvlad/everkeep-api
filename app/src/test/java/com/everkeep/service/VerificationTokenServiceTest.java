@@ -3,6 +3,8 @@ package com.everkeep.service;
 import static org.mockito.Mockito.when;
 
 import javax.persistence.EntityNotFoundException;
+import java.time.Clock;
+import java.time.Duration;
 import java.time.OffsetDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.Optional;
@@ -14,27 +16,31 @@ import org.mockito.ArgumentCaptor;
 import org.mockito.Captor;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.test.context.TestPropertySource;
 
 import com.everkeep.AbstractTest;
+import com.everkeep.config.TimeConfig;
+import com.everkeep.config.properties.VerificationTokenProperties;
 import com.everkeep.exception.VerificationTokenExpirationException;
 import com.everkeep.model.User;
 import com.everkeep.model.VerificationToken;
 import com.everkeep.repository.VerificationTokenRepository;
 
-@SpringBootTest(classes = VerificationTokenService.class)
-@TestPropertySource(properties = "verificationToken.expirationTimeSec = 60")
+@SpringBootTest(classes = {
+        VerificationTokenService.class,
+        TimeConfig.class
+})
 class VerificationTokenServiceTest extends AbstractTest {
 
     private static final String TOKEN_VALUE = "tokenValue";
 
     @Autowired
     private VerificationTokenService verificationTokenService;
-    @Value("${verificationToken.expirationTimeSec}")
-    private long expirationTimeSec;
+    @Autowired
+    private Clock clock;
+    @MockBean
+    private VerificationTokenProperties verificationTokenProperties;
     @MockBean
     private VerificationTokenRepository verificationTokenRepository;
     @Captor
@@ -48,7 +54,9 @@ class VerificationTokenServiceTest extends AbstractTest {
     @Test
     void create() {
         var user = new User();
+        var tokenDuration = Duration.of(30, ChronoUnit.SECONDS);
 
+        when(verificationTokenProperties.getExpiryDuration()).thenReturn(tokenDuration);
         verificationTokenService.create(user, VerificationToken.Action.CONFIRM_ACCOUNT);
 
         Mockito.verify(verificationTokenRepository).save(tokenCaptor.capture());
@@ -57,7 +65,7 @@ class VerificationTokenServiceTest extends AbstractTest {
             Assertions.assertEquals(VerificationToken.Action.CONFIRM_ACCOUNT, actual.getAction());
             Assertions.assertEquals(user, actual.getUser());
             Assertions.assertEquals(
-                    OffsetDateTime.now().plusSeconds(expirationTimeSec).truncatedTo(ChronoUnit.SECONDS),
+                    OffsetDateTime.now().plusSeconds(tokenDuration.getSeconds()).truncatedTo(ChronoUnit.SECONDS),
                     actual.getExpiryTime().truncatedTo(ChronoUnit.SECONDS));
         });
     }
