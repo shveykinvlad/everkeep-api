@@ -29,27 +29,27 @@ public class NoteController {
 
     private final NoteService noteService;
 
-    @Operation(summary = "Get all notes", security = @SecurityRequirement(name = "Bearer"))
     @GetMapping
+    @Operation(summary = "Get all notes", security = @SecurityRequirement(name = "Bearer"))
     public List<NoteDto> getAll() {
         return NoteConverter.convert(noteService.getAll());
     }
 
-    @Operation(summary = "Get note by id", security = @SecurityRequirement(name = "Bearer"))
     @GetMapping("/{id}")
+    @Operation(summary = "Get note by id", security = @SecurityRequirement(name = "Bearer"))
     public NoteDto get(@PathVariable("id") Long id) {
         return NoteConverter.convert(noteService.get(id));
     }
 
-    @Operation(summary = "Get note by title", security = @SecurityRequirement(name = "Bearer"))
     @GetMapping("/search")
+    @Operation(summary = "Get note by title", security = @SecurityRequirement(name = "Bearer"))
     public List<NoteDto> get(@RequestParam String title) {
         return NoteConverter.convert(noteService.get(title));
     }
 
-    @Operation(summary = "Save note", security = @SecurityRequirement(name = "Bearer"))
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
+    @Operation(summary = "Save note", security = @SecurityRequirement(name = "Bearer"))
     public NoteDto save(@RequestBody @Valid NoteDto noteDto) {
         var note = NoteConverter.convert(noteDto);
         note = noteService.save(note);
@@ -57,8 +57,8 @@ public class NoteController {
         return NoteConverter.convert(note);
     }
 
-    @Operation(summary = "Update note", security = @SecurityRequirement(name = "Bearer"))
     @PutMapping("/{id}")
+    @Operation(summary = "Update note", security = @SecurityRequirement(name = "Bearer"))
     public NoteDto update(@RequestBody @Valid NoteDto noteDto) {
         var note = NoteConverter.convert(noteDto);
         note = noteService.update(note);
@@ -66,9 +66,9 @@ public class NoteController {
         return NoteConverter.convert(note);
     }
 
-    @Operation(summary = "Delete note", security = @SecurityRequirement(name = "Bearer"))
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
+    @Operation(summary = "Delete note", security = @SecurityRequirement(name = "Bearer"))
     public void delete(@PathVariable("id") Long id) {
         noteService.delete(id);
     }
