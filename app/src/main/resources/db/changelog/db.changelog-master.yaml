@@ -1,0 +1,19 @@
+databaseChangeLog:
+  - include:
+      file: changeset/create-table-users.yaml
+      relativeToChangelogFile: true
+  - include:
+      file: changeset/create-table-roles.yaml
+      relativeToChangelogFile: true
+  - include:
+      file: changeset/create-table-note.yaml
+      relativeToChangelogFile: true
+  - include:
+      file: changeset/create-table-users-roles.yaml
+      relativeToChangelogFile: true
+  - include:
+      file: changeset/create-table-verification-token.yaml
+      relativeToChangelogFile: true
+  - include:
+      file: changeset/insert-roles.yaml
+      relativeToChangelogFile: true

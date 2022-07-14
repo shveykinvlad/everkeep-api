@@ -1,0 +1,59 @@
+databaseChangeLog:
+  - changeSet:
+      id: create-sequence-note
+      author: shveikin
+      preConditions:
+        - onFail: MARK_RAN
+        - not:
+            - sequenceExists:
+                sequenceName: note_id_sequence
+      rollback:
+        - dropSequence:
+            sequenceName: note_id_sequence
+      changes:
+        - createSequence:
+            sequenceName: note_id_sequence
+
+  - changeSet:
+      id: create-table-note
+      author: shveikin
+      preConditions:
+        - onFail: MARK_RAN
+        - not:
+            - tableExists:
+                tableName: note
+      rollback:
+        - dropTable:
+            tableName: note
+      changes:
+        - createTable:
+            tableName: note
+            columns:
+              - column:
+                  name: id
+                  type: BIGINT
+                  constraints:
+                    primaryKey: true
+                    primaryKeyName: note_pk
+              - column:
+                  name: title
+                  type: VARCHAR(255)
+              - column:
+                  name: text
+                  type: TEXT
+              - column:
+                  name: priority
+                  type: VARCHAR(255)
+              - column:
+                  name: username
+                  type: VARCHAR(255)
+                  constraints:
+                    nullable: false
+                    foreignKeyName: fk_user_email
+                    references: users(email)
+              - column:
+                  name: create_time
+                  type: TIMESTAMP WITHOUT TIME ZONE
+                  constraints:
+                    nullable: false
+                  defaultValueComputed: CURRENT_TIMESTAMP

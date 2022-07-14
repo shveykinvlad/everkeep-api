@@ -10,12 +10,11 @@ Frontend: https://everkeep.herokuapp.com
 * Spring Data
 * JWT
 * PostgreSQL
-* Flyway
+* Liquibase
 * TestContainers
 * Docker
 * Swagger
 * Lombok
-* MapStruct
 ## Functionality
 * REST
 * Validation

@@ -1,0 +1,14 @@
+databaseChangeLog:
+  - changeSet:
+      id: insert-roles
+      author: shveikin
+      preConditions:
+        - onFail: MARK_RAN
+        - tableExists:
+            tableName: roles
+      rollback:
+        - delete:
+            tableName: roles
+      changes:
+        - sql:
+            sql: INSERT INTO roles (id, name) VALUES (1001, 'ROLE_USER'), (1002, 'ROLE_ADMIN');

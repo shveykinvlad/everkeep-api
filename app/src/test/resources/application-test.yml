@@ -1,0 +1,12 @@
+spring:
+  main:
+    allow-circular-references: true
+  mail:
+    host: localhost
+    username: username
+    password: password
+    port: 465
+    protocol: smtp
+
+jwt:
+  secret: TVFX8dwOWzOQbMecjnnZ3foXeBVDZK0ItpdXxlz6IgGjVJNU4cTo3Evj7nIE0n

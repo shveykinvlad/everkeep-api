@@ -1,0 +1,51 @@
+databaseChangeLog:
+  - changeSet:
+      id: create-sequence-users
+      author: shveikin
+      preConditions:
+        - onFail: MARK_RAN
+        - not:
+            - sequenceExists:
+                sequenceName: user_id_sequence
+      rollback:
+        - dropSequence:
+            sequenceName: user_id_sequence
+      changes:
+        - createSequence:
+            sequenceName: user_id_sequence
+
+  - changeSet:
+      id: create-table-users
+      author: shveikin
+      preConditions:
+        - onFail: MARK_RAN
+        - not:
+            - tableExists:
+                tableName: users
+      rollback:
+        - dropTable:
+            tableName: users
+      changes:
+        - createTable:
+            tableName: users
+            columns:
+              - column:
+                  name: id
+                  type: BIGINT
+                  constraints:
+                    primaryKey: true
+                    primaryKeyName: users_pk
+              - column:
+                  name: password
+                  type: VARCHAR(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: email
+                  type: VARCHAR(255)
+                  constraints:
+                    nullable: false
+                    unique: true
+              - column:
+                  name: enabled
+                  type: BOOLEAN

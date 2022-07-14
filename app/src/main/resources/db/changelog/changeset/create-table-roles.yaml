@@ -1,0 +1,43 @@
+databaseChangeLog:
+  - changeSet:
+      id: create-sequence-roles
+      author: shveikin
+      preConditions:
+        - onFail: MARK_RAN
+        - not:
+            - sequenceExists:
+                sequenceName: role_id_sequence
+      rollback:
+        - dropSequence:
+            sequenceName: role_id_sequence
+      changes:
+        - createSequence:
+            sequenceName: role_id_sequence
+
+  - changeSet:
+      id: create-table-roles
+      author: shveikin
+      preConditions:
+        - onFail: MARK_RAN
+        - not:
+            - tableExists:
+                tableName: roles
+      rollback:
+        - dropTable:
+            tableName: roles
+      changes:
+        - createTable:
+            tableName: roles
+            columns:
+              - column:
+                  name: id
+                  type: BIGINT
+                  constraints:
+                    primaryKey: true
+                    primaryKeyName: roles_pk
+              - column:
+                  name: name
+                  type: VARCHAR(255)
+                  constraints:
+                    nullable: false
+                    unique: true

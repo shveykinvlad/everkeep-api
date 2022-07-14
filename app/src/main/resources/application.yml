@@ -1,0 +1,32 @@
+spring:
+  datasource:
+    url: ${SPRING_DATASOURCE_URL}
+    username: ${SPRING_DATASOURCE_USERNAME}
+    password: ${SPRING_DATASOURCE_PASSWORD}
+    driverClassName: org.postgresql.Driver
+  jpa:
+    open-in-view: false
+    hibernate:
+      ddl-auto: validate
+  mail:
+    host: ${SPRING_MAIL_HOST}
+    port: ${SPRING_MAIL_PORT}
+    protocol: ${SPRING_MAIL_PROTOCOL}
+    username: ${SPRING_MAIL_USERNAME}
+    password: ${SPRING_MAIL_PASSWORD}
+
+springdoc:
+  swagger-ui:
+    disable-swagger-default-url: true
+  packages-to-scan:
+    - com.everkeep
+
+jwt:
+  secret: ${JWT_SECRET}
+  expirationTimeSec: ${JWT_EXPIRATION_TIME_SEC:900} # 15 minutes
+
+verificationToken:
+  expirationTimeSec: ${VERIFICATION_TOKEN_EXPIRATION_TIME_SEC:2592000} # 1 month
+
+integration:
+  uiUrl: ${INTEGRATION_UI_URL}

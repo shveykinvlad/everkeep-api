@@ -1,6 +1,4 @@
 rootProject.name = 'everkeep'
 
-include 'everkeep-api'
-include 'everkeep-db'
-include 'everkeep-impl'
+include 'app'
 

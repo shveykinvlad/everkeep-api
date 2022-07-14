@@ -4,10 +4,10 @@ buildscript {
     }
 
     dependencies {
+        // Plugins
         classpath "org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}"
         classpath "io.spring.gradle:dependency-management-plugin:${springDependencyManagementVersion}"
-        classpath "gradle.plugin.org.flywaydb:gradle-plugin-publishing:${flywayVersion}"
-        classpath "gradle.plugin.com.github.spotbugs.snom:spotbugs-gradle-plugin:${spotbugsVersion}"
+        classpath "com.github.spotbugs.snom:spotbugs-gradle-plugin:${spotbugsVersion}"
     }
 }
 
@@ -28,16 +28,21 @@ configure(subprojects) {
         }
 
         dependencies {
-            dependency "org.mapstruct:mapstruct:${mapstructVersion}"
-            dependency "org.mapstruct:mapstruct-processor:${mapstructVersion}"
+            // Database
+            dependency "org.liquibase:liquibase-core:${liquibaseVersion}"
+            dependency "org.postgresql:postgresql:${postgresqlVersion}"
+
+            // Utilities
             dependency "org.projectlombok:lombok:${lombokVersion}"
-            dependency "org.testcontainers:postgresql:${testContainersPostgresqlVersion}"
-            dependency "org.flywaydb:flyway-core:${flywayVersion}"
             dependency "org.springdoc:springdoc-openapi-ui:${springdocVersion}"
             dependency "org.passay:passay:${passayVersion}"
             dependency "io.jsonwebtoken:jjwt-api:${jsonwebtokenVersion}"
             dependency "io.jsonwebtoken:jjwt-impl:${jsonwebtokenVersion}"
             dependency "io.jsonwebtoken:jjwt-jackson:${jsonwebtokenVersion}"
+
+            // Test
+            dependency "org.testcontainers:postgresql:${testContainersPostgresqlVersion}"
+            dependency "org.testcontainers:junit-jupiter:${testContainersPostgresqlVersion}"
             dependency "com.icegreen:greenmail:${greenMailVersion}"
         }
 
@@ -46,16 +51,16 @@ configure(subprojects) {
         }
     }
 
-    sourceCompatibility = JavaVersion.VERSION_14
-    targetCompatibility = JavaVersion.VERSION_14
+    sourceCompatibility = JavaVersion.VERSION_17
+    targetCompatibility = JavaVersion.VERSION_17
 
     checkstyle {
-        toolVersion = '8.36'
+        toolVersion = '9.2.1'
         ignoreFailures = false
     }
 
     spotbugs {
-        excludeFilter = file('../config/spotbugs/spotbugs-exclude.xml')
+        excludeFilter = file("../config/spotbugs/spotbugs-exclude.xml")
     }
 
     test {
@@ -63,20 +68,10 @@ configure(subprojects) {
     }
 
     jacoco {
-        toolVersion = '0.8.5'
+        toolVersion = '0.8.8'
     }
 
-    def jacocoExclude = [
-            'com/everkeep/config/mapper/*',
-    ]
-
     jacocoTestCoverageVerification {
-        afterEvaluate {
-            getClassDirectories().setFrom(classDirectories.files.collect {
-                fileTree(dir: it, exclude: jacocoExclude)
-            })
-        }
-
         violationRules {
             rule {
                 limit {
@@ -85,14 +80,6 @@ configure(subprojects) {
                     minimum = 0.8
                 }
             }
-        }
-    }
-
-    jacocoTestReport {
-        afterEvaluate {
-            getClassDirectories().setFrom(classDirectories.files.collect {
-                fileTree(dir: it, exclude: jacocoExclude)
-            })
         }
     }
 
