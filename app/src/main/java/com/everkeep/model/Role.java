@@ -9,13 +9,16 @@ import javax.persistence.Table;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
-import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Entity
 @Table(name = "roles")
-@Data
+@Getter
+@Setter
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
@@ -26,8 +29,8 @@ public class Role {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = ID_SEQ)
     @SequenceGenerator(name = ID_SEQ, sequenceName = ID_SEQ, allocationSize = 1)
-    @EqualsAndHashCode.Exclude
     private Long id;
 
+    @EqualsAndHashCode.Include
     private String name;
 }

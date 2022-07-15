@@ -14,12 +14,15 @@ import java.time.OffsetDateTime;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
-import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Entity
-@Data
+@Getter
+@Setter
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
@@ -30,14 +33,13 @@ public class VerificationToken {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = ID_SEQ)
     @SequenceGenerator(name = ID_SEQ, sequenceName = ID_SEQ, allocationSize = 1)
-    @EqualsAndHashCode.Exclude
     private Long id;
 
+    @EqualsAndHashCode.Include
     private String value;
 
-    @ManyToOne(targetEntity = User.class, fetch = FetchType.EAGER)
-    @JoinColumn(nullable = false, name = "user_id")
-    @EqualsAndHashCode.Exclude
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id")
     private User user;
 
     private OffsetDateTime expiryTime;

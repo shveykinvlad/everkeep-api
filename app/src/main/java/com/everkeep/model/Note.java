@@ -13,16 +13,19 @@ import java.time.LocalDateTime;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
-import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
 import org.springframework.data.annotation.CreatedBy;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 @Entity
 @EntityListeners(AuditingEntityListener.class)
-@Data
+@Getter
+@Setter
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
@@ -33,14 +36,16 @@ public class Note {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = ID_SEQ)
     @SequenceGenerator(name = ID_SEQ, sequenceName = ID_SEQ, allocationSize = 1)
-    @EqualsAndHashCode.Exclude
     private Long id;
 
+    @EqualsAndHashCode.Include
     private String title;
 
+    @EqualsAndHashCode.Include
     private String text;
 
     @Enumerated(EnumType.STRING)
+    @EqualsAndHashCode.Include
     private NotePriority priority;
 
     @CreatedBy
