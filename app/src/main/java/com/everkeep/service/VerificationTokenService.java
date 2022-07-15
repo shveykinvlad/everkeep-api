@@ -25,7 +25,7 @@ public class VerificationTokenService {
     public VerificationToken create(User user, VerificationToken.Action tokenAction) {
         var value = UUID.randomUUID().toString();
         var expiryTime = OffsetDateTime.now(clock)
-                .plusSeconds(verificationTokenProperties.getExpiryDuration().getSeconds());
+                .plusSeconds(verificationTokenProperties.expiryDuration().getSeconds());
         var token = VerificationToken.builder()
                 .value(value)
                 .user(user)

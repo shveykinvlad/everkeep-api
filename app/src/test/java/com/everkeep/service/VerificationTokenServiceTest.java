@@ -56,7 +56,7 @@ class VerificationTokenServiceTest extends AbstractTest {
         var user = new User();
         var tokenDuration = Duration.of(30, ChronoUnit.SECONDS);
 
-        when(verificationTokenProperties.getExpiryDuration()).thenReturn(tokenDuration);
+        when(verificationTokenProperties.expiryDuration()).thenReturn(tokenDuration);
         verificationTokenService.create(user, VerificationToken.Action.CONFIRM_ACCOUNT);
 
         Mockito.verify(verificationTokenRepository).save(tokenCaptor.capture());

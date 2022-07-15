@@ -27,21 +27,21 @@ public class MailService {
 
     public void sendUserConfirmationMail(String to, String tokenValue) {
         var subject = getDefaultMessage(CONFIRMATION_SUBJECT_CODE);
-        var text = getDefaultMessage(CONFIRMATION_MESSAGE_CODE, integrationProperties.getUiUrl(), tokenValue);
+        var text = getDefaultMessage(CONFIRMATION_MESSAGE_CODE, integrationProperties.uiUrl(), tokenValue);
 
         send(to, subject, text);
     }
 
     public void sendResetPasswordMail(String to, String tokenValue) {
         var subject = getDefaultMessage(RESET_PASSWORD_SUBJECT_CODE);
-        var text = getDefaultMessage(RESET_PASSWORD_MESSAGE_CODE, integrationProperties.getUiUrl(), to, tokenValue);
+        var text = getDefaultMessage(RESET_PASSWORD_MESSAGE_CODE, integrationProperties.uiUrl(), to, tokenValue);
 
         send(to, subject, text);
     }
 
     private void send(String to, String subject, String text) {
         var message = new SimpleMailMessage();
-        message.setFrom(mailProperties.getUsername());
+        message.setFrom(mailProperties.username());
         message.setTo(to);
         message.setSubject(subject);
         message.setText(text);

@@ -25,7 +25,7 @@ public class JwtTokenProvider {
 
     public Claims getClaims(String jwt) {
         return Jwts.parserBuilder()
-                .setSigningKey(jwtProperties.getSecret().getBytes(UTF_16))
+                .setSigningKey(jwtProperties.secret().getBytes(UTF_16))
                 .build()
                 .parseClaimsJws(jwt)
                 .getBody();
@@ -35,14 +35,14 @@ public class JwtTokenProvider {
         var claims = Map.of("roles", user.getRolesNames());
         var creationDate = Date.from(OffsetDateTime.now(clock).toInstant());
         var expirationDate = Date.from(OffsetDateTime.now(clock)
-                .plusSeconds(jwtProperties.getExpiryDuration().getSeconds()).toInstant());
+                .plusSeconds(jwtProperties.expiryDuration().getSeconds()).toInstant());
 
         return Jwts.builder()
                 .setClaims(claims)
                 .setSubject(user.getEmail())
                 .setIssuedAt(creationDate)
                 .setExpiration(expirationDate)
-                .signWith(Keys.hmacShaKeyFor(jwtProperties.getSecret().getBytes(UTF_16)))
+                .signWith(Keys.hmacShaKeyFor(jwtProperties.secret().getBytes(UTF_16)))
                 .compact();
     }
 }

@@ -58,8 +58,8 @@ class MailServiceTest extends AbstractTest {
         var uiUrl = UI_URL;
         var tokenValue = TOKEN_VALUE;
 
-        when(integrationProperties.getUiUrl()).thenReturn(uiUrl);
-        when(mailProperties.getUsername()).thenReturn(mailFrom);
+        when(integrationProperties.uiUrl()).thenReturn(uiUrl);
+        when(mailProperties.username()).thenReturn(mailFrom);
         mailService.sendUserConfirmationMail(mailTo, tokenValue);
 
         Mockito.verify(javaMailSender).send(mailCaptor.capture());
@@ -80,8 +80,8 @@ class MailServiceTest extends AbstractTest {
         var uiUrl = UI_URL;
         var tokenValue = TOKEN_VALUE;
 
-        when(integrationProperties.getUiUrl()).thenReturn(uiUrl);
-        when(mailProperties.getUsername()).thenReturn(mailFrom);
+        when(integrationProperties.uiUrl()).thenReturn(uiUrl);
+        when(mailProperties.username()).thenReturn(mailFrom);
         mailService.sendResetPasswordMail(mailTo, tokenValue);
 
         Mockito.verify(javaMailSender).send(mailCaptor.capture());

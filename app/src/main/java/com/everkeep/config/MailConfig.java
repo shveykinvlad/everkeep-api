@@ -13,11 +13,11 @@ public class MailConfig {
     @Bean
     public JavaMailSender javaMailSender(MailProperties mailProperties) {
         var mailSender = new JavaMailSenderImpl();
-        mailSender.setHost(mailProperties.getHost());
-        mailSender.setPort(mailProperties.getPort());
-        mailSender.setProtocol(mailProperties.getProtocol());
-        mailSender.setUsername(mailProperties.getUsername());
-        mailSender.setPassword(mailProperties.getPassword());
+        mailSender.setHost(mailProperties.host());
+        mailSender.setPort(mailProperties.port());
+        mailSender.setProtocol(mailProperties.protocol());
+        mailSender.setUsername(mailProperties.username());
+        mailSender.setPassword(mailProperties.password());
 
         return mailSender;
     }
