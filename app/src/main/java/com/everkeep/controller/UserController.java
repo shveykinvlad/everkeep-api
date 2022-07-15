@@ -27,7 +27,7 @@ public class UserController {
     @PostMapping("/register")
     @Operation(summary = "Register user")
     public void register(@RequestBody @Valid RegistrationRequest registrationRequest) {
-        userService.register(registrationRequest.email(), registrationRequest.email());
+        userService.register(registrationRequest.email(), registrationRequest.password());
     }
 
     @GetMapping("/confirm")

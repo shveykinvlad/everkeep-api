@@ -1,15 +1,18 @@
 package com.everkeep.service;
 
 import javax.persistence.EntityNotFoundException;
+import java.util.Arrays;
 import java.util.List;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.everkeep.model.Note;
 import com.everkeep.repository.NoteRepository;
+import com.everkeep.util.SpecificationUtil;
 
 @Service
 @Transactional
@@ -28,8 +31,8 @@ public class NoteService {
                 .orElseThrow(() -> new EntityNotFoundException("Note with id = %d not found".formatted(id)));
     }
 
-    public List<Note> get(String title) {
-        return noteRepository.findByTitleContainsAndUsername(title, userService.getAuthenticatedUsername());
+    public List<Note> search(String value) {
+        return noteRepository.findAll(isContainedInTitleOrText(value, userService.getAuthenticatedUsername()));
     }
 
     public Note save(Note note) {
@@ -46,5 +49,14 @@ public class NoteService {
 
     public void delete(Long id) {
         noteRepository.deleteByIdAndUsername(id, userService.getAuthenticatedUsername());
+    }
+
+    private Specification<Note> isContainedInTitleOrText(String value, String username) {
+        return Specification.where(isContainedInTitleOrText(value))
+                .and(SpecificationUtil.isEqualToAttribute(username, Note.Fields.username));
+    }
+
+    private Specification<Note> isContainedInTitleOrText(String value) {
+        return SpecificationUtil.isContainedInAttributes(value, Arrays.asList(Note.Fields.title, Note.Fields.text));
     }
 }

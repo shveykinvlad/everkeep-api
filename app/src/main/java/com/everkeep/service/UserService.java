@@ -12,6 +12,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.everkeep.controller.dto.AuthResponse;
 import com.everkeep.exception.UserAlreadyEnabledException;
@@ -23,6 +24,7 @@ import com.everkeep.repository.UserRepository;
 import com.everkeep.service.security.JwtTokenProvider;
 
 @Service
+@Transactional
 @RequiredArgsConstructor
 @Slf4j
 public class UserService implements UserDetailsService {
@@ -112,8 +114,7 @@ public class UserService implements UserDetailsService {
     }
 
     private boolean userExists(String email) {
-        return userRepository.findByEmail(email)
-                .isPresent();
+        return userRepository.existsByEmail(email);
     }
 
     private User createUser(String email, String password) {

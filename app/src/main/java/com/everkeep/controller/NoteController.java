@@ -43,8 +43,8 @@ public class NoteController {
 
     @GetMapping("/search")
     @Operation(summary = "Get note by title", security = @SecurityRequirement(name = "Bearer"))
-    public List<NoteDto> get(@RequestParam String title) {
-        return NoteConverter.convert(noteService.get(title));
+    public List<NoteDto> search(@RequestParam String value) {
+        return NoteConverter.convert(noteService.search(value));
     }
 
     @PostMapping

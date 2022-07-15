@@ -115,14 +115,10 @@ class UserServiceTest extends AbstractTest {
     @Test
     void registerIfUserExists() {
         var email = EMAIL;
-        var password = PASSWORD;
-        var user = User.builder()
-                .password(password)
-                .build();
 
-        when(userRepository.findByEmail(email)).thenReturn(Optional.of(user));
+        when(userRepository.existsByEmail(email)).thenReturn(true);
 
-        Assertions.assertThrows(UserAlreadyExistsException.class, () -> userService.register(email, password));
+        Assertions.assertThrows(UserAlreadyExistsException.class, () -> userService.register(email, PASSWORD));
     }
 
     @Test
@@ -139,9 +135,7 @@ class UserServiceTest extends AbstractTest {
         userService.confirm(tokenValue);
 
         Mockito.verify(userRepository).save(userCaptor.capture());
-        Assertions.assertAll(() -> {
-            Assertions.assertTrue(userCaptor.getValue().isEnabled());
-        });
+        Assertions.assertAll(() -> Assertions.assertTrue(userCaptor.getValue().isEnabled()));
     }
 
     @Test
@@ -215,9 +209,7 @@ class UserServiceTest extends AbstractTest {
         userService.updatePassword(tokenValue, password);
 
         Mockito.verify(userRepository).save(userCaptor.capture());
-        Assertions.assertAll(() -> {
-            Assertions.assertEquals(encodedPassword, userCaptor.getValue().getPassword());
-        });
+        Assertions.assertAll(() -> Assertions.assertEquals(encodedPassword, userCaptor.getValue().getPassword()));
     }
 
     @Test

@@ -70,13 +70,13 @@ class NoteControllerTest extends AbstractIntegrationTest {
 
     @Test
     @WithMockUser(username = "user@user.com")
-    void getByTitle() {
+    void search() {
         userRepository.save(getUser());
         var expected = noteRepository.saveAll(getNotes());
 
         var httpEntity = new HttpEntity<>(getAuthorizationHeader());
         var actual = restTemplate.exchange(
-                getPath() + "/search/?title={title}", HttpMethod.GET, httpEntity, NoteDto[].class, expected.get(0).getTitle());
+                getPath() + "/search/?value={value}", HttpMethod.GET, httpEntity, NoteDto[].class, expected.get(0).getTitle());
 
         Assertions.assertNotNull(actual.getBody());
         Assertions.assertEquals(expected.get(0).getTitle(), actual.getBody()[0].title());

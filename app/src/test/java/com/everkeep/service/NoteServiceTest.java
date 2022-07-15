@@ -13,6 +13,7 @@ import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.security.access.AccessDeniedException;
 
 import com.everkeep.AbstractTest;
@@ -81,7 +82,7 @@ class NoteServiceTest extends AbstractTest {
     }
 
     @Test
-    void getByTitle() {
+    void search() {
         var username = USERNAME;
         var title = TITLE;
         var note = Note.builder()
@@ -91,8 +92,8 @@ class NoteServiceTest extends AbstractTest {
         var expected = List.of(note);
 
         when(userService.getAuthenticatedUsername()).thenReturn(username);
-        when(noteRepository.findByTitleContainsAndUsername(title, username)).thenReturn(expected);
-        var actual = noteService.get(title);
+        when(noteRepository.findAll(Mockito.<Specification<Note>>any())).thenReturn(expected);
+        var actual = noteService.search(title);
 
         Assertions.assertEquals(expected, actual);
     }
