@@ -11,7 +11,6 @@ import org.springframework.validation.annotation.Validated;
 @Validated
 @ConstructorBinding
 public record VerificationTokenProperties(
-
         @NotNull
         Duration expiryDuration
 ) { }

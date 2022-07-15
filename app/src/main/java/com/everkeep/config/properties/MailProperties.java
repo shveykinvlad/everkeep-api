@@ -13,12 +13,16 @@ import org.springframework.validation.annotation.Validated;
 public record MailProperties(
         @NotEmpty
         String host,
+
         @NotNull
         Integer port,
+
         @NotEmpty
         String protocol,
+
         @NotEmpty
         String username,
+
         @NotEmpty
         String password
 ) { }

@@ -11,7 +11,11 @@ buildscript {
     }
 }
 
-configure(subprojects) {
+ext {
+    javaProjects = [project(':app')]
+}
+
+configure(javaProjects) {
 
     apply plugin: 'java'
     apply plugin: 'io.spring.dependency-management'

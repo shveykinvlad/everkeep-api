@@ -14,6 +14,7 @@ import org.springframework.validation.annotation.Validated;
 public record JwtProperties(
         @NotEmpty
         String secret,
+
         @NotNull
         Duration expiryDuration
 ) { }
