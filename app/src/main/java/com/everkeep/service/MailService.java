@@ -25,7 +25,7 @@ public class MailService {
     private final IntegrationProperties integrationProperties;
     private final MessageSource messageSource;
 
-    public void sendUserConfirmationMail(String to, String tokenValue) {
+    public void sendConfirmationMail(String to, String tokenValue) {
         var subject = getDefaultMessage(CONFIRMATION_SUBJECT_CODE);
         var text = getDefaultMessage(CONFIRMATION_MESSAGE_CODE, integrationProperties.uiUrl(), tokenValue);
 

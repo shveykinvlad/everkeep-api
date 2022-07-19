@@ -1,17 +1,17 @@
 package com.everkeep.controller;
 
-import java.util.List;
-import java.util.Optional;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.springframework.http.MediaType.APPLICATION_JSON;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import com.everkeep.AbstractIntegrationTest;
 import com.everkeep.controller.dto.NoteDto;
@@ -24,15 +24,22 @@ import com.everkeep.service.converter.NoteConverter;
 
 class NoteControllerTest extends AbstractIntegrationTest {
 
-    private static final String USERNAME = "user@user.com";
-    private static final String JWT = "eyJhbGciOiJIUzUxMiJ9."
-            + "eyJyb2xlcyI6WyJST0xFX1VTRVIiXSwic3ViIjoidXNlckB1c2VyLmNvbSIsImlhdCI6MTYwNjU5MDYwMSwiZXhwIjo0NzYwMTkwNjAxfQ."
-            + "6dhRZKmVBsxzpC0oEVcp_7dH0-kazdzKO8RSNd0s0ebwgQltxUoTvZKpjCCgsT-5gZKbQgHi_-U_F2BW7Q4Tkg";
+    private static final String NOTES_URL = "/api/notes";
+    private static final String ID_URL = "/{id}";
+    private static final String SEARCH_URL = "/search";
+    private static final String VALUE_PARAM = "value";
+
+    private static final String USERNAME = "email@example.com";
 
     @Autowired
     private NoteRepository noteRepository;
     @Autowired
     private UserRepository userRepository;
+
+    @BeforeEach
+    void setUp() {
+        userRepository.save(buildUser());
+    }
 
     @AfterEach
     void tearDown() {
@@ -42,153 +49,133 @@ class NoteControllerTest extends AbstractIntegrationTest {
 
     @Test
     @WithMockUser(username = USERNAME)
-    void getAll() {
-        userRepository.save(getUser());
-        var expected = noteRepository.saveAll(getNotes());
-
-        var httpEntity = new HttpEntity<>(getAuthorizationHeader());
-        var actual = restTemplate.exchange(
-                getPath(), HttpMethod.GET, httpEntity, NoteDto[].class);
-
-        Assertions.assertNotNull(actual.getBody());
-        Assertions.assertEquals(expected.size(), actual.getBody().length);
-    }
-
-    @Test
-    @WithMockUser(username = USERNAME)
-    void get() {
-        userRepository.save(getUser());
-        var expected = noteRepository.save(getNote());
-
-        var httpEntity = new HttpEntity<>(getAuthorizationHeader());
-        var actual = restTemplate.exchange(
-                getPath() + "/{id}", HttpMethod.GET, httpEntity, NoteDto.class, expected.getId());
-
-        Assertions.assertNotNull(actual.getBody());
-        Assertions.assertEquals(expected.getId(), actual.getBody().id());
-    }
-
-    @Test
-    @WithMockUser(username = "user@user.com")
-    void search() {
-        userRepository.save(getUser());
-        var expected = noteRepository.saveAll(getNotes());
-
-        var httpEntity = new HttpEntity<>(getAuthorizationHeader());
-        var actual = restTemplate.exchange(
-                getPath() + "/search/?value={value}", HttpMethod.GET, httpEntity, NoteDto[].class, expected.get(0).getTitle());
-
-        Assertions.assertNotNull(actual.getBody());
-        Assertions.assertEquals(expected.get(0).getTitle(), actual.getBody()[0].title());
-    }
-
-    @Test
-    @WithMockUser(username = USERNAME)
-    void save() {
-        userRepository.save(getUser());
-        var httpEntity = new HttpEntity<>(getNoteDto(), getAuthorizationHeader());
-        var expected = restTemplate.postForObject(getPath(), httpEntity, NoteDto.class);
-        var expectedIdOptional = Optional.ofNullable(expected)
-                .map(NoteDto::id);
-
-        Assertions.assertTrue(expectedIdOptional.isPresent());
-    }
-
-    @Test
-    @WithMockUser(username = USERNAME)
-    void update() {
-        userRepository.save(getUser());
-        var noteDto = NoteConverter.convert(noteRepository.save(getNote()));
-        var updatedNoteDto = NoteDto.builder()
-                .id(noteDto.id())
-                .title(noteDto.title())
-                .text("updated text")
-                .priority(NotePriority.LOW)
-                .build();
-
-        var httpEntity = new HttpEntity<>(updatedNoteDto, getAuthorizationHeader());
-        var actual = restTemplate.exchange(
-                getPath() + "/{id}", HttpMethod.PUT, httpEntity, NoteDto.class, updatedNoteDto.id());
-        var actualText = Optional.ofNullable(actual)
-                .map(HttpEntity::getBody)
-                .map(NoteDto::text)
-                .orElse("");
-
-        Assertions.assertEquals(updatedNoteDto.text(), actualText);
-    }
-
-    @Test
-    @WithMockUser(username = USERNAME)
-    void delete() {
-        userRepository.save(getUser());
-        var note = noteRepository.save(getNote());
-
-        var httpEntity = new HttpEntity<>(getAuthorizationHeader());
-        restTemplate.exchange(getPath() + "/{id}", HttpMethod.DELETE, httpEntity, NoteDto.class, note.getId());
-
-        Assertions.assertTrue(noteRepository.findById(note.getId())
-                .isEmpty());
-    }
-
-    private HttpHeaders getAuthorizationHeader() {
-        var headers = new HttpHeaders();
-        headers.setContentType(MediaType.APPLICATION_JSON);
-        headers.set(HttpHeaders.AUTHORIZATION, "Bearer " + JWT);
-
-        return headers;
-    }
-
-    @Override
-    protected String getControllerPath() {
-        return "/api/notes/";
-    }
-
-    private List<Note> getNotes() {
-        return List.of(
+    void getAll() throws Exception {
+        var note = noteRepository.save(
                 Note.builder()
-                        .text("text one")
-                        .title("title one")
-                        .priority(NotePriority.LOW)
-                        .username(USERNAME)
-                        .build(),
+                        .title("First")
+                        .text("First note")
+                        .priority(NotePriority.NONE)
+                        .build()
+        );
+
+        mockMvc.perform(MockMvcRequestBuilders.get(NOTES_URL))
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(APPLICATION_JSON))
+                .andExpect(jsonPath("$[0].id").value(note.getId()))
+                .andExpect(jsonPath("$[0].title").value(note.getTitle()))
+                .andExpect(jsonPath("$[0].text").value(note.getText()))
+                .andExpect(jsonPath("$[0].priority").value(note.getPriority().name()));
+    }
+
+    @Test
+    @WithMockUser(username = USERNAME)
+    void get() throws Exception {
+        var note = noteRepository.save(
                 Note.builder()
-                        .text("text two")
-                        .title("title two")
-                        .priority(NotePriority.MEDIUM)
-                        .username(USERNAME)
-                        .build(),
+                        .title("Second")
+                        .text("Second note")
+                        .priority(NotePriority.NONE)
+                        .build()
+        );
+
+        mockMvc.perform(MockMvcRequestBuilders.get(NOTES_URL + ID_URL, note.getId()))
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(APPLICATION_JSON))
+                .andExpect(jsonPath("$.id").value(note.getId()))
+                .andExpect(jsonPath("$.title").value(note.getTitle()))
+                .andExpect(jsonPath("$.text").value(note.getText()))
+                .andExpect(jsonPath("$.priority").value(note.getPriority().name()));
+    }
+
+    @Test
+    @WithMockUser(username = USERNAME)
+    void search() throws Exception {
+        var note = noteRepository.save(
                 Note.builder()
-                        .text("text three")
-                        .title("title three")
-                        .priority(NotePriority.HIGH)
-                        .username(USERNAME)
+                        .title("Third")
+                        .text("Third note")
+                        .priority(NotePriority.NONE)
                         .build());
+
+        mockMvc.perform(MockMvcRequestBuilders.get(NOTES_URL + SEARCH_URL)
+                        .param(VALUE_PARAM, note.getTitle()))
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(APPLICATION_JSON))
+                .andExpect(jsonPath("$[0].id").value(note.getId()))
+                .andExpect(jsonPath("$[0].title").value(note.getTitle()))
+                .andExpect(jsonPath("$[0].text").value(note.getText()))
+                .andExpect(jsonPath("$[0].priority").value(note.getPriority().name()));
     }
 
-    public Note getNote() {
-        return Note.builder()
-                .id(1L)
-                .text("text")
-                .title("title")
-                .priority(NotePriority.NONE)
-                .username(USERNAME)
+    @Test
+    @WithMockUser(username = USERNAME)
+    void save() throws Exception {
+        var noteDto = NoteConverter.convert(
+                Note.builder()
+                        .title("Fourth")
+                        .text("Fourth note")
+                        .priority(NotePriority.NONE)
+                        .build());
+
+        mockMvc.perform(MockMvcRequestBuilders.post(NOTES_URL)
+                        .content(mapper.writeValueAsString(noteDto))
+                        .contentType(APPLICATION_JSON))
+                .andExpect(status().isCreated())
+                .andExpect(content().contentType(APPLICATION_JSON))
+                .andExpect(jsonPath("$.id").exists())
+                .andExpect(jsonPath("$.title").value(noteDto.title()))
+                .andExpect(jsonPath("$.text").value(noteDto.text()))
+                .andExpect(jsonPath("$.priority").value(noteDto.priority().name()));
+    }
+
+    @Test
+    @WithMockUser(username = USERNAME)
+    void update() throws Exception {
+        var note = noteRepository.save(
+                Note.builder()
+                        .title("Fifth")
+                        .text("Fifth note")
+                        .priority(NotePriority.NONE)
+                        .build()
+        );
+        var noteDto = NoteDto.builder()
+                .id(note.getId())
+                .title(note.getTitle())
+                .text(note.getText())
+                .priority(NotePriority.HIGH)
                 .build();
+
+        mockMvc.perform(MockMvcRequestBuilders.put(NOTES_URL + ID_URL, note.getId())
+                        .content(mapper.writeValueAsString(noteDto))
+                        .contentType(APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(APPLICATION_JSON))
+                .andExpect(jsonPath("$.id").exists())
+                .andExpect(jsonPath("$.title").value(noteDto.title()))
+                .andExpect(jsonPath("$.text").value(noteDto.text()))
+                .andExpect(jsonPath("$.priority").value(noteDto.priority().name()));
     }
 
-    public User getUser() {
+    @Test
+    @WithMockUser(username = USERNAME)
+    void delete() throws Exception {
+        var note = noteRepository.save(Note.builder()
+                .title("Sixth")
+                .text("Sixth note")
+                .priority(NotePriority.NONE)
+                .build());
+
+        mockMvc.perform(MockMvcRequestBuilders.delete(NOTES_URL + ID_URL, note.getId()))
+                .andExpect(status().isNoContent());
+
+        assertFalse(noteRepository.existsById(note.getId()));
+    }
+
+    private User buildUser() {
         return User.builder()
-                .id(1L)
-                .password("password")
+                .password("$2a$10$l13RhzScYa0XCo4AGvbxTe2/f7W8.0b5bLf5Plwq713G15rcxlpJe")
                 .email(USERNAME)
                 .enabled(true)
-                .build();
-    }
-
-    public NoteDto getNoteDto() {
-        return NoteDto.builder()
-                .text("text")
-                .title("title")
-                .priority(NotePriority.NONE)
                 .build();
     }
 }

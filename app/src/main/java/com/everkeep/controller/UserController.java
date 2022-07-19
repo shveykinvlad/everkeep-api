@@ -12,8 +12,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.everkeep.controller.dto.AuthRequest;
-import com.everkeep.controller.dto.AuthResponse;
+import com.everkeep.controller.dto.AuthenticationRequest;
+import com.everkeep.controller.dto.AuthenticationResponse;
 import com.everkeep.controller.dto.RegistrationRequest;
 import com.everkeep.service.UserService;
 
@@ -57,13 +57,13 @@ public class UserController {
 
     @PostMapping("/authenticate")
     @Operation(summary = "Authenticate")
-    public AuthResponse authenticate(@RequestBody @Valid AuthRequest authRequest) {
-        return userService.authenticate(authRequest.email(), authRequest.password());
+    public AuthenticationResponse authenticate(@RequestBody @Valid AuthenticationRequest authenticationRequest) {
+        return userService.authenticate(authenticationRequest.email(), authenticationRequest.password());
     }
 
     @PostMapping("/authenticate/refresh")
     @Operation(summary = "Refresh access token")
-    public AuthResponse refreshAccessToken(@RequestBody @Valid String refreshToken) {
+    public AuthenticationResponse refreshAccessToken(@RequestBody @Valid String refreshToken) {
         return userService.refreshAccessToken(refreshToken);
     }
 }

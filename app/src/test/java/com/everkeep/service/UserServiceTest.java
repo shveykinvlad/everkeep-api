@@ -1,16 +1,19 @@
 package com.everkeep.service;
 
+import static org.junit.jupiter.api.Assertions.assertAll;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import java.util.Optional;
+import java.util.UUID;
 
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Captor;
-import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -21,7 +24,6 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import com.everkeep.AbstractTest;
-import com.everkeep.service.security.JwtTokenProvider;
 import com.everkeep.exception.UserAlreadyEnabledException;
 import com.everkeep.exception.UserAlreadyExistsException;
 import com.everkeep.model.Role;
@@ -29,18 +31,15 @@ import com.everkeep.model.User;
 import com.everkeep.model.VerificationToken;
 import com.everkeep.repository.RoleRepository;
 import com.everkeep.repository.UserRepository;
+import com.everkeep.service.security.JwtTokenProvider;
 
 @SpringBootTest(classes = UserService.class)
 class UserServiceTest extends AbstractTest {
 
-    private static final String ROLE_NAME = "ROLE_USER";
-    private static final String EMAIL = "email@example.com";
-    private static final String PASSWORD = "password";
-    private static final String ENCODED_PASSWORD = "encoded password";
-    private static final String TOKEN_VALUE = "token value";
-
     @Autowired
     private UserService userService;
+    @MockBean
+    private AuthenticationManager authenticationManager;
     @MockBean
     private UserRepository userRepository;
     @MockBean
@@ -52,44 +51,36 @@ class UserServiceTest extends AbstractTest {
     @MockBean
     private MailService mailService;
     @MockBean
-    private AuthenticationManager authenticationManager;
-    @MockBean
     private JwtTokenProvider jwtTokenProvider;
     @Captor
     private ArgumentCaptor<User> userCaptor;
 
-    @AfterEach
-    void tearDown() {
-        Mockito.reset(userRepository, roleRepository, passwordEncoder, verificationTokenService,
-                mailService, authenticationManager, jwtTokenProvider);
-    }
-
     @Test
     void loadUserByUsername() {
-        var email = EMAIL;
-        var expected = new User();
+        var email = "first@example.com";
+        var savedUser = User.builder()
+                .email(email)
+                .build();
+        when(userRepository.findByEmail(email)).thenReturn(Optional.of(savedUser));
 
-        when(userRepository.findByEmail(email)).thenReturn(Optional.of(expected));
-        var actual = userService.loadUserByUsername(email);
+        var receivedUser = userService.loadUserByUsername(email);
 
-        Assertions.assertEquals(expected, actual);
+        assertEquals(savedUser, receivedUser);
     }
 
     @Test
     void loadUserByUsernameIfNotFound() {
-        var email = EMAIL;
-
+        var email = "second@example.com";
         when(userRepository.findByEmail(email)).thenReturn(Optional.empty());
 
-        Assertions.assertThrows(UsernameNotFoundException.class, () -> userService.loadUserByUsername(email));
+        assertThrows(UsernameNotFoundException.class, () -> userService.loadUserByUsername(email));
     }
 
     @Test
     void register() {
-        var password = PASSWORD;
-        var email = EMAIL;
-        var tokenValue = TOKEN_VALUE;
-        var roleName = ROLE_NAME;
+        var password = "Th1rdP4$$";
+        var email = "third@example.com";
+        var roleName = "ROLE_USER";
         var action = VerificationToken.Action.CONFIRM_ACCOUNT;
         var role = Role.builder()
                 .name(roleName)
@@ -98,84 +89,84 @@ class UserServiceTest extends AbstractTest {
                 .email(email)
                 .build();
         var token = VerificationToken.builder()
-                .value(tokenValue)
+                .value(UUID.randomUUID().toString())
                 .action(action)
                 .build();
-
         when(userRepository.findByEmail(email)).thenReturn(Optional.empty());
-        when(passwordEncoder.encode(password)).thenReturn(ENCODED_PASSWORD);
+        when(passwordEncoder.encode(password)).thenReturn("");
         when(roleRepository.findByName(roleName)).thenReturn(role);
         when(userRepository.save(any(User.class))).thenReturn(user);
         when(verificationTokenService.create(user, action)).thenReturn(token);
+
         userService.register(email, password);
 
-        Mockito.verify(mailService).sendUserConfirmationMail(email, tokenValue);
+        verify(mailService).sendConfirmationMail(email, token.getValue());
     }
 
     @Test
     void registerIfUserExists() {
-        var email = EMAIL;
-
+        var email = "fourth@example.com";
         when(userRepository.existsByEmail(email)).thenReturn(true);
 
-        Assertions.assertThrows(UserAlreadyExistsException.class, () -> userService.register(email, PASSWORD));
+        assertThrows(UserAlreadyExistsException.class, () -> userService.register(email, "F0urthP4$$"));
     }
 
     @Test
     void confirm() {
-        var tokenValue = TOKEN_VALUE;
+        var tokenValue = UUID.randomUUID().toString();
         var action = VerificationToken.Action.CONFIRM_ACCOUNT;
         var token = VerificationToken.builder()
                 .value(tokenValue)
                 .action(action)
                 .user(new User())
                 .build();
-
         when(verificationTokenService.apply(tokenValue, action)).thenReturn(token);
+
         userService.confirm(tokenValue);
 
-        Mockito.verify(userRepository).save(userCaptor.capture());
-        Assertions.assertAll(() -> Assertions.assertTrue(userCaptor.getValue().isEnabled()));
+        verify(userRepository).save(userCaptor.capture());
+        assertAll("Should enable user",
+                () -> assertTrue(userCaptor.getValue().isEnabled())
+        );
     }
 
     @Test
     void resendToken() {
-        var email = EMAIL;
+        var email = "fifth@example.com";
         var user = User.builder()
                 .email(email)
                 .build();
-        var tokenValue = TOKEN_VALUE;
+        var tokenValue = UUID.randomUUID().toString();
         var action = VerificationToken.Action.CONFIRM_ACCOUNT;
         var token = VerificationToken.builder()
                 .user(user)
                 .value(tokenValue)
                 .action(action)
                 .build();
-
         when(userRepository.findByEmail(email)).thenReturn(Optional.of(user));
         when(verificationTokenService.create(user, action)).thenReturn(token);
+
         userService.resendToken(email);
 
-        Mockito.verify(mailService).sendUserConfirmationMail(email, tokenValue);
+        verify(mailService).sendConfirmationMail(email, tokenValue);
     }
 
     @Test
-    void resendTokenIfUserIsEnabled() {
-        var email = EMAIL;
+    void resendTokenIfUserIsAlreadyEnabled() {
+        var email = "sixth@example.com";
         var user = User.builder()
                 .email(email)
                 .enabled(true)
                 .build();
-
         when(userRepository.findByEmail(email)).thenReturn(Optional.of(user));
 
-        Assertions.assertThrows(UserAlreadyEnabledException.class, () -> userService.resendToken(email));
+        assertThrows(UserAlreadyEnabledException.class, () -> userService.resendToken(email));
     }
 
     @Test
     void resetPassword() {
-        var tokenValue = TOKEN_VALUE;
-        var email = EMAIL;
+        var tokenValue = UUID.randomUUID().toString();
+        var email = "seventh@example.com";
         var user = User.builder()
                 .email(email)
                 .build();
@@ -184,61 +175,63 @@ class UserServiceTest extends AbstractTest {
                 .action(action)
                 .value(tokenValue)
                 .build();
-
         when(userRepository.findByEmail(email)).thenReturn(Optional.of(user));
         when(verificationTokenService.create(user, action)).thenReturn(token);
+
         userService.resetPassword(email);
 
-        Mockito.verify(mailService).sendResetPasswordMail(user.getEmail(), tokenValue);
+        verify(mailService).sendResetPasswordMail(user.getEmail(), tokenValue);
     }
 
     @Test
     void updatePassword() {
-        var tokenValue = TOKEN_VALUE;
+        var tokenValue = UUID.randomUUID().toString();
         var action = VerificationToken.Action.RESET_PASSWORD;
-        var password = PASSWORD;
-        var encodedPassword = ENCODED_PASSWORD;
+        var password = "P4$$w0rd";
+        var encodedPassword = "$2a$10$l13RhzScYa0XCo4AGvbxTe2/f7W8.0b5bLf5Plwq713G15rcxlpJe";
         var token = VerificationToken.builder()
                 .value(tokenValue)
                 .action(action)
                 .user(new User())
                 .build();
-
         when(verificationTokenService.apply(tokenValue, action)).thenReturn(token);
         when(passwordEncoder.encode(password)).thenReturn(encodedPassword);
+
         userService.updatePassword(tokenValue, password);
 
-        Mockito.verify(userRepository).save(userCaptor.capture());
-        Assertions.assertAll(() -> Assertions.assertEquals(encodedPassword, userCaptor.getValue().getPassword()));
+        verify(userRepository).save(userCaptor.capture());
+        assertAll("Should return updated password",
+                () -> assertEquals(encodedPassword, userCaptor.getValue().getPassword())
+        );
     }
 
     @Test
     void authenticate() {
-        var email = EMAIL;
-        var password = PASSWORD;
+        var email = "eighth@example.com";
+        var password = "E1ghthP4$$";
         var jwt = "jwt";
         var user = User.builder()
                 .email(email)
                 .password(password)
                 .build();
-        var tokenValue = TOKEN_VALUE;
+        var tokenValue = UUID.randomUUID().toString();
         var action = VerificationToken.Action.REFRESH_ACCESS;
         var token = VerificationToken.builder()
                 .value(tokenValue)
                 .action(action)
                 .build();
-
         when(authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(email, password)))
                 .thenReturn(new TestingAuthenticationToken(user, password));
         when(jwtTokenProvider.generateToken(user)).thenReturn(jwt);
         when(verificationTokenService.create(user, action)).thenReturn(token);
-        var actual = userService.authenticate(email, password);
 
-        Assertions.assertAll(() -> {
-            Assertions.assertEquals(jwt, actual.jwt());
-            Assertions.assertEquals(tokenValue, actual.refreshTokenValue());
-            Assertions.assertEquals(email, actual.userEmail());
-        });
+        var authenticationResponse = userService.authenticate(email, password);
+
+        assertAll("Should return access token",
+                () -> assertEquals(jwt, authenticationResponse.jwt()),
+                () -> assertEquals(tokenValue, authenticationResponse.refreshTokenValue()),
+                () -> assertEquals(email, authenticationResponse.userEmail())
+        );
     }
 
     @Test
@@ -256,16 +249,15 @@ class UserServiceTest extends AbstractTest {
                 .action(VerificationToken.Action.REFRESH_ACCESS)
                 .user(user)
                 .build();
-
         when(verificationTokenService.apply(oldToken.getValue(), action)).thenReturn(oldToken);
         when(jwtTokenProvider.generateToken(user)).thenReturn(jwt);
         when(verificationTokenService.create(user, action)).thenReturn(newToken);
-        var actual = userService.refreshAccessToken(oldToken.getValue());
 
-        Assertions.assertAll(() -> {
-            Assertions.assertEquals(jwt, actual.jwt());
-            Assertions.assertEquals(newToken.getValue(), actual.refreshTokenValue());
-            Assertions.assertEquals(newToken.getUser().getEmail(), actual.userEmail());
-        });
+        var authenticationResponse = userService.refreshAccessToken(oldToken.getValue());
+
+        assertAll("Should refresh access token",
+                () -> assertEquals(jwt, authenticationResponse.jwt()),
+                () -> assertEquals(newToken.getValue(), authenticationResponse.refreshTokenValue()),
+                () -> assertEquals(newToken.getUser().getEmail(), authenticationResponse.userEmail()));
     }
 }

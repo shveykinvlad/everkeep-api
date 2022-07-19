@@ -1,5 +1,10 @@
 package com.everkeep.service;
 
+import static org.junit.jupiter.api.Assertions.assertAll;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.when;
 
 import javax.persistence.EntityNotFoundException;
@@ -8,9 +13,8 @@ import java.time.Duration;
 import java.time.OffsetDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.Optional;
+import java.util.UUID;
 
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Captor;
@@ -33,8 +37,6 @@ import com.everkeep.repository.VerificationTokenRepository;
 })
 class VerificationTokenServiceTest extends AbstractTest {
 
-    private static final String TOKEN_VALUE = "tokenValue";
-
     @Autowired
     private VerificationTokenService verificationTokenService;
     @Autowired
@@ -46,92 +48,92 @@ class VerificationTokenServiceTest extends AbstractTest {
     @Captor
     private ArgumentCaptor<VerificationToken> tokenCaptor;
 
-    @AfterEach
-    void tearDown() {
-        Mockito.reset(verificationTokenRepository);
-    }
-
     @Test
     void create() {
         var user = new User();
-        var tokenDuration = Duration.of(30, ChronoUnit.SECONDS);
+        var duration = Duration.of(30, ChronoUnit.SECONDS);
+        when(verificationTokenProperties.expiryDuration()).thenReturn(duration);
 
-        when(verificationTokenProperties.expiryDuration()).thenReturn(tokenDuration);
         verificationTokenService.create(user, VerificationToken.Action.CONFIRM_ACCOUNT);
 
         Mockito.verify(verificationTokenRepository).save(tokenCaptor.capture());
-        Assertions.assertAll(() -> {
-            var actual = tokenCaptor.getValue();
-            Assertions.assertEquals(VerificationToken.Action.CONFIRM_ACCOUNT, actual.getAction());
-            Assertions.assertEquals(user, actual.getUser());
-            Assertions.assertEquals(
-                    OffsetDateTime.now().plusSeconds(tokenDuration.getSeconds()).truncatedTo(ChronoUnit.SECONDS),
-                    actual.getExpiryTime().truncatedTo(ChronoUnit.SECONDS));
-        });
+        var savedToken = tokenCaptor.getValue();
+        assertAll("Should return created token",
+                () -> assertEquals(VerificationToken.Action.CONFIRM_ACCOUNT, savedToken.getAction()),
+                () -> assertEquals(user, savedToken.getUser()),
+                () -> assertEquals(OffsetDateTime.now(clock).plusSeconds(duration.getSeconds()).truncatedTo(ChronoUnit.SECONDS),
+                        savedToken.getExpiryTime().truncatedTo(ChronoUnit.SECONDS))
+        );
     }
 
     @Test
     void get() {
-        var tokenValue = TOKEN_VALUE;
+        var value = UUID.randomUUID().toString();
         var action = VerificationToken.Action.CONFIRM_ACCOUNT;
-        var expected = VerificationToken.builder()
-                .value(tokenValue)
+        var savedToken = VerificationToken.builder()
+                .value(value)
                 .action(action)
                 .build();
+        when(verificationTokenRepository.findByValueAndAction(value, action)).thenReturn(Optional.of(savedToken));
 
-        when(verificationTokenRepository.findByValueAndAction(tokenValue, action)).thenReturn(Optional.of(expected));
-        var actual = verificationTokenService.get(tokenValue, VerificationToken.Action.CONFIRM_ACCOUNT);
+        var receivedToken = verificationTokenService.get(value, VerificationToken.Action.CONFIRM_ACCOUNT);
 
-        Assertions.assertEquals(expected, actual);
+        assertAll("Should return token",
+                () -> assertEquals(value, receivedToken.getValue()),
+                () -> assertTrue(receivedToken.isActive()),
+                () -> assertEquals(action, receivedToken.getAction())
+        );
     }
 
     @Test
-    void getIfNotFound() {
-        var tokenValue = TOKEN_VALUE;
+    void getNotFound() {
+        var value = UUID.randomUUID().toString();
         var action = VerificationToken.Action.CONFIRM_ACCOUNT;
+        when(verificationTokenRepository.findByValueAndAction(value, action)).thenReturn(Optional.empty());
 
-        when(verificationTokenRepository.findByValueAndAction(tokenValue, action)).thenReturn(Optional.empty());
-
-        Assertions.assertThrows(EntityNotFoundException.class, () -> verificationTokenService.get(tokenValue, action));
+        assertThrows(EntityNotFoundException.class,
+                () -> verificationTokenService.get(value, action),
+                "Should throw an exception if token not found");
     }
 
     @Test
-    void validateAndUtilize() {
-        var tokenValue = TOKEN_VALUE;
+    void apply() {
+        var value = UUID.randomUUID().toString();
         var action = VerificationToken.Action.CONFIRM_ACCOUNT;
         var expiryTime = OffsetDateTime.MAX;
-        var token = VerificationToken.builder()
-                .value(tokenValue)
+        var savedToken = VerificationToken.builder()
+                .value(value)
                 .action(action)
                 .expiryTime(expiryTime)
                 .build();
+        when(verificationTokenRepository.findByValueAndAction(value, action)).thenReturn(Optional.of(savedToken));
 
-        when(verificationTokenRepository.findByValueAndAction(tokenValue, action)).thenReturn(Optional.of(token));
-        verificationTokenService.apply(tokenValue, action);
+        verificationTokenService.apply(value, action);
 
         Mockito.verify(verificationTokenRepository).save(tokenCaptor.capture());
-        Assertions.assertAll(() -> {
-            var actual = tokenCaptor.getValue();
-            Assertions.assertFalse(actual.isActive());
-            Assertions.assertEquals(action, actual.getAction());
-            Assertions.assertEquals(tokenValue, actual.getValue());
-            Assertions.assertEquals(expiryTime, actual.getExpiryTime());
-        });
+        var appliedToken = tokenCaptor.getValue();
+        assertAll("Should return applied token",
+                () -> assertEquals(value, appliedToken.getValue()),
+                () -> assertEquals(action, appliedToken.getAction()),
+                () -> assertFalse(appliedToken.isActive()),
+                () -> assertEquals(expiryTime, appliedToken.getExpiryTime())
+        );
     }
 
     @Test
-    void validateAndUtilizeIfExpired() {
-        var tokenValue = TOKEN_VALUE;
+    void applyExpired() {
+        var value = UUID.randomUUID().toString();
         var action = VerificationToken.Action.CONFIRM_ACCOUNT;
         var expiryTime = OffsetDateTime.MIN;
         var token = VerificationToken.builder()
-                .value(tokenValue)
+                .value(value)
                 .action(action)
                 .expiryTime(expiryTime)
                 .build();
+        when(verificationTokenRepository.findByValueAndAction(value, action)).thenReturn(Optional.of(token));
 
-        when(verificationTokenRepository.findByValueAndAction(tokenValue, action)).thenReturn(Optional.of(token));
-        Assertions.assertThrows(VerificationTokenExpirationException.class,
-                () -> verificationTokenService.apply(tokenValue, action));
+        assertThrows(VerificationTokenExpirationException.class,
+                () -> verificationTokenService.apply(value, action),
+                "Should throw an exception if the token is expired");
     }
 }

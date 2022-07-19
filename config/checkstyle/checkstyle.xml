@@ -15,10 +15,6 @@
         <property name="optional" value="true"/>
     </module>
     <module name="SuppressionSingleFilter">
-        <property name="checks" value="MultipleStringLiterals"/>
-        <property name="files" value=".*[\\/]src[\\/](test|it)[\\/]"/>
-    </module>
-    <module name="SuppressionSingleFilter">
         <property name="checks" value="MagicNumberCheck"/>
         <property name="files" value=".*[\\/]src[\\/](test|it)[\\/]"/>
     </module>

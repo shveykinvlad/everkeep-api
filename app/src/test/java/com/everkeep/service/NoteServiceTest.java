@@ -1,13 +1,15 @@
 package com.everkeep.service;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertIterableEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import javax.persistence.EntityNotFoundException;
 import java.util.List;
 import java.util.Optional;
 
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,14 +20,11 @@ import org.springframework.security.access.AccessDeniedException;
 
 import com.everkeep.AbstractTest;
 import com.everkeep.model.Note;
+import com.everkeep.model.NotePriority;
 import com.everkeep.repository.NoteRepository;
 
 @SpringBootTest(classes = NoteService.class)
 class NoteServiceTest extends AbstractTest {
-
-    private static final Long ID = 1L;
-    private static final String USERNAME = "username";
-    private static final String TITLE = "title";
 
     @Autowired
     private NoteService noteService;
@@ -34,117 +33,129 @@ class NoteServiceTest extends AbstractTest {
     @MockBean
     private NoteRepository noteRepository;
 
-    @AfterEach
-    void tearDown() {
-        Mockito.reset(userService, noteRepository);
-    }
-
     @Test
     void getAll() {
-        var username = USERNAME;
+        var username = "first@example.com";
         var note = Note.builder()
-                .username(USERNAME)
+                .id(1L)
+                .title("First")
+                .text("First note")
+                .priority(NotePriority.NONE)
+                .username(username)
                 .build();
-        var expected = List.of(note);
-
+        var savedNotes = List.of(note);
         when(userService.getAuthenticatedUsername()).thenReturn(username);
-        when(noteRepository.findByUsername(username)).thenReturn(expected);
-        var actual = noteService.getAll();
+        when(noteRepository.findByUsername(username)).thenReturn(savedNotes);
 
-        Assertions.assertIterableEquals(expected, actual);
+        var receivedNotes = noteService.getAll();
+
+        assertIterableEquals(savedNotes, receivedNotes);
     }
 
     @Test
     void getById() {
-        var username = USERNAME;
-        var id = ID;
-        var expected = Note.builder()
+        var id = 1L;
+        var savedNote = Note.builder()
                 .id(id)
-                .username(USERNAME)
+                .title("Second")
+                .text("Second note")
+                .priority(NotePriority.NONE)
+                .username("second@example.com")
                 .build();
+        when(userService.getAuthenticatedUsername()).thenReturn(savedNote.getUsername());
+        when(noteRepository.findByIdAndUsername(savedNote.getId(), savedNote.getUsername())).thenReturn(Optional.of(savedNote));
 
-        when(userService.getAuthenticatedUsername()).thenReturn(username);
-        when(noteRepository.findByIdAndUsername(id, username)).thenReturn(Optional.of(expected));
-        var actual = noteService.get(id);
+        var receivedNote = noteService.get(id);
 
-        Assertions.assertEquals(expected, actual);
+        assertEquals(savedNote, receivedNote);
     }
 
     @Test
     void getByIdIfNotFound() {
-        var id = ID;
-        var username = USERNAME;
-
+        var id = 1L;
+        var username = "unknown@example.com";
         when(userService.getAuthenticatedUsername()).thenReturn(username);
         when(noteRepository.findByIdAndUsername(id, username)).thenReturn(Optional.empty());
 
-        Assertions.assertThrows(EntityNotFoundException.class, () -> noteService.get(id));
+        assertThrows(EntityNotFoundException.class, () -> noteService.get(id));
     }
 
     @Test
     void search() {
-        var username = USERNAME;
-        var title = TITLE;
         var note = Note.builder()
-                .username(username)
-                .title(title)
+                .id(1L)
+                .title("Third")
+                .text("Third note")
+                .priority(NotePriority.NONE)
+                .username("third@example.com")
                 .build();
-        var expected = List.of(note);
+        var savedNotes = List.of(note);
+        when(userService.getAuthenticatedUsername()).thenReturn(note.getUsername());
+        when(noteRepository.findAll(Mockito.<Specification<Note>>any())).thenReturn(savedNotes);
 
-        when(userService.getAuthenticatedUsername()).thenReturn(username);
-        when(noteRepository.findAll(Mockito.<Specification<Note>>any())).thenReturn(expected);
-        var actual = noteService.search(title);
+        var receivedNotes = noteService.search(note.getTitle());
 
-        Assertions.assertEquals(expected, actual);
+        assertEquals(savedNotes, receivedNotes);
     }
 
     @Test
     void save() {
-        var note = new Note();
+        var note = Note.builder()
+                .id(1L)
+                .title("Fourth")
+                .text("Fourth note")
+                .priority(NotePriority.NONE)
+                .username("fourth@example.com")
+                .build();
+
         noteService.save(note);
 
-        Mockito.verify(noteRepository).save(note);
+        verify(noteRepository).save(note);
     }
 
     @Test
     void update() {
-        var id = ID;
-        var username = USERNAME;
+        var id = 1L;
         var note = Note.builder()
                 .id(id)
-                .username(username)
+                .title("Fifth")
+                .text("Fifth note")
+                .priority(NotePriority.NONE)
+                .username("fifth@example.com")
                 .build();
+        when(userService.getAuthenticatedUsername()).thenReturn(note.getUsername());
+        when(noteRepository.findByIdAndUsername(id, note.getUsername())).thenReturn(Optional.of(note));
 
-        when(userService.getAuthenticatedUsername()).thenReturn(username);
-        when(noteRepository.findByIdAndUsername(id, username)).thenReturn(Optional.of(note));
         noteService.update(note);
 
-        Mockito.verify(noteRepository).save(note);
+        verify(noteRepository).save(note);
     }
 
     @Test
     void updateIfHasNotPermissions() {
-        var id = ID;
-        var illegalUsername = USERNAME;
+        var id = 1L;
+        var illegalUsername = "banned@example.com";
         var note = Note.builder()
                 .id(id)
-                .username(USERNAME)
+                .title("Sixth")
+                .text("Sixth note")
+                .priority(NotePriority.NONE)
+                .username("sixtha@example.com")
                 .build();
-
         when(userService.getAuthenticatedUsername()).thenReturn(illegalUsername);
         when(noteRepository.findByIdAndUsername(id, illegalUsername)).thenReturn(Optional.empty());
 
-        Assertions.assertThrows(AccessDeniedException.class, () -> noteService.update(note));
+        assertThrows(AccessDeniedException.class, () -> noteService.update(note));
     }
 
     @Test
     void delete() {
-        var username = USERNAME;
-        var id = ID;
-
+        var username = "seventh@example.com";
+        var id = 1L;
         when(userService.getAuthenticatedUsername()).thenReturn(username);
+
         noteService.delete(id);
 
-        Mockito.verify(noteRepository).deleteByIdAndUsername(id, username);
+        verify(noteRepository).deleteByIdAndUsername(id, username);
     }
 }

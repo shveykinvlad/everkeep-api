@@ -14,7 +14,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.everkeep.controller.dto.AuthResponse;
+import com.everkeep.controller.dto.AuthenticationResponse;
 import com.everkeep.exception.UserAlreadyEnabledException;
 import com.everkeep.exception.UserAlreadyExistsException;
 import com.everkeep.model.User;
@@ -41,7 +41,7 @@ public class UserService implements UserDetailsService {
     @Override
     public User loadUserByUsername(String email) {
         return userRepository.findByEmail(email)
-                .orElseThrow(() -> new UsernameNotFoundException("User with email = %s not found".formatted(email)));
+                .orElseThrow(() -> new UsernameNotFoundException("User with email = %s not found" .formatted(email)));
     }
 
     public void register(String email, String password) {
@@ -51,7 +51,7 @@ public class UserService implements UserDetailsService {
         var user = createUser(email, password);
         var token = verificationTokenService.create(user, VerificationToken.Action.CONFIRM_ACCOUNT);
 
-        mailService.sendUserConfirmationMail(user.getEmail(), token.getValue());
+        mailService.sendConfirmationMail(user.getEmail(), token.getValue());
     }
 
     public void confirm(String tokenValue) {
@@ -69,7 +69,7 @@ public class UserService implements UserDetailsService {
         }
         var token = verificationTokenService.create(user, VerificationToken.Action.CONFIRM_ACCOUNT);
 
-        mailService.sendUserConfirmationMail(user.getEmail(), token.getValue());
+        mailService.sendConfirmationMail(user.getEmail(), token.getValue());
     }
 
     public void resetPassword(String email) {
@@ -87,22 +87,22 @@ public class UserService implements UserDetailsService {
         userRepository.save(user);
     }
 
-    public AuthResponse authenticate(String email, String password) {
+    public AuthenticationResponse authenticate(String email, String password) {
         var authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(email, password));
         var user = (User) authentication.getPrincipal();
         var jwtToken = jwtTokenProvider.generateToken(user);
         var refreshToken = verificationTokenService.create(user, VerificationToken.Action.REFRESH_ACCESS);
 
-        return new AuthResponse(jwtToken, refreshToken.getValue(), user.getEmail());
+        return new AuthenticationResponse(jwtToken, refreshToken.getValue(), user.getEmail());
     }
 
-    public AuthResponse refreshAccessToken(String oldTokenValue) {
+    public AuthenticationResponse refreshAccessToken(String oldTokenValue) {
         var oldToken = verificationTokenService.apply(oldTokenValue, VerificationToken.Action.REFRESH_ACCESS);
         var user = oldToken.getUser();
         var jwt = jwtTokenProvider.generateToken(user);
         var newToken = verificationTokenService.create(user, VerificationToken.Action.REFRESH_ACCESS);
 
-        return AuthResponse.builder()
+        return AuthenticationResponse.builder()
                 .jwt(jwt)
                 .refreshTokenValue(newToken.getValue())
                 .userEmail(user.getEmail())
