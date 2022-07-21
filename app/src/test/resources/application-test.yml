@@ -1,11 +1,14 @@
 spring:
+  datasource:
+    hikari:
+      connection-timeout: 250
   main:
     allow-circular-references: true
   mail:
     host: localhost
-    username: username
+    username: login
     password: password
-    port: 465
+    port: 3025
     protocol: smtp
 
 jwt:

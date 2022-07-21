@@ -29,7 +29,7 @@ class NoteControllerTest extends AbstractIntegrationTest {
     private static final String SEARCH_URL = "/search";
     private static final String VALUE_PARAM = "value";
 
-    private static final String USERNAME = "email@example.com";
+    private static final String USERNAME = "email@localhost";
 
     @Autowired
     private NoteRepository noteRepository;
@@ -52,8 +52,8 @@ class NoteControllerTest extends AbstractIntegrationTest {
     void getAll() throws Exception {
         var note = noteRepository.save(
                 Note.builder()
-                        .title("First")
-                        .text("First note")
+                        .title("First title")
+                        .text("First text")
                         .priority(NotePriority.NONE)
                         .build()
         );
@@ -72,8 +72,8 @@ class NoteControllerTest extends AbstractIntegrationTest {
     void get() throws Exception {
         var note = noteRepository.save(
                 Note.builder()
-                        .title("Second")
-                        .text("Second note")
+                        .title("Second title")
+                        .text("Second text")
                         .priority(NotePriority.NONE)
                         .build()
         );
@@ -92,8 +92,8 @@ class NoteControllerTest extends AbstractIntegrationTest {
     void search() throws Exception {
         var note = noteRepository.save(
                 Note.builder()
-                        .title("Third")
-                        .text("Third note")
+                        .title("Third title")
+                        .text("Third text")
                         .priority(NotePriority.NONE)
                         .build());
 
@@ -112,8 +112,8 @@ class NoteControllerTest extends AbstractIntegrationTest {
     void save() throws Exception {
         var noteDto = NoteConverter.convert(
                 Note.builder()
-                        .title("Fourth")
-                        .text("Fourth note")
+                        .title("Fourth title")
+                        .text("Fourth text")
                         .priority(NotePriority.NONE)
                         .build());
 
@@ -133,8 +133,8 @@ class NoteControllerTest extends AbstractIntegrationTest {
     void update() throws Exception {
         var note = noteRepository.save(
                 Note.builder()
-                        .title("Fifth")
-                        .text("Fifth note")
+                        .title("Fifth title")
+                        .text("Fifth text")
                         .priority(NotePriority.NONE)
                         .build()
         );
@@ -160,8 +160,8 @@ class NoteControllerTest extends AbstractIntegrationTest {
     @WithMockUser(username = USERNAME)
     void delete() throws Exception {
         var note = noteRepository.save(Note.builder()
-                .title("Sixth")
-                .text("Sixth note")
+                .title("Sixth title")
+                .text("Sixth text")
                 .priority(NotePriority.NONE)
                 .build());
 

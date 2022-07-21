@@ -35,11 +35,11 @@ class NoteServiceTest extends AbstractTest {
 
     @Test
     void getAll() {
-        var username = "first@example.com";
+        var username = "one@localhost";
         var note = Note.builder()
                 .id(1L)
-                .title("First")
-                .text("First note")
+                .title("First title")
+                .text("First text")
                 .priority(NotePriority.NONE)
                 .username(username)
                 .build();
@@ -57,10 +57,10 @@ class NoteServiceTest extends AbstractTest {
         var id = 1L;
         var savedNote = Note.builder()
                 .id(id)
-                .title("Second")
-                .text("Second note")
+                .title("Second title")
+                .text("Second text")
                 .priority(NotePriority.NONE)
-                .username("second@example.com")
+                .username("two@localhost")
                 .build();
         when(userService.getAuthenticatedUsername()).thenReturn(savedNote.getUsername());
         when(noteRepository.findByIdAndUsername(savedNote.getId(), savedNote.getUsername())).thenReturn(Optional.of(savedNote));
@@ -73,7 +73,7 @@ class NoteServiceTest extends AbstractTest {
     @Test
     void getByIdIfNotFound() {
         var id = 1L;
-        var username = "unknown@example.com";
+        var username = "unknown@localhost";
         when(userService.getAuthenticatedUsername()).thenReturn(username);
         when(noteRepository.findByIdAndUsername(id, username)).thenReturn(Optional.empty());
 
@@ -84,10 +84,10 @@ class NoteServiceTest extends AbstractTest {
     void search() {
         var note = Note.builder()
                 .id(1L)
-                .title("Third")
-                .text("Third note")
+                .title("Third title")
+                .text("Third text")
                 .priority(NotePriority.NONE)
-                .username("third@example.com")
+                .username("three@localhost")
                 .build();
         var savedNotes = List.of(note);
         when(userService.getAuthenticatedUsername()).thenReturn(note.getUsername());
@@ -102,10 +102,10 @@ class NoteServiceTest extends AbstractTest {
     void save() {
         var note = Note.builder()
                 .id(1L)
-                .title("Fourth")
-                .text("Fourth note")
+                .title("Fourth title")
+                .text("Fourth text")
                 .priority(NotePriority.NONE)
-                .username("fourth@example.com")
+                .username("four@localhost")
                 .build();
 
         noteService.save(note);
@@ -118,10 +118,10 @@ class NoteServiceTest extends AbstractTest {
         var id = 1L;
         var note = Note.builder()
                 .id(id)
-                .title("Fifth")
-                .text("Fifth note")
+                .title("Fifth title")
+                .text("Fifth text")
                 .priority(NotePriority.NONE)
-                .username("fifth@example.com")
+                .username("five@localhost")
                 .build();
         when(userService.getAuthenticatedUsername()).thenReturn(note.getUsername());
         when(noteRepository.findByIdAndUsername(id, note.getUsername())).thenReturn(Optional.of(note));
@@ -134,13 +134,13 @@ class NoteServiceTest extends AbstractTest {
     @Test
     void updateIfHasNotPermissions() {
         var id = 1L;
-        var illegalUsername = "banned@example.com";
+        var illegalUsername = "banned@localhost";
         var note = Note.builder()
                 .id(id)
-                .title("Sixth")
-                .text("Sixth note")
+                .title("Sixth title")
+                .text("Sixth text")
                 .priority(NotePriority.NONE)
-                .username("sixtha@example.com")
+                .username("six@localhost")
                 .build();
         when(userService.getAuthenticatedUsername()).thenReturn(illegalUsername);
         when(noteRepository.findByIdAndUsername(id, illegalUsername)).thenReturn(Optional.empty());
@@ -150,7 +150,7 @@ class NoteServiceTest extends AbstractTest {
 
     @Test
     void delete() {
-        var username = "seventh@example.com";
+        var username = "seven@localhost";
         var id = 1L;
         when(userService.getAuthenticatedUsername()).thenReturn(username);
 

@@ -6,7 +6,6 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-import java.text.MessageFormat;
 import java.util.UUID;
 
 import org.junit.jupiter.api.Test;
@@ -45,8 +44,8 @@ class MailServiceTest extends AbstractTest {
 
     @Test
     void sendConfirmationMail() {
-        var mailTo = "mailTo@example.com";
-        var mailFrom = "mailFrom@example.com";
+        var mailTo = "mailTo@localhost";
+        var mailFrom = "mailFrom@localhost";
         var uiUrl = "http://localhost:4200";
         var tokenValue = UUID.randomUUID().toString();
         when(integrationProperties.uiUrl()).thenReturn(uiUrl);
@@ -59,15 +58,15 @@ class MailServiceTest extends AbstractTest {
         assertAll("Should capture confirmation mail",
                 () -> assertEquals(mailFrom, sentMail.getFrom()),
                 () -> assertEquals("Email confirmation", sentMail.getSubject()),
-                () -> assertEquals(MessageFormat.format("{0}/users/confirm?token={1}", uiUrl, tokenValue), sentMail.getText()),
+                () -> assertEquals("%s/users/confirm?token=%s".formatted(uiUrl, tokenValue), sentMail.getText()),
                 () -> assertArrayEquals(new String[]{mailTo}, sentMail.getTo())
         );
     }
 
     @Test
     void sendResetPasswordMail() {
-        var mailTo = "mailTo@example.com";
-        var mailFrom = "mailFrom@example.com";
+        var mailTo = "mailTo@localhost";
+        var mailFrom = "mailFrom@localhost";
         var uiUrl = "http://localhost:4200";
         var tokenValue = UUID.randomUUID().toString();
         when(integrationProperties.uiUrl()).thenReturn(uiUrl);
@@ -80,8 +79,7 @@ class MailServiceTest extends AbstractTest {
         assertAll("Should capture reset password mail",
                 () -> assertEquals(mailFrom, sentMail.getFrom()),
                 () -> assertEquals("Password reset", sentMail.getSubject()),
-                () -> assertEquals(MessageFormat.format("{0}/users/password/update?email={1}&token={2}", uiUrl, mailTo, tokenValue),
-                        sentMail.getText()),
+                () -> assertEquals("%s/users/password/update?email=%s&token=%s".formatted(uiUrl, mailTo, tokenValue), sentMail.getText()),
                 () -> assertArrayEquals(new String[]{mailTo}, sentMail.getTo())
         );
     }

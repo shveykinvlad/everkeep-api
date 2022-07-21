@@ -57,7 +57,7 @@ class UserServiceTest extends AbstractTest {
 
     @Test
     void loadUserByUsername() {
-        var email = "first@example.com";
+        var email = "one@localhost";
         var savedUser = User.builder()
                 .email(email)
                 .build();
@@ -70,7 +70,7 @@ class UserServiceTest extends AbstractTest {
 
     @Test
     void loadUserByUsernameIfNotFound() {
-        var email = "second@example.com";
+        var email = "two@localhost";
         when(userRepository.findByEmail(email)).thenReturn(Optional.empty());
 
         assertThrows(UsernameNotFoundException.class, () -> userService.loadUserByUsername(email));
@@ -79,7 +79,7 @@ class UserServiceTest extends AbstractTest {
     @Test
     void register() {
         var password = "Th1rdP4$$";
-        var email = "third@example.com";
+        var email = "three@localhost";
         var roleName = "ROLE_USER";
         var action = VerificationToken.Action.CONFIRM_ACCOUNT;
         var role = Role.builder()
@@ -105,7 +105,7 @@ class UserServiceTest extends AbstractTest {
 
     @Test
     void registerIfUserExists() {
-        var email = "fourth@example.com";
+        var email = "four@localhost";
         when(userRepository.existsByEmail(email)).thenReturn(true);
 
         assertThrows(UserAlreadyExistsException.class, () -> userService.register(email, "F0urthP4$$"));
@@ -132,7 +132,7 @@ class UserServiceTest extends AbstractTest {
 
     @Test
     void resendToken() {
-        var email = "fifth@example.com";
+        var email = "five@localhost";
         var user = User.builder()
                 .email(email)
                 .build();
@@ -153,7 +153,7 @@ class UserServiceTest extends AbstractTest {
 
     @Test
     void resendTokenIfUserIsAlreadyEnabled() {
-        var email = "sixth@example.com";
+        var email = "six@localhost";
         var user = User.builder()
                 .email(email)
                 .enabled(true)
@@ -166,7 +166,7 @@ class UserServiceTest extends AbstractTest {
     @Test
     void resetPassword() {
         var tokenValue = UUID.randomUUID().toString();
-        var email = "seventh@example.com";
+        var email = "seven@localhost";
         var user = User.builder()
                 .email(email)
                 .build();
@@ -207,7 +207,7 @@ class UserServiceTest extends AbstractTest {
 
     @Test
     void authenticate() {
-        var email = "eighth@example.com";
+        var email = "eight@localhost";
         var password = "E1ghthP4$$";
         var jwt = "jwt";
         var user = User.builder()
