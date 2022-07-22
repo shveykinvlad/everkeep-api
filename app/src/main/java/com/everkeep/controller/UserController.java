@@ -30,16 +30,16 @@ public class UserController {
         userService.register(registrationRequest.email(), registrationRequest.password());
     }
 
-    @GetMapping("/confirm")
-    @Operation(summary = "Confirm user registration")
-    public void confirm(@RequestParam("token") String tokenValue) {
-        userService.confirm(tokenValue);
-    }
-
-    @GetMapping("/confirm/resend")
+    @GetMapping(value = "/confirmation", params = "email")
     @Operation(summary = "Resend confirmation email")
     public void resendToken(@RequestParam("email") String email) {
         userService.resendToken(email);
+    }
+
+    @GetMapping(value = "/confirmation", params = "token")
+    @Operation(summary = "Confirm user registration")
+    public void confirm(@RequestParam("token") String tokenValue) {
+        userService.confirm(tokenValue);
     }
 
     @GetMapping("/password/reset")

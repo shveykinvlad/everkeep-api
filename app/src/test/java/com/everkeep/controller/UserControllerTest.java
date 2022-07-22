@@ -33,9 +33,7 @@ import com.everkeep.repository.VerificationTokenRepository;
 class UserControllerTest extends AbstractIntegrationTest {
 
     private static final String USERS_URL = "/api/users";
-    private static final String REGISTER_URL = "/register";
-    private static final String CONFIRM_URL = "/confirm";
-    private static final String RESEND_URL = "/resend";
+    private static final String CONFIRM_URL = "/confirmation";
     private static final String AUTHENTICATE_URL = "/authenticate";
     private static final String REFRESH_URL = "/refresh";
     private static final String PASSWORD_URL = "/password";
@@ -82,7 +80,7 @@ class UserControllerTest extends AbstractIntegrationTest {
                 () -> assertEquals(1, receivedMessages.length),
                 () -> assertEquals(email, receivedMessages[0].getAllRecipients()[0].toString()),
                 () -> assertEquals("Email confirmation", receivedMessages[0].getSubject()),
-                () -> assertEquals("http://localhost:4200/users/confirm?token=%s".formatted(token.getValue()),
+                () -> assertEquals("http://localhost:4200/users/confirmation?token=%s".formatted(token.getValue()),
                         GreenMailUtil.getBody(receivedMessages[0])));
     }
 
@@ -132,7 +130,7 @@ class UserControllerTest extends AbstractIntegrationTest {
                         .build()
         );
 
-        mockMvc.perform(MockMvcRequestBuilders.get(USERS_URL + CONFIRM_URL + RESEND_URL)
+        mockMvc.perform(MockMvcRequestBuilders.get(USERS_URL + CONFIRM_URL)
                         .param("email", user.getEmail()))
                 .andExpect(status().isOk());
 
@@ -142,7 +140,7 @@ class UserControllerTest extends AbstractIntegrationTest {
                 () -> assertEquals(1, receivedMessages.length),
                 () -> assertEquals(email, receivedMessages[0].getAllRecipients()[0].toString()),
                 () -> assertEquals("Email confirmation", receivedMessages[0].getSubject()),
-                () -> assertEquals("http://localhost:4200/users/confirm?token=%s".formatted(token.getValue()),
+                () -> assertEquals("http://localhost:4200/users/confirmation?token=%s".formatted(token.getValue()),
                         GreenMailUtil.getBody(receivedMessages[0])));
     }
 

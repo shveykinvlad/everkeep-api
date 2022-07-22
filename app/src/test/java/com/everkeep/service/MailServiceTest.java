@@ -58,7 +58,7 @@ class MailServiceTest extends AbstractTest {
         assertAll("Should capture confirmation mail",
                 () -> assertEquals(mailFrom, sentMail.getFrom()),
                 () -> assertEquals("Email confirmation", sentMail.getSubject()),
-                () -> assertEquals("%s/users/confirm?token=%s".formatted(uiUrl, tokenValue), sentMail.getText()),
+                () -> assertEquals("%s/users/confirmation?token=%s".formatted(uiUrl, tokenValue), sentMail.getText()),
                 () -> assertArrayEquals(new String[]{mailTo}, sentMail.getTo())
         );
     }
