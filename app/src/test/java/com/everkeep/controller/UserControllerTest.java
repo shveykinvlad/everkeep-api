@@ -71,7 +71,7 @@ class UserControllerTest extends AbstractIntegrationTest {
                 email
         );
 
-        mockMvc.perform(MockMvcRequestBuilders.post(USERS_URL + REGISTER_URL)
+        mockMvc.perform(MockMvcRequestBuilders.post(USERS_URL)
                         .content(mapper.writeValueAsString(request))
                         .contentType(APPLICATION_JSON))
                 .andExpect(status().isOk());
