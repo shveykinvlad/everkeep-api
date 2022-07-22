@@ -10,8 +10,8 @@ public record AuthenticationResponse(
         String jwt,
 
         @NotBlank
-        String refreshTokenValue,
+        String refreshToken,
 
         @NotBlank
-        String userEmail
+        String email
 ) { }

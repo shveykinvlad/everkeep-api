@@ -52,7 +52,7 @@ databaseChangeLog:
                     foreignKeyName: fk_user_email
                     references: users(email)
               - column:
-                  name: create_time
+                  name: creation_timestamp
                   type: TIMESTAMP WITHOUT TIME ZONE
                   constraints:
                     nullable: false

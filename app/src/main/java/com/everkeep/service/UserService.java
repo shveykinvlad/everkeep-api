@@ -104,8 +104,8 @@ public class UserService implements UserDetailsService {
 
         return AuthenticationResponse.builder()
                 .jwt(jwt)
-                .refreshTokenValue(newToken.getValue())
-                .userEmail(user.getEmail())
+                .refreshToken(newToken.getValue())
+                .email(user.getEmail())
                 .build();
     }
 

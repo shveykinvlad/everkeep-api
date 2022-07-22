@@ -56,5 +56,5 @@ public class Note {
 
     @CreationTimestamp
     @Column(updatable = false, nullable = false)
-    private LocalDateTime createTime;
+    private LocalDateTime creationTimestamp;
 }

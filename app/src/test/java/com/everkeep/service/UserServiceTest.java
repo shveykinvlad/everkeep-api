@@ -229,8 +229,8 @@ class UserServiceTest extends AbstractTest {
 
         assertAll("Should return access token",
                 () -> assertEquals(jwt, authenticationResponse.jwt()),
-                () -> assertEquals(tokenValue, authenticationResponse.refreshTokenValue()),
-                () -> assertEquals(email, authenticationResponse.userEmail())
+                () -> assertEquals(tokenValue, authenticationResponse.refreshToken()),
+                () -> assertEquals(email, authenticationResponse.email())
         );
     }
 
@@ -257,7 +257,7 @@ class UserServiceTest extends AbstractTest {
 
         assertAll("Should refresh access token",
                 () -> assertEquals(jwt, authenticationResponse.jwt()),
-                () -> assertEquals(newToken.getValue(), authenticationResponse.refreshTokenValue()),
-                () -> assertEquals(newToken.getUser().getEmail(), authenticationResponse.userEmail()));
+                () -> assertEquals(newToken.getValue(), authenticationResponse.refreshToken()),
+                () -> assertEquals(newToken.getUser().getEmail(), authenticationResponse.email()));
     }
 }

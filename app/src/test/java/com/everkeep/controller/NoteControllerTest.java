@@ -1,6 +1,9 @@
 package com.everkeep.controller;
 
+import static org.junit.jupiter.api.Assertions.assertAll;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -126,6 +129,12 @@ class NoteControllerTest extends AbstractIntegrationTest {
                 .andExpect(jsonPath("$.title").value(noteDto.title()))
                 .andExpect(jsonPath("$.text").value(noteDto.text()))
                 .andExpect(jsonPath("$.priority").value(noteDto.priority().name()));
+
+        var note = noteRepository.findAll().get(0);
+        assertAll("Should persist username and creation timestamp",
+                () -> assertEquals(USERNAME, note.getUsername()),
+                () -> assertNotNull(note.getCreationTimestamp())
+        );
     }
 
     @Test

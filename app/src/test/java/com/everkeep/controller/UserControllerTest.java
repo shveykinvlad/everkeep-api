@@ -232,9 +232,9 @@ class UserControllerTest extends AbstractIntegrationTest {
                         .contentType(APPLICATION_JSON)
                         .content(mapper.writeValueAsString(request)))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.userEmail").value(user.getEmail()))
+                .andExpect(jsonPath("$.email").value(user.getEmail()))
                 .andExpect(jsonPath("$.jwt").exists())
-                .andExpect(jsonPath("$.refreshTokenValue").exists());
+                .andExpect(jsonPath("$.refreshToken").exists());
     }
 
     @Test
@@ -262,8 +262,8 @@ class UserControllerTest extends AbstractIntegrationTest {
         mockMvc.perform(MockMvcRequestBuilders.post(USERS_URL + AUTHENTICATE_URL + REFRESH_URL)
                         .content(token.getValue()))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.userEmail").value(user.getEmail()))
+                .andExpect(jsonPath("$.email").value(user.getEmail()))
                 .andExpect(jsonPath("$.jwt").exists())
-                .andExpect(jsonPath("$.refreshTokenValue").exists());
+                .andExpect(jsonPath("$.refreshToken").exists());
     }
 }
