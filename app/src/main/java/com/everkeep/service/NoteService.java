@@ -12,7 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.everkeep.model.Note;
 import com.everkeep.repository.NoteRepository;
-import com.everkeep.util.SpecificationUtil;
+import com.everkeep.utils.SpecificationUtils;
 
 @Service
 @Transactional
@@ -53,10 +53,10 @@ public class NoteService {
 
     private Specification<Note> isContainedInTitleOrText(String value, String username) {
         return Specification.where(isContainedInTitleOrText(value))
-                .and(SpecificationUtil.isEqualToAttribute(username, Note.Fields.username));
+                .and(SpecificationUtils.isEqualToAttribute(username, Note.Fields.username));
     }
 
     private Specification<Note> isContainedInTitleOrText(String value) {
-        return SpecificationUtil.isContainedInAttributes(value, Arrays.asList(Note.Fields.title, Note.Fields.text));
+        return SpecificationUtils.isContainedInAttributes(value, Arrays.asList(Note.Fields.title, Note.Fields.text));
     }
 }

@@ -1,5 +1,12 @@
 package com.everkeep.controller;
 
+import static com.everkeep.controller.UserController.ACCESS_URL;
+import static com.everkeep.controller.UserController.AUTHENTICATION_URL;
+import static com.everkeep.controller.UserController.CONFIRMATION_URL;
+import static com.everkeep.controller.UserController.EMAIL_PARAM;
+import static com.everkeep.controller.UserController.PASSWORD_URL;
+import static com.everkeep.controller.UserController.USERS_URL;
+import static com.everkeep.utils.Headers.X_API_KEY;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -32,15 +39,6 @@ import com.everkeep.repository.VerificationTokenRepository;
 
 class UserControllerTest extends AbstractIntegrationTest {
 
-    private static final String USERS_URL = "/api/users";
-    private static final String CONFIRM_URL = "/confirmation";
-    private static final String AUTHENTICATE_URL = "/authenticate";
-    private static final String REFRESH_URL = "/refresh";
-    private static final String PASSWORD_URL = "/password";
-    private static final String RESET_URL = "/reset";
-    private static final String UPDATE_URL = "/update";
-    private static final String TOKEN_PARAM = "token";
-
     private static final String ROLE_USER = "ROLE_USER";
 
     @Autowired
@@ -72,7 +70,7 @@ class UserControllerTest extends AbstractIntegrationTest {
         mockMvc.perform(MockMvcRequestBuilders.post(USERS_URL)
                         .content(mapper.writeValueAsString(request))
                         .contentType(APPLICATION_JSON))
-                .andExpect(status().isOk());
+                .andExpect(status().isCreated());
 
         var token = verificationTokenRepository.findAll().get(0);
         var receivedMessages = GREEN_MAIL.getReceivedMessages();
@@ -85,7 +83,7 @@ class UserControllerTest extends AbstractIntegrationTest {
     }
 
     @Test
-    void confirm() throws Exception {
+    void applyConfirmation() throws Exception {
         var role = roleRepository.findByName(ROLE_USER);
         var user = userRepository.save(
                 User.builder()
@@ -106,8 +104,8 @@ class UserControllerTest extends AbstractIntegrationTest {
                         .build()
         );
 
-        mockMvc.perform(MockMvcRequestBuilders.get(USERS_URL + CONFIRM_URL)
-                        .param(TOKEN_PARAM, token.getValue()))
+        mockMvc.perform(MockMvcRequestBuilders.post(USERS_URL + CONFIRMATION_URL)
+                        .header(X_API_KEY, token.getValue()))
                 .andExpect(status().isOk());
 
         assertAll("Should enable user and utilize token",
@@ -118,7 +116,7 @@ class UserControllerTest extends AbstractIntegrationTest {
     }
 
     @Test
-    void resendToken() throws Exception {
+    void resendConfirmation() throws Exception {
         var email = "three@localhost";
         var role = roleRepository.findByName(ROLE_USER);
         var user = userRepository.save(
@@ -130,8 +128,8 @@ class UserControllerTest extends AbstractIntegrationTest {
                         .build()
         );
 
-        mockMvc.perform(MockMvcRequestBuilders.get(USERS_URL + CONFIRM_URL)
-                        .param("email", user.getEmail()))
+        mockMvc.perform(MockMvcRequestBuilders.get(USERS_URL + CONFIRMATION_URL)
+                        .param(EMAIL_PARAM, user.getEmail()))
                 .andExpect(status().isOk());
 
         var token = verificationTokenRepository.findAll().get(0);
@@ -157,9 +155,9 @@ class UserControllerTest extends AbstractIntegrationTest {
                         .build()
         );
 
-        mockMvc.perform(MockMvcRequestBuilders.get(USERS_URL + PASSWORD_URL + RESET_URL)
-                        .param("email", user.getEmail()))
-                .andExpect(status().isOk());
+        mockMvc.perform(MockMvcRequestBuilders.delete(USERS_URL + PASSWORD_URL)
+                        .param(EMAIL_PARAM, user.getEmail()))
+                .andExpect(status().isNoContent());
 
         var token = verificationTokenRepository.findAll().get(0);
         var receivedMessages = GREEN_MAIL.getReceivedMessages();
@@ -198,8 +196,8 @@ class UserControllerTest extends AbstractIntegrationTest {
                 "N3WP4$$w0rd",
                 user.getEmail()
         );
-        mockMvc.perform(MockMvcRequestBuilders.put(USERS_URL + PASSWORD_URL + UPDATE_URL)
-                        .param(TOKEN_PARAM, token.getValue())
+        mockMvc.perform(MockMvcRequestBuilders.post(USERS_URL + PASSWORD_URL)
+                        .header(X_API_KEY, token.getValue())
                         .contentType(APPLICATION_JSON)
                         .content(mapper.writeValueAsString(request)))
                 .andExpect(status().isOk());
@@ -214,7 +212,7 @@ class UserControllerTest extends AbstractIntegrationTest {
     }
 
     @Test
-    void authenticate() throws Exception {
+    void login() throws Exception {
         var email = "six@localhost";
         var role = roleRepository.findByName(ROLE_USER);
         var user = userRepository.save(
@@ -226,7 +224,7 @@ class UserControllerTest extends AbstractIntegrationTest {
                         .build()
         );
         var request = new AuthenticationRequest(email, "P4$$w0rd");
-        mockMvc.perform(MockMvcRequestBuilders.post(USERS_URL + AUTHENTICATE_URL)
+        mockMvc.perform(MockMvcRequestBuilders.post(USERS_URL + AUTHENTICATION_URL)
                         .contentType(APPLICATION_JSON)
                         .content(mapper.writeValueAsString(request)))
                 .andExpect(status().isOk())
@@ -257,8 +255,8 @@ class UserControllerTest extends AbstractIntegrationTest {
                         .build()
         );
 
-        mockMvc.perform(MockMvcRequestBuilders.post(USERS_URL + AUTHENTICATE_URL + REFRESH_URL)
-                        .content(token.getValue()))
+        mockMvc.perform(MockMvcRequestBuilders.post(USERS_URL + ACCESS_URL)
+                        .header(X_API_KEY, token.getValue()))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.email").value(user.getEmail()))
                 .andExpect(jsonPath("$.jwt").exists())

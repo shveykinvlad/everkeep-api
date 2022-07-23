@@ -235,7 +235,7 @@ class UserServiceTest extends AbstractTest {
     }
 
     @Test
-    void refreshAccessToken() {
+    void refreshAccess() {
         var user = new User();
         var jwt = "jwt";
         var action = VerificationToken.Action.REFRESH_ACCESS;

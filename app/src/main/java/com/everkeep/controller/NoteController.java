@@ -1,5 +1,7 @@
 package com.everkeep.controller;
 
+import static com.everkeep.config.SwaggerConfig.SECURITY_SCHEME;
+
 import javax.validation.Valid;
 import java.util.List;
 
@@ -23,33 +25,38 @@ import com.everkeep.service.NoteService;
 import com.everkeep.service.converter.NoteConverter;
 
 @RestController
-@RequestMapping(path = "/api/notes")
+@RequestMapping(path = NoteController.NOTES_URL)
 @RequiredArgsConstructor
 public class NoteController {
+
+    public static final String NOTES_URL = "/api/notes";
+    public static final String SEARCH_URL = "/search";
+    public static final String ID_URL = "/{id}";
+    public static final String VALUE_PARAM = "value";
 
     private final NoteService noteService;
 
     @GetMapping
-    @Operation(summary = "Get all notes", security = @SecurityRequirement(name = "Bearer"))
+    @Operation(summary = "Get all notes", security = @SecurityRequirement(name = SECURITY_SCHEME))
     public List<NoteDto> getAll() {
         return NoteConverter.convert(noteService.getAll());
     }
 
-    @GetMapping("/{id}")
-    @Operation(summary = "Get note by id", security = @SecurityRequirement(name = "Bearer"))
-    public NoteDto get(@PathVariable("id") Long id) {
+    @GetMapping(ID_URL)
+    @Operation(summary = "Get note by id", security = @SecurityRequirement(name = SECURITY_SCHEME))
+    public NoteDto get(@PathVariable Long id) {
         return NoteConverter.convert(noteService.get(id));
     }
 
-    @GetMapping("/search")
-    @Operation(summary = "Get note by title", security = @SecurityRequirement(name = "Bearer"))
-    public List<NoteDto> search(@RequestParam String value) {
+    @GetMapping(SEARCH_URL)
+    @Operation(summary = "Get note by title", security = @SecurityRequirement(name = SECURITY_SCHEME))
+    public List<NoteDto> search(@RequestParam(VALUE_PARAM) String value) {
         return NoteConverter.convert(noteService.search(value));
     }
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    @Operation(summary = "Save note", security = @SecurityRequirement(name = "Bearer"))
+    @Operation(summary = "Save note", security = @SecurityRequirement(name = SECURITY_SCHEME))
     public NoteDto save(@RequestBody @Valid NoteDto noteDto) {
         var note = NoteConverter.convert(noteDto);
         note = noteService.save(note);
@@ -57,8 +64,8 @@ public class NoteController {
         return NoteConverter.convert(note);
     }
 
-    @PutMapping("/{id}")
-    @Operation(summary = "Update note", security = @SecurityRequirement(name = "Bearer"))
+    @PutMapping(ID_URL)
+    @Operation(summary = "Update note", security = @SecurityRequirement(name = SECURITY_SCHEME))
     public NoteDto update(@RequestBody @Valid NoteDto noteDto) {
         var note = NoteConverter.convert(noteDto);
         note = noteService.update(note);
@@ -66,10 +73,10 @@ public class NoteController {
         return NoteConverter.convert(note);
     }
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping(ID_URL)
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    @Operation(summary = "Delete note", security = @SecurityRequirement(name = "Bearer"))
-    public void delete(@PathVariable("id") Long id) {
+    @Operation(summary = "Delete note", security = @SecurityRequirement(name = SECURITY_SCHEME))
+    public void delete(@PathVariable Long id) {
         noteService.delete(id);
     }
 }

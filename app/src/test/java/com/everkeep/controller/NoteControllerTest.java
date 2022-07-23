@@ -1,5 +1,9 @@
 package com.everkeep.controller;
 
+import static com.everkeep.controller.NoteController.ID_URL;
+import static com.everkeep.controller.NoteController.NOTES_URL;
+import static com.everkeep.controller.NoteController.SEARCH_URL;
+import static com.everkeep.controller.NoteController.VALUE_PARAM;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -26,11 +30,6 @@ import com.everkeep.repository.UserRepository;
 import com.everkeep.service.converter.NoteConverter;
 
 class NoteControllerTest extends AbstractIntegrationTest {
-
-    private static final String NOTES_URL = "/api/notes";
-    private static final String ID_URL = "/{id}";
-    private static final String SEARCH_URL = "/search";
-    private static final String VALUE_PARAM = "value";
 
     private static final String USERNAME = "email@localhost";
 

@@ -1,4 +1,4 @@
-package com.everkeep.util;
+package com.everkeep.utils;
 
 import javax.persistence.criteria.Predicate;
 import java.util.List;
@@ -7,7 +7,7 @@ import lombok.experimental.UtilityClass;
 import org.springframework.data.jpa.domain.Specification;
 
 @UtilityClass
-public class SpecificationUtil {
+public class SpecificationUtils {
 
     public <T> Specification<T> isEqualToAttribute(String value, String attribute) {
         return (root, query, builder) -> builder.equal(root.get(attribute), value);
