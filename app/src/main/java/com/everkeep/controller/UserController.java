@@ -33,6 +33,7 @@ public class UserController {
     public static final String CONFIRMATION_URL = "/confirmation";
     public static final String PASSWORD_URL = "/password";
     public static final String AUTHENTICATION_URL = "/authentication";
+    public static final String LOGOUT_URL = "/logout";
     public static final String ACCESS_URL = "/access";
     public static final String EMAIL_PARAM = "email";
 
@@ -75,6 +76,13 @@ public class UserController {
     @Operation(summary = "Authentication")
     public AuthenticationResponse authenticate(@RequestBody @Valid AuthenticationRequest authenticationRequest) {
         return userService.authenticate(authenticationRequest.email(), authenticationRequest.password());
+    }
+
+    @DeleteMapping(LOGOUT_URL)
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    @Operation(summary = "Logout")
+    public void logout(@RequestHeader(X_API_KEY) @NotBlank String token) {
+        userService.logout(token);
     }
 
     @PostMapping(ACCESS_URL)

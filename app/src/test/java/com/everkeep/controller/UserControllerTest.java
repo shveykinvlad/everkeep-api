@@ -4,6 +4,7 @@ import static com.everkeep.controller.UserController.ACCESS_URL;
 import static com.everkeep.controller.UserController.AUTHENTICATION_URL;
 import static com.everkeep.controller.UserController.CONFIRMATION_URL;
 import static com.everkeep.controller.UserController.EMAIL_PARAM;
+import static com.everkeep.controller.UserController.LOGOUT_URL;
 import static com.everkeep.controller.UserController.PASSWORD_URL;
 import static com.everkeep.controller.UserController.USERS_URL;
 import static com.everkeep.utils.Headers.X_API_KEY;
@@ -99,8 +100,7 @@ class UserControllerTest extends AbstractIntegrationTest {
                         .action(VerificationToken.Action.CONFIRM_ACCOUNT)
                         .active(true)
                         .user(user)
-                        .expiryTime(OffsetDateTime.now(clock)
-                                .plusSeconds(verificationTokenProperties.expiryDuration().getSeconds()))
+                        .expiryTime(OffsetDateTime.now(clock).plusSeconds(verificationTokenProperties.expiryDuration().getSeconds()))
                         .build()
         );
 
@@ -187,8 +187,7 @@ class UserControllerTest extends AbstractIntegrationTest {
                         .action(VerificationToken.Action.RESET_PASSWORD)
                         .active(true)
                         .user(user)
-                        .expiryTime(OffsetDateTime.now(clock)
-                                .plusSeconds(verificationTokenProperties.expiryDuration().getSeconds()))
+                        .expiryTime(OffsetDateTime.now(clock).plusSeconds(verificationTokenProperties.expiryDuration().getSeconds()))
                         .build()
         );
         var request = new RegistrationRequest(
@@ -250,8 +249,7 @@ class UserControllerTest extends AbstractIntegrationTest {
                         .action(VerificationToken.Action.REFRESH_ACCESS)
                         .active(true)
                         .user(user)
-                        .expiryTime(OffsetDateTime.now(clock)
-                                .plusSeconds(verificationTokenProperties.expiryDuration().getSeconds()))
+                        .expiryTime(OffsetDateTime.now(clock).plusSeconds(verificationTokenProperties.expiryDuration().getSeconds()))
                         .build()
         );
 
@@ -261,5 +259,36 @@ class UserControllerTest extends AbstractIntegrationTest {
                 .andExpect(jsonPath("$.email").value(user.getEmail()))
                 .andExpect(jsonPath("$.jwt").exists())
                 .andExpect(jsonPath("$.refreshToken").exists());
+    }
+
+    @Test
+    void logout() throws Exception {
+        var role = roleRepository.findByName(ROLE_USER);
+        var user = userRepository.save(
+                User.builder()
+                        .email("eight@localhost")
+                        .password("$2a$10$m3PkFi86uXTS3LXjxK09DOmT2eVN0IqAW73M7henHdDbc3QxLs7e.")
+                        .enabled(true)
+                        .roles(Set.of(role))
+                        .build()
+        );
+        var token = verificationTokenRepository.save(
+                VerificationToken.builder()
+                        .value(UUID.randomUUID().toString())
+                        .action(VerificationToken.Action.REFRESH_ACCESS)
+                        .active(true)
+                        .user(user)
+                        .expiryTime(OffsetDateTime.now(clock).plusSeconds(verificationTokenProperties.expiryDuration().getSeconds()))
+                        .build()
+        );
+
+        mockMvc.perform(MockMvcRequestBuilders.delete(USERS_URL + LOGOUT_URL)
+                        .header(X_API_KEY, token.getValue()))
+                .andExpect(status().isNoContent());
+
+        assertAll("Should utilize token",
+                () -> assertFalse(verificationTokenRepository.findByValueAndAction(token.getValue(), token.getAction()).orElseThrow()
+                        .isActive())
+        );
     }
 }

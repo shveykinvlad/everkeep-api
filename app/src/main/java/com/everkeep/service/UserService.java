@@ -41,7 +41,7 @@ public class UserService implements UserDetailsService {
     @Override
     public User loadUserByUsername(String email) {
         return userRepository.findByEmail(email)
-                .orElseThrow(() -> new UsernameNotFoundException("User with email = %s not found" .formatted(email)));
+                .orElseThrow(() -> new UsernameNotFoundException("User with email = %s not found".formatted(email)));
     }
 
     public void register(String email, String password) {
@@ -109,6 +109,10 @@ public class UserService implements UserDetailsService {
                 .build();
     }
 
+    public void logout(String token) {
+        verificationTokenService.apply(token, VerificationToken.Action.REFRESH_ACCESS);
+    }
+
     public String getAuthenticatedUsername() {
         return SecurityContextHolder.getContext().getAuthentication().getName();
     }
@@ -126,4 +130,5 @@ public class UserService implements UserDetailsService {
 
         return userRepository.save(user);
     }
+
 }

@@ -112,7 +112,7 @@ class UserServiceTest extends AbstractTest {
     }
 
     @Test
-    void confirm() {
+    void applyConfirmation() {
         var tokenValue = UUID.randomUUID().toString();
         var action = VerificationToken.Action.CONFIRM_ACCOUNT;
         var token = VerificationToken.builder()
@@ -131,7 +131,7 @@ class UserServiceTest extends AbstractTest {
     }
 
     @Test
-    void resendToken() {
+    void resendConfirmation() {
         var email = "five@localhost";
         var user = User.builder()
                 .email(email)
@@ -152,7 +152,7 @@ class UserServiceTest extends AbstractTest {
     }
 
     @Test
-    void resendTokenIfUserIsAlreadyEnabled() {
+    void resendConfirmationIfUserIsAlreadyEnabled() {
         var email = "six@localhost";
         var user = User.builder()
                 .email(email)
@@ -235,7 +235,7 @@ class UserServiceTest extends AbstractTest {
     }
 
     @Test
-    void refreshAccess() {
+    void access() {
         var user = new User();
         var jwt = "jwt";
         var action = VerificationToken.Action.REFRESH_ACCESS;
@@ -259,5 +259,14 @@ class UserServiceTest extends AbstractTest {
                 () -> assertEquals(jwt, authenticationResponse.jwt()),
                 () -> assertEquals(newToken.getValue(), authenticationResponse.refreshToken()),
                 () -> assertEquals(newToken.getUser().getEmail(), authenticationResponse.email()));
+    }
+
+    @Test
+    void logout() {
+        var tokenValue = UUID.randomUUID().toString();
+
+        userService.logout(tokenValue);
+
+        verify(verificationTokenService).apply(tokenValue, VerificationToken.Action.REFRESH_ACCESS);
     }
 }
