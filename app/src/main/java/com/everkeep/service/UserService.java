@@ -14,7 +14,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.everkeep.controller.dto.AuthenticationResponse;
+import com.everkeep.controller.dto.SessionResponse;
 import com.everkeep.exception.UserAlreadyEnabledException;
 import com.everkeep.exception.UserAlreadyExistsException;
 import com.everkeep.model.User;
@@ -87,29 +87,29 @@ public class UserService implements UserDetailsService {
         userRepository.save(user);
     }
 
-    public AuthenticationResponse authenticate(String email, String password) {
+    public SessionResponse createSession(String email, String password) {
         var authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(email, password));
         var user = (User) authentication.getPrincipal();
         var jwtToken = jwtTokenProvider.generateToken(user);
         var refreshToken = verificationTokenService.create(user, VerificationToken.Action.REFRESH_ACCESS);
 
-        return new AuthenticationResponse(jwtToken, refreshToken.getValue(), user.getEmail());
+        return new SessionResponse(jwtToken, refreshToken.getValue(), user.getEmail());
     }
 
-    public AuthenticationResponse refreshAccessToken(String oldTokenValue) {
+    public SessionResponse refreshSession(String oldTokenValue) {
         var oldToken = verificationTokenService.apply(oldTokenValue, VerificationToken.Action.REFRESH_ACCESS);
         var user = oldToken.getUser();
         var jwt = jwtTokenProvider.generateToken(user);
         var newToken = verificationTokenService.create(user, VerificationToken.Action.REFRESH_ACCESS);
 
-        return AuthenticationResponse.builder()
+        return SessionResponse.builder()
                 .jwt(jwt)
                 .refreshToken(newToken.getValue())
                 .email(user.getEmail())
                 .build();
     }
 
-    public void logout(String token) {
+    public void deleteSession(String token) {
         verificationTokenService.apply(token, VerificationToken.Action.REFRESH_ACCESS);
     }
 

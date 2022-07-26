@@ -206,7 +206,7 @@ class UserServiceTest extends AbstractTest {
     }
 
     @Test
-    void authenticate() {
+    void createSession() {
         var email = "eight@localhost";
         var password = "E1ghthP4$$";
         var jwt = "jwt";
@@ -225,17 +225,17 @@ class UserServiceTest extends AbstractTest {
         when(jwtTokenProvider.generateToken(user)).thenReturn(jwt);
         when(verificationTokenService.create(user, action)).thenReturn(token);
 
-        var authenticationResponse = userService.authenticate(email, password);
+        var sessionResponse = userService.createSession(email, password);
 
         assertAll("Should return access token",
-                () -> assertEquals(jwt, authenticationResponse.jwt()),
-                () -> assertEquals(tokenValue, authenticationResponse.refreshToken()),
-                () -> assertEquals(email, authenticationResponse.email())
+                () -> assertEquals(jwt, sessionResponse.jwt()),
+                () -> assertEquals(tokenValue, sessionResponse.refreshToken()),
+                () -> assertEquals(email, sessionResponse.email())
         );
     }
 
     @Test
-    void access() {
+    void refreshSession() {
         var user = new User();
         var jwt = "jwt";
         var action = VerificationToken.Action.REFRESH_ACCESS;
@@ -253,19 +253,19 @@ class UserServiceTest extends AbstractTest {
         when(jwtTokenProvider.generateToken(user)).thenReturn(jwt);
         when(verificationTokenService.create(user, action)).thenReturn(newToken);
 
-        var authenticationResponse = userService.refreshAccessToken(oldToken.getValue());
+        var sessionResponse = userService.refreshSession(oldToken.getValue());
 
         assertAll("Should refresh access token",
-                () -> assertEquals(jwt, authenticationResponse.jwt()),
-                () -> assertEquals(newToken.getValue(), authenticationResponse.refreshToken()),
-                () -> assertEquals(newToken.getUser().getEmail(), authenticationResponse.email()));
+                () -> assertEquals(jwt, sessionResponse.jwt()),
+                () -> assertEquals(newToken.getValue(), sessionResponse.refreshToken()),
+                () -> assertEquals(newToken.getUser().getEmail(), sessionResponse.email()));
     }
 
     @Test
-    void logout() {
+    void deleteSession() {
         var tokenValue = UUID.randomUUID().toString();
 
-        userService.logout(tokenValue);
+        userService.deleteSession(tokenValue);
 
         verify(verificationTokenService).apply(tokenValue, VerificationToken.Action.REFRESH_ACCESS);
     }

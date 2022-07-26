@@ -5,7 +5,7 @@ import javax.validation.constraints.NotBlank;
 import lombok.Builder;
 
 @Builder
-public record AuthenticationResponse(
+public record SessionResponse(
         @NotBlank
         String jwt,
 

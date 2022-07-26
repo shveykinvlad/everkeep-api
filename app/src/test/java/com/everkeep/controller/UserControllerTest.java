@@ -1,11 +1,9 @@
 package com.everkeep.controller;
 
-import static com.everkeep.controller.UserController.ACCESS_URL;
-import static com.everkeep.controller.UserController.AUTHENTICATION_URL;
 import static com.everkeep.controller.UserController.CONFIRMATION_URL;
 import static com.everkeep.controller.UserController.EMAIL_PARAM;
-import static com.everkeep.controller.UserController.LOGOUT_URL;
 import static com.everkeep.controller.UserController.PASSWORD_URL;
+import static com.everkeep.controller.UserController.SESSION_URL;
 import static com.everkeep.controller.UserController.USERS_URL;
 import static com.everkeep.utils.Headers.X_API_KEY;
 import static org.junit.jupiter.api.Assertions.assertAll;
@@ -30,8 +28,8 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import com.everkeep.AbstractIntegrationTest;
 import com.everkeep.config.properties.VerificationTokenProperties;
-import com.everkeep.controller.dto.AuthenticationRequest;
 import com.everkeep.controller.dto.RegistrationRequest;
+import com.everkeep.controller.dto.SessionRequest;
 import com.everkeep.model.User;
 import com.everkeep.model.VerificationToken;
 import com.everkeep.repository.RoleRepository;
@@ -211,7 +209,7 @@ class UserControllerTest extends AbstractIntegrationTest {
     }
 
     @Test
-    void login() throws Exception {
+    void createSession() throws Exception {
         var email = "six@localhost";
         var role = roleRepository.findByName(ROLE_USER);
         var user = userRepository.save(
@@ -222,8 +220,8 @@ class UserControllerTest extends AbstractIntegrationTest {
                         .roles(Set.of(role))
                         .build()
         );
-        var request = new AuthenticationRequest(email, "P4$$w0rd");
-        mockMvc.perform(MockMvcRequestBuilders.post(USERS_URL + AUTHENTICATION_URL)
+        var request = new SessionRequest(email, "P4$$w0rd");
+        mockMvc.perform(MockMvcRequestBuilders.post(USERS_URL + SESSION_URL)
                         .contentType(APPLICATION_JSON)
                         .content(mapper.writeValueAsString(request)))
                 .andExpect(status().isOk())
@@ -233,7 +231,7 @@ class UserControllerTest extends AbstractIntegrationTest {
     }
 
     @Test
-    void refreshAccessToken() throws Exception {
+    void refreshSession() throws Exception {
         var role = roleRepository.findByName(ROLE_USER);
         var user = userRepository.save(
                 User.builder()
@@ -253,7 +251,7 @@ class UserControllerTest extends AbstractIntegrationTest {
                         .build()
         );
 
-        mockMvc.perform(MockMvcRequestBuilders.post(USERS_URL + ACCESS_URL)
+        mockMvc.perform(MockMvcRequestBuilders.put(USERS_URL + SESSION_URL)
                         .header(X_API_KEY, token.getValue()))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.email").value(user.getEmail()))
@@ -262,7 +260,7 @@ class UserControllerTest extends AbstractIntegrationTest {
     }
 
     @Test
-    void logout() throws Exception {
+    void deleteSession() throws Exception {
         var role = roleRepository.findByName(ROLE_USER);
         var user = userRepository.save(
                 User.builder()
@@ -282,7 +280,7 @@ class UserControllerTest extends AbstractIntegrationTest {
                         .build()
         );
 
-        mockMvc.perform(MockMvcRequestBuilders.delete(USERS_URL + LOGOUT_URL)
+        mockMvc.perform(MockMvcRequestBuilders.delete(USERS_URL + SESSION_URL)
                         .header(X_API_KEY, token.getValue()))
                 .andExpect(status().isNoContent());
 

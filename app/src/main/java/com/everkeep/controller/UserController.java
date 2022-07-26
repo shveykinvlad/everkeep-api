@@ -12,6 +12,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -19,8 +20,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.everkeep.controller.dto.AuthenticationRequest;
-import com.everkeep.controller.dto.AuthenticationResponse;
+import com.everkeep.controller.dto.SessionRequest;
+import com.everkeep.controller.dto.SessionResponse;
 import com.everkeep.controller.dto.RegistrationRequest;
 import com.everkeep.service.UserService;
 
@@ -30,11 +31,9 @@ import com.everkeep.service.UserService;
 public class UserController {
 
     public static final String USERS_URL = "/api/users";
-    public static final String CONFIRMATION_URL = "/confirmation";
-    public static final String PASSWORD_URL = "/password";
-    public static final String AUTHENTICATION_URL = "/authentication";
-    public static final String LOGOUT_URL = "/logout";
-    public static final String ACCESS_URL = "/access";
+    public static final String CONFIRMATION_URL = "/confirmations";
+    public static final String PASSWORD_URL = "/passwords";
+    public static final String SESSION_URL = "/sessions";
     public static final String EMAIL_PARAM = "email";
 
     private final UserService userService;
@@ -72,22 +71,22 @@ public class UserController {
         userService.updatePassword(token, registrationRequest.password());
     }
 
-    @PostMapping(AUTHENTICATION_URL)
-    @Operation(summary = "Authentication")
-    public AuthenticationResponse authenticate(@RequestBody @Valid AuthenticationRequest authenticationRequest) {
-        return userService.authenticate(authenticationRequest.email(), authenticationRequest.password());
+    @PostMapping(SESSION_URL)
+    @Operation(summary = "Create session")
+    public SessionResponse createSession(@RequestBody @Valid SessionRequest sessionRequest) {
+        return userService.createSession(sessionRequest.email(), sessionRequest.password());
     }
 
-    @DeleteMapping(LOGOUT_URL)
+    @DeleteMapping(SESSION_URL)
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    @Operation(summary = "Logout")
-    public void logout(@RequestHeader(X_API_KEY) @NotBlank String token) {
-        userService.logout(token);
+    @Operation(summary = "Delete session")
+    public void deleteSession(@RequestHeader(X_API_KEY) @NotBlank String token) {
+        userService.deleteSession(token);
     }
 
-    @PostMapping(ACCESS_URL)
-    @Operation(summary = "Refresh access token")
-    public AuthenticationResponse refreshAccess(@RequestHeader(X_API_KEY) @NotBlank String token) {
-        return userService.refreshAccessToken(token);
+    @PutMapping(SESSION_URL)
+    @Operation(summary = "Refresh session")
+    public SessionResponse refreshSession(@RequestHeader(X_API_KEY) @NotBlank String token) {
+        return userService.refreshSession(token);
     }
 }
