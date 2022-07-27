@@ -9,7 +9,5 @@ public record ErrorDto(
 
         String message,
 
-        //int status,
-
         OffsetDateTime timestamp
 ) { }
