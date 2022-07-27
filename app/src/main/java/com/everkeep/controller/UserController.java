@@ -33,7 +33,7 @@ public class UserController {
     public static final String USERS_URL = "/api/users";
     public static final String CONFIRMATION_URL = "/confirmation";
     public static final String PASSWORD_URL = "/password";
-    public static final String SESSION_URL = "/sessions";
+    public static final String SESSIONS_URL = "/sessions";
     public static final String EMAIL_PARAM = "email";
 
     private final UserService userService;
@@ -71,20 +71,20 @@ public class UserController {
         userService.updatePassword(token, registrationRequest.password());
     }
 
-    @PostMapping(SESSION_URL)
+    @PostMapping(SESSIONS_URL)
     @Operation(summary = "Create session")
     public SessionResponse createSession(@RequestBody @Valid SessionRequest sessionRequest) {
         return userService.createSession(sessionRequest.email(), sessionRequest.password());
     }
 
-    @DeleteMapping(SESSION_URL)
+    @DeleteMapping(SESSIONS_URL)
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @Operation(summary = "Delete session")
     public void deleteSession(@RequestHeader(X_API_KEY) @NotBlank String token) {
         userService.deleteSession(token);
     }
 
-    @PutMapping(SESSION_URL)
+    @PutMapping(SESSIONS_URL)
     @Operation(summary = "Refresh session")
     public SessionResponse refreshSession(@RequestHeader(X_API_KEY) @NotBlank String token) {
         return userService.refreshSession(token);

@@ -3,7 +3,7 @@ package com.everkeep.controller;
 import static com.everkeep.controller.UserController.CONFIRMATION_URL;
 import static com.everkeep.controller.UserController.EMAIL_PARAM;
 import static com.everkeep.controller.UserController.PASSWORD_URL;
-import static com.everkeep.controller.UserController.SESSION_URL;
+import static com.everkeep.controller.UserController.SESSIONS_URL;
 import static com.everkeep.controller.UserController.USERS_URL;
 import static com.everkeep.utils.Headers.X_API_KEY;
 import static org.junit.jupiter.api.Assertions.assertAll;
@@ -221,7 +221,7 @@ class UserControllerTest extends AbstractIntegrationTest {
                         .build()
         );
         var request = new SessionRequest(email, "P4$$w0rd");
-        mockMvc.perform(MockMvcRequestBuilders.post(USERS_URL + SESSION_URL)
+        mockMvc.perform(MockMvcRequestBuilders.post(USERS_URL + SESSIONS_URL)
                         .contentType(APPLICATION_JSON)
                         .content(mapper.writeValueAsString(request)))
                 .andExpect(status().isOk())
@@ -251,7 +251,7 @@ class UserControllerTest extends AbstractIntegrationTest {
                         .build()
         );
 
-        mockMvc.perform(MockMvcRequestBuilders.put(USERS_URL + SESSION_URL)
+        mockMvc.perform(MockMvcRequestBuilders.put(USERS_URL + SESSIONS_URL)
                         .header(X_API_KEY, token.getValue()))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.email").value(user.getEmail()))
@@ -280,7 +280,7 @@ class UserControllerTest extends AbstractIntegrationTest {
                         .build()
         );
 
-        mockMvc.perform(MockMvcRequestBuilders.delete(USERS_URL + SESSION_URL)
+        mockMvc.perform(MockMvcRequestBuilders.delete(USERS_URL + SESSIONS_URL)
                         .header(X_API_KEY, token.getValue()))
                 .andExpect(status().isNoContent());
 
