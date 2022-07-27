@@ -1,3 +1,7 @@
+server:
+  error:
+    include-stacktrace: never
+
 spring:
   datasource:
     url: ${SPRING_DATASOURCE_URL:}

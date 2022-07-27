@@ -50,8 +50,8 @@ public class VerificationToken {
     private boolean active = true;
 
     public enum Action {
-        RESET_PASSWORD,
-        CONFIRM_ACCOUNT,
-        REFRESH_ACCESS
+        PASSWORD_RESET,
+        ACCOUNT_CONFIRMATION,
+        SESSION_REFRESH
     }
 }

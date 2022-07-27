@@ -7,7 +7,6 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.when;
 
-import javax.persistence.EntityNotFoundException;
 import java.time.Clock;
 import java.time.Duration;
 import java.time.OffsetDateTime;
@@ -26,7 +25,8 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import com.everkeep.AbstractTest;
 import com.everkeep.config.TimeConfig;
 import com.everkeep.config.properties.VerificationTokenProperties;
-import com.everkeep.exception.VerificationTokenExpirationException;
+import com.everkeep.exception.VerificationTokenExpiredException;
+import com.everkeep.exception.VerificationTokenNotFoundException;
 import com.everkeep.model.User;
 import com.everkeep.model.VerificationToken;
 import com.everkeep.repository.VerificationTokenRepository;
@@ -54,12 +54,12 @@ class VerificationTokenServiceTest extends AbstractTest {
         var duration = Duration.of(30, ChronoUnit.SECONDS);
         when(verificationTokenProperties.expiryDuration()).thenReturn(duration);
 
-        verificationTokenService.create(user, VerificationToken.Action.CONFIRM_ACCOUNT);
+        verificationTokenService.create(user, VerificationToken.Action.ACCOUNT_CONFIRMATION);
 
         Mockito.verify(verificationTokenRepository).save(tokenCaptor.capture());
         var savedToken = tokenCaptor.getValue();
         assertAll("Should return created token",
-                () -> assertEquals(VerificationToken.Action.CONFIRM_ACCOUNT, savedToken.getAction()),
+                () -> assertEquals(VerificationToken.Action.ACCOUNT_CONFIRMATION, savedToken.getAction()),
                 () -> assertEquals(user, savedToken.getUser()),
                 () -> assertEquals(OffsetDateTime.now(clock).plusSeconds(duration.getSeconds()).truncatedTo(ChronoUnit.SECONDS),
                         savedToken.getExpiryTime().truncatedTo(ChronoUnit.SECONDS))
@@ -69,14 +69,14 @@ class VerificationTokenServiceTest extends AbstractTest {
     @Test
     void get() {
         var value = UUID.randomUUID().toString();
-        var action = VerificationToken.Action.CONFIRM_ACCOUNT;
+        var action = VerificationToken.Action.ACCOUNT_CONFIRMATION;
         var savedToken = VerificationToken.builder()
                 .value(value)
                 .action(action)
                 .build();
         when(verificationTokenRepository.findByValueAndAction(value, action)).thenReturn(Optional.of(savedToken));
 
-        var receivedToken = verificationTokenService.get(value, VerificationToken.Action.CONFIRM_ACCOUNT);
+        var receivedToken = verificationTokenService.get(value, VerificationToken.Action.ACCOUNT_CONFIRMATION);
 
         assertAll("Should return token",
                 () -> assertEquals(value, receivedToken.getValue()),
@@ -88,10 +88,10 @@ class VerificationTokenServiceTest extends AbstractTest {
     @Test
     void getNotFound() {
         var value = UUID.randomUUID().toString();
-        var action = VerificationToken.Action.CONFIRM_ACCOUNT;
+        var action = VerificationToken.Action.ACCOUNT_CONFIRMATION;
         when(verificationTokenRepository.findByValueAndAction(value, action)).thenReturn(Optional.empty());
 
-        assertThrows(EntityNotFoundException.class,
+        assertThrows(VerificationTokenNotFoundException.class,
                 () -> verificationTokenService.get(value, action),
                 "Should throw an exception if token not found");
     }
@@ -99,7 +99,7 @@ class VerificationTokenServiceTest extends AbstractTest {
     @Test
     void apply() {
         var value = UUID.randomUUID().toString();
-        var action = VerificationToken.Action.CONFIRM_ACCOUNT;
+        var action = VerificationToken.Action.ACCOUNT_CONFIRMATION;
         var expiryTime = OffsetDateTime.MAX;
         var savedToken = VerificationToken.builder()
                 .value(value)
@@ -123,7 +123,7 @@ class VerificationTokenServiceTest extends AbstractTest {
     @Test
     void applyExpired() {
         var value = UUID.randomUUID().toString();
-        var action = VerificationToken.Action.CONFIRM_ACCOUNT;
+        var action = VerificationToken.Action.ACCOUNT_CONFIRMATION;
         var expiryTime = OffsetDateTime.MIN;
         var token = VerificationToken.builder()
                 .value(value)
@@ -132,7 +132,7 @@ class VerificationTokenServiceTest extends AbstractTest {
                 .build();
         when(verificationTokenRepository.findByValueAndAction(value, action)).thenReturn(Optional.of(token));
 
-        assertThrows(VerificationTokenExpirationException.class,
+        assertThrows(VerificationTokenExpiredException.class,
                 () -> verificationTokenService.apply(value, action),
                 "Should throw an exception if the token is expired");
     }

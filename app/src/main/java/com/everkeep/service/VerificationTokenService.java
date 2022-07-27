@@ -1,6 +1,5 @@
 package com.everkeep.service;
 
-import javax.persistence.EntityNotFoundException;
 import java.time.Clock;
 import java.time.OffsetDateTime;
 import java.util.UUID;
@@ -9,7 +8,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import com.everkeep.config.properties.VerificationTokenProperties;
-import com.everkeep.exception.VerificationTokenExpirationException;
+import com.everkeep.exception.VerificationTokenExpiredException;
+import com.everkeep.exception.VerificationTokenNotFoundException;
 import com.everkeep.model.User;
 import com.everkeep.model.VerificationToken;
 import com.everkeep.repository.VerificationTokenRepository;
@@ -38,7 +38,7 @@ public class VerificationTokenService {
 
     public VerificationToken get(String value, VerificationToken.Action action) {
         return verificationTokenRepository.findByValueAndAction(value, action)
-                .orElseThrow(() -> new EntityNotFoundException("VerificationToken %s for action %s not found"
+                .orElseThrow(() -> new VerificationTokenNotFoundException("VerificationToken %s for action %s not found"
                         .formatted(value, action)));
     }
 
@@ -51,7 +51,7 @@ public class VerificationTokenService {
 
     private void validate(VerificationToken token) {
         if (OffsetDateTime.now().isAfter(token.getExpiryTime())) {
-            throw new VerificationTokenExpirationException("Verification token is expired", token.getValue());
+            throw new VerificationTokenExpiredException("Verification token is expired", token.getValue());
         }
     }
 

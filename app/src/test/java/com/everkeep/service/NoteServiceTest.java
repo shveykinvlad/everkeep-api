@@ -6,7 +6,6 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-import javax.persistence.EntityNotFoundException;
 import java.util.List;
 import java.util.Optional;
 
@@ -19,6 +18,7 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.security.access.AccessDeniedException;
 
 import com.everkeep.AbstractTest;
+import com.everkeep.exception.NoteNotFoundException;
 import com.everkeep.model.Note;
 import com.everkeep.model.NotePriority;
 import com.everkeep.repository.NoteRepository;
@@ -77,7 +77,7 @@ class NoteServiceTest extends AbstractTest {
         when(userService.getAuthenticatedUsername()).thenReturn(username);
         when(noteRepository.findByIdAndUsername(id, username)).thenReturn(Optional.empty());
 
-        assertThrows(EntityNotFoundException.class, () -> noteService.get(id));
+        assertThrows(NoteNotFoundException.class, () -> noteService.get(id));
     }
 
     @Test

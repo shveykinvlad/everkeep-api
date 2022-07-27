@@ -95,7 +95,7 @@ class UserControllerTest extends AbstractIntegrationTest {
         var token = verificationTokenRepository.save(
                 VerificationToken.builder()
                         .value(UUID.randomUUID().toString())
-                        .action(VerificationToken.Action.CONFIRM_ACCOUNT)
+                        .action(VerificationToken.Action.ACCOUNT_CONFIRMATION)
                         .active(true)
                         .user(user)
                         .expiryTime(OffsetDateTime.now(clock).plusSeconds(verificationTokenProperties.expiryDuration().getSeconds()))
@@ -182,7 +182,7 @@ class UserControllerTest extends AbstractIntegrationTest {
         var token = verificationTokenRepository.save(
                 VerificationToken.builder()
                         .value(UUID.randomUUID().toString())
-                        .action(VerificationToken.Action.RESET_PASSWORD)
+                        .action(VerificationToken.Action.PASSWORD_RESET)
                         .active(true)
                         .user(user)
                         .expiryTime(OffsetDateTime.now(clock).plusSeconds(verificationTokenProperties.expiryDuration().getSeconds()))
@@ -244,7 +244,7 @@ class UserControllerTest extends AbstractIntegrationTest {
         var token = verificationTokenRepository.save(
                 VerificationToken.builder()
                         .value(UUID.randomUUID().toString())
-                        .action(VerificationToken.Action.REFRESH_ACCESS)
+                        .action(VerificationToken.Action.SESSION_REFRESH)
                         .active(true)
                         .user(user)
                         .expiryTime(OffsetDateTime.now(clock).plusSeconds(verificationTokenProperties.expiryDuration().getSeconds()))
@@ -273,7 +273,7 @@ class UserControllerTest extends AbstractIntegrationTest {
         var token = verificationTokenRepository.save(
                 VerificationToken.builder()
                         .value(UUID.randomUUID().toString())
-                        .action(VerificationToken.Action.REFRESH_ACCESS)
+                        .action(VerificationToken.Action.SESSION_REFRESH)
                         .active(true)
                         .user(user)
                         .expiryTime(OffsetDateTime.now(clock).plusSeconds(verificationTokenProperties.expiryDuration().getSeconds()))

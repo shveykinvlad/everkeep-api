@@ -49,13 +49,13 @@ public class UserService implements UserDetailsService {
             throw new UserAlreadyExistsException("User already exists", email);
         }
         var user = createUser(email, password);
-        var token = verificationTokenService.create(user, VerificationToken.Action.CONFIRM_ACCOUNT);
+        var token = verificationTokenService.create(user, VerificationToken.Action.ACCOUNT_CONFIRMATION);
 
         mailService.sendConfirmationMail(user.getEmail(), token.getValue());
     }
 
     public void confirm(String tokenValue) {
-        var verificationToken = verificationTokenService.apply(tokenValue, VerificationToken.Action.CONFIRM_ACCOUNT);
+        var verificationToken = verificationTokenService.apply(tokenValue, VerificationToken.Action.ACCOUNT_CONFIRMATION);
         var user = verificationToken.getUser();
         user.setEnabled(true);
 
@@ -67,20 +67,20 @@ public class UserService implements UserDetailsService {
         if (user.isEnabled()) {
             throw new UserAlreadyEnabledException("User already enabled", user.getEmail());
         }
-        var token = verificationTokenService.create(user, VerificationToken.Action.CONFIRM_ACCOUNT);
+        var token = verificationTokenService.create(user, VerificationToken.Action.ACCOUNT_CONFIRMATION);
 
         mailService.sendConfirmationMail(user.getEmail(), token.getValue());
     }
 
     public void resetPassword(String email) {
         var user = loadUserByUsername(email);
-        var token = verificationTokenService.create(user, VerificationToken.Action.RESET_PASSWORD);
+        var token = verificationTokenService.create(user, VerificationToken.Action.PASSWORD_RESET);
 
         mailService.sendResetPasswordMail(user.getEmail(), token.getValue());
     }
 
     public void updatePassword(String tokenValue, String password) {
-        var verificationToken = verificationTokenService.apply(tokenValue, VerificationToken.Action.RESET_PASSWORD);
+        var verificationToken = verificationTokenService.apply(tokenValue, VerificationToken.Action.PASSWORD_RESET);
         var user = verificationToken.getUser();
         user.setPassword(passwordEncoder.encode(password));
 
@@ -91,16 +91,16 @@ public class UserService implements UserDetailsService {
         var authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(email, password));
         var user = (User) authentication.getPrincipal();
         var jwtToken = jwtTokenProvider.generateToken(user);
-        var refreshToken = verificationTokenService.create(user, VerificationToken.Action.REFRESH_ACCESS);
+        var refreshToken = verificationTokenService.create(user, VerificationToken.Action.SESSION_REFRESH);
 
         return new SessionResponse(jwtToken, refreshToken.getValue(), user.getEmail());
     }
 
     public SessionResponse refreshSession(String oldTokenValue) {
-        var oldToken = verificationTokenService.apply(oldTokenValue, VerificationToken.Action.REFRESH_ACCESS);
+        var oldToken = verificationTokenService.apply(oldTokenValue, VerificationToken.Action.SESSION_REFRESH);
         var user = oldToken.getUser();
         var jwt = jwtTokenProvider.generateToken(user);
-        var newToken = verificationTokenService.create(user, VerificationToken.Action.REFRESH_ACCESS);
+        var newToken = verificationTokenService.create(user, VerificationToken.Action.SESSION_REFRESH);
 
         return SessionResponse.builder()
                 .jwt(jwt)
@@ -110,7 +110,7 @@ public class UserService implements UserDetailsService {
     }
 
     public void deleteSession(String token) {
-        verificationTokenService.apply(token, VerificationToken.Action.REFRESH_ACCESS);
+        verificationTokenService.apply(token, VerificationToken.Action.SESSION_REFRESH);
     }
 
     public String getAuthenticatedUsername() {

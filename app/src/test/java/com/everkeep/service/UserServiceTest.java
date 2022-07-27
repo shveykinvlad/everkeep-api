@@ -81,7 +81,7 @@ class UserServiceTest extends AbstractTest {
         var password = "Th1rdP4$$";
         var email = "three@localhost";
         var roleName = "ROLE_USER";
-        var action = VerificationToken.Action.CONFIRM_ACCOUNT;
+        var action = VerificationToken.Action.ACCOUNT_CONFIRMATION;
         var role = Role.builder()
                 .name(roleName)
                 .build();
@@ -114,7 +114,7 @@ class UserServiceTest extends AbstractTest {
     @Test
     void applyConfirmation() {
         var tokenValue = UUID.randomUUID().toString();
-        var action = VerificationToken.Action.CONFIRM_ACCOUNT;
+        var action = VerificationToken.Action.ACCOUNT_CONFIRMATION;
         var token = VerificationToken.builder()
                 .value(tokenValue)
                 .action(action)
@@ -137,7 +137,7 @@ class UserServiceTest extends AbstractTest {
                 .email(email)
                 .build();
         var tokenValue = UUID.randomUUID().toString();
-        var action = VerificationToken.Action.CONFIRM_ACCOUNT;
+        var action = VerificationToken.Action.ACCOUNT_CONFIRMATION;
         var token = VerificationToken.builder()
                 .user(user)
                 .value(tokenValue)
@@ -170,7 +170,7 @@ class UserServiceTest extends AbstractTest {
         var user = User.builder()
                 .email(email)
                 .build();
-        var action = VerificationToken.Action.RESET_PASSWORD;
+        var action = VerificationToken.Action.PASSWORD_RESET;
         var token = VerificationToken.builder()
                 .action(action)
                 .value(tokenValue)
@@ -186,7 +186,7 @@ class UserServiceTest extends AbstractTest {
     @Test
     void updatePassword() {
         var tokenValue = UUID.randomUUID().toString();
-        var action = VerificationToken.Action.RESET_PASSWORD;
+        var action = VerificationToken.Action.PASSWORD_RESET;
         var password = "P4$$w0rd";
         var encodedPassword = "$2a$10$l13RhzScYa0XCo4AGvbxTe2/f7W8.0b5bLf5Plwq713G15rcxlpJe";
         var token = VerificationToken.builder()
@@ -215,7 +215,7 @@ class UserServiceTest extends AbstractTest {
                 .password(password)
                 .build();
         var tokenValue = UUID.randomUUID().toString();
-        var action = VerificationToken.Action.REFRESH_ACCESS;
+        var action = VerificationToken.Action.SESSION_REFRESH;
         var token = VerificationToken.builder()
                 .value(tokenValue)
                 .action(action)
@@ -238,15 +238,15 @@ class UserServiceTest extends AbstractTest {
     void refreshSession() {
         var user = new User();
         var jwt = "jwt";
-        var action = VerificationToken.Action.REFRESH_ACCESS;
+        var action = VerificationToken.Action.SESSION_REFRESH;
         var oldToken = VerificationToken.builder()
                 .value("old value")
-                .action(VerificationToken.Action.REFRESH_ACCESS)
+                .action(VerificationToken.Action.SESSION_REFRESH)
                 .user(user)
                 .build();
         var newToken = VerificationToken.builder()
                 .value("new value")
-                .action(VerificationToken.Action.REFRESH_ACCESS)
+                .action(VerificationToken.Action.SESSION_REFRESH)
                 .user(user)
                 .build();
         when(verificationTokenService.apply(oldToken.getValue(), action)).thenReturn(oldToken);
@@ -267,6 +267,6 @@ class UserServiceTest extends AbstractTest {
 
         userService.deleteSession(tokenValue);
 
-        verify(verificationTokenService).apply(tokenValue, VerificationToken.Action.REFRESH_ACCESS);
+        verify(verificationTokenService).apply(tokenValue, VerificationToken.Action.SESSION_REFRESH);
     }
 }

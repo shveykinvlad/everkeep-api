@@ -1,6 +1,5 @@
 package com.everkeep.service;
 
-import javax.persistence.EntityNotFoundException;
 import java.util.Arrays;
 import java.util.List;
 
@@ -10,6 +9,7 @@ import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.everkeep.exception.NoteNotFoundException;
 import com.everkeep.model.Note;
 import com.everkeep.repository.NoteRepository;
 import com.everkeep.utils.SpecificationUtils;
@@ -28,7 +28,7 @@ public class NoteService {
 
     public Note get(Long id) {
         return noteRepository.findByIdAndUsername(id, userService.getAuthenticatedUsername())
-                .orElseThrow(() -> new EntityNotFoundException("Note with id = %d not found".formatted(id)));
+                .orElseThrow(() -> new NoteNotFoundException("Note with id = %d not found".formatted(id)));
     }
 
     public List<Note> search(String value) {

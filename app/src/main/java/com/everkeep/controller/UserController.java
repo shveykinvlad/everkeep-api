@@ -31,8 +31,8 @@ import com.everkeep.service.UserService;
 public class UserController {
 
     public static final String USERS_URL = "/api/users";
-    public static final String CONFIRMATION_URL = "/confirmations";
-    public static final String PASSWORD_URL = "/passwords";
+    public static final String CONFIRMATION_URL = "/confirmation";
+    public static final String PASSWORD_URL = "/password";
     public static final String SESSION_URL = "/sessions";
     public static final String EMAIL_PARAM = "email";
 

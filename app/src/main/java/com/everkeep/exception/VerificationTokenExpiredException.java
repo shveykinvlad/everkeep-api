@@ -3,11 +3,11 @@ package com.everkeep.exception;
 import lombok.Getter;
 
 @Getter
-public class VerificationTokenExpirationException extends RuntimeException {
+public class VerificationTokenExpiredException extends RuntimeException {
 
     private final String token;
 
-    public VerificationTokenExpirationException(String message, String token) {
+    public VerificationTokenExpiredException(String message, String token) {
         super(message);
         this.token = token;
     }
