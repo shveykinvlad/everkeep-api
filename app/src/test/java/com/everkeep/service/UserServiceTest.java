@@ -17,9 +17,7 @@ import org.mockito.Captor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.TestingAuthenticationToken;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
@@ -39,7 +37,7 @@ class UserServiceTest extends AbstractTest {
     @Autowired
     private UserService userService;
     @MockBean
-    private AuthenticationManager authenticationManager;
+    private AuthenticationService authenticationService;
     @MockBean
     private UserRepository userRepository;
     @MockBean
@@ -63,7 +61,7 @@ class UserServiceTest extends AbstractTest {
                 .build();
         when(userRepository.findByEmail(email)).thenReturn(Optional.of(savedUser));
 
-        var receivedUser = userService.loadUserByUsername(email);
+        var receivedUser = userService.get(email);
 
         assertEquals(savedUser, receivedUser);
     }
@@ -73,7 +71,7 @@ class UserServiceTest extends AbstractTest {
         var email = "two@localhost";
         when(userRepository.findByEmail(email)).thenReturn(Optional.empty());
 
-        assertThrows(UsernameNotFoundException.class, () -> userService.loadUserByUsername(email));
+        assertThrows(UsernameNotFoundException.class, () -> userService.get(email));
     }
 
     @Test
@@ -220,7 +218,7 @@ class UserServiceTest extends AbstractTest {
                 .value(tokenValue)
                 .action(action)
                 .build();
-        when(authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(email, password)))
+        when(authenticationService.authenticate(email, password))
                 .thenReturn(new TestingAuthenticationToken(user, password));
         when(jwtTokenProvider.generateToken(user)).thenReturn(jwt);
         when(verificationTokenService.create(user, action)).thenReturn(token);

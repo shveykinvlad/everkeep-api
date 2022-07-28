@@ -2,8 +2,6 @@ spring:
   datasource:
     hikari:
       connection-timeout: 250
-  main:
-    allow-circular-references: true
   mail:
     host: localhost
     username: login

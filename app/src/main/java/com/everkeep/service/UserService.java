@@ -4,11 +4,7 @@ import java.util.Set;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.context.annotation.Lazy;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -27,10 +23,9 @@ import com.everkeep.service.security.JwtTokenProvider;
 @Transactional
 @RequiredArgsConstructor
 @Slf4j
-public class UserService implements UserDetailsService {
+public class UserService {
 
-    @Lazy
-    private final AuthenticationManager authenticationManager;
+    private final AuthenticationService authenticationService;
     private final UserRepository userRepository;
     private final RoleRepository roleRepository;
     private final PasswordEncoder passwordEncoder;
@@ -38,8 +33,7 @@ public class UserService implements UserDetailsService {
     private final MailService mailService;
     private final JwtTokenProvider jwtTokenProvider;
 
-    @Override
-    public User loadUserByUsername(String email) {
+    public User get(String email) {
         return userRepository.findByEmail(email)
                 .orElseThrow(() -> new UsernameNotFoundException("User with email = %s not found".formatted(email)));
     }
@@ -63,7 +57,7 @@ public class UserService implements UserDetailsService {
     }
 
     public void resendToken(String email) {
-        var user = loadUserByUsername(email);
+        var user = get(email);
         if (user.isEnabled()) {
             throw new UserAlreadyEnabledException("User already enabled", user.getEmail());
         }
@@ -73,7 +67,7 @@ public class UserService implements UserDetailsService {
     }
 
     public void resetPassword(String email) {
-        var user = loadUserByUsername(email);
+        var user = get(email);
         var token = verificationTokenService.create(user, VerificationToken.Action.PASSWORD_RESET);
 
         mailService.sendResetPasswordMail(user.getEmail(), token.getValue());
@@ -88,7 +82,7 @@ public class UserService implements UserDetailsService {
     }
 
     public SessionResponse createSession(String email, String password) {
-        var authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(email, password));
+        var authentication = authenticationService.authenticate(email, password);
         var user = (User) authentication.getPrincipal();
         var jwtToken = jwtTokenProvider.generateToken(user);
         var refreshToken = verificationTokenService.create(user, VerificationToken.Action.SESSION_REFRESH);
