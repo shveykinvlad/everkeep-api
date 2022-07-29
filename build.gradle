@@ -75,7 +75,17 @@ configure(javaProjects) {
         toolVersion = '0.8.8'
     }
 
+    def jacocoExclude = [
+            'com/everkeep/model/*',
+    ]
+
     jacocoTestCoverageVerification {
+        afterEvaluate {
+            getClassDirectories().setFrom(classDirectories.files.collect {
+                fileTree(dir: it, exclude: jacocoExclude)
+            })
+        }
+
         violationRules {
             rule {
                 limit {

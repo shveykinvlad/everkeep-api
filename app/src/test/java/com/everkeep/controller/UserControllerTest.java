@@ -72,16 +72,16 @@ class UserControllerTest extends AbstractIntegrationTest {
                         .contentType(APPLICATION_JSON))
                 .andExpect(status().isCreated());
 
-        var receivedMessages = GREEN_MAIL.getReceivedMessages();
+        var receivedMessage = GREEN_MAIL.getReceivedMessages()[0];
         assertAll("Should receive confirmation email",
                 () -> assertEquals(1, GREEN_MAIL.getReceivedMessages().length),
-                () -> assertEquals(email, receivedMessages[0].getAllRecipients()[0].toString()),
-                () -> assertEquals("Email confirmation", receivedMessages[0].getSubject()),
-                () -> assertTrue(GreenMailUtil.getBody(receivedMessages[0]).matches(CONFIRMATION_MAIL_MESSAGE_REGEX)));
+                () -> assertEquals(email, receivedMessage.getAllRecipients()[0].toString()),
+                () -> assertEquals("Email confirmation", receivedMessage.getSubject()),
+                () -> assertTrue(GreenMailUtil.getBody(receivedMessage).matches(CONFIRMATION_MAIL_MESSAGE_REGEX)));
     }
 
     @Test
-    void applyConfirmation() throws Exception {
+    void confirm() throws Exception {
         var role = roleRepository.findByName(ROLE_USER);
         var user = userRepository.save(
                 User.builder()
@@ -107,7 +107,9 @@ class UserControllerTest extends AbstractIntegrationTest {
                 .andExpect(status().isOk());
 
         assertAll("Should enable user and utilize token",
-                () -> assertTrue(userRepository.findByEmail(user.getEmail()).orElseThrow().isEnabled()),
+                () -> assertTrue(userRepository.findByEmail(user.getEmail())
+                        .orElseThrow()
+                        .isEnabled()),
                 () -> assertFalse(verificationTokenRepository.findByHashValueAndAction(token.getHashValue(), token.getAction())
                         .orElseThrow()
                         .isActive())
@@ -131,13 +133,12 @@ class UserControllerTest extends AbstractIntegrationTest {
                         .param(EMAIL_PARAM, user.getEmail()))
                 .andExpect(status().isOk());
 
-        var receivedMessages = GREEN_MAIL.getReceivedMessages();
+        var receivedMessage = GREEN_MAIL.getReceivedMessages()[0];
         assertAll("Should receive confirmation email",
-                () -> assertEquals(1, receivedMessages.length),
-                () -> assertEquals(email, receivedMessages[0].getAllRecipients()[0].toString()),
-                () -> assertEquals("Email confirmation", receivedMessages[0].getSubject()),
-                () -> assertTrue(GreenMailUtil.getBody(receivedMessages[0]).matches(CONFIRMATION_MAIL_MESSAGE_REGEX)));
-
+                () -> assertEquals(1, GREEN_MAIL.getReceivedMessages().length),
+                () -> assertEquals(email, receivedMessage.getAllRecipients()[0].toString()),
+                () -> assertEquals("Email confirmation", receivedMessage.getSubject()),
+                () -> assertTrue(GreenMailUtil.getBody(receivedMessage).matches(CONFIRMATION_MAIL_MESSAGE_REGEX)));
     }
 
     @Test
@@ -157,12 +158,12 @@ class UserControllerTest extends AbstractIntegrationTest {
                         .param(EMAIL_PARAM, user.getEmail()))
                 .andExpect(status().isNoContent());
 
-        var receivedMessages = GREEN_MAIL.getReceivedMessages();
+        var receivedMessage = GREEN_MAIL.getReceivedMessages()[0];
         assertAll("Should receive password reset email",
-                () -> assertEquals(1, receivedMessages.length),
-                () -> assertEquals(email, receivedMessages[0].getAllRecipients()[0].toString()),
-                () -> assertEquals("Password reset", receivedMessages[0].getSubject()),
-                () -> assertTrue(GreenMailUtil.getBody(receivedMessages[0]).matches(PASSWORD_RESET_MAIL_MESSAGE_REGEX)));
+                () -> assertEquals(1, GREEN_MAIL.getReceivedMessages().length),
+                () -> assertEquals(email, receivedMessage.getAllRecipients()[0].toString()),
+                () -> assertEquals("Password reset", receivedMessage.getSubject()),
+                () -> assertTrue(GreenMailUtil.getBody(receivedMessage).matches(PASSWORD_RESET_MAIL_MESSAGE_REGEX)));
     }
 
     @Test
@@ -184,7 +185,8 @@ class UserControllerTest extends AbstractIntegrationTest {
                         .action(VerificationToken.Action.PASSWORD_RESET)
                         .active(true)
                         .user(user)
-                        .expiryTime(OffsetDateTime.now(clock).plusSeconds(verificationTokenProperties.expiryDuration().getSeconds()))
+                        .expiryTime(OffsetDateTime.now(clock)
+                                .plusSeconds(verificationTokenProperties.expiryDuration().getSeconds()))
                         .build()
         );
         var request = new RegistrationRequest(
@@ -205,7 +207,6 @@ class UserControllerTest extends AbstractIntegrationTest {
                 () -> assertFalse(verificationTokenRepository.findByHashValueAndAction(token.getHashValue(), token.getAction())
                         .orElseThrow()
                         .isActive())
-
         );
     }
 }

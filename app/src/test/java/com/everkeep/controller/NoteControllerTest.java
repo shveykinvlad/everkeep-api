@@ -180,13 +180,14 @@ class NoteControllerTest extends AbstractIntegrationTest {
     @Test
     @WithMockUser(username = USERNAME)
     void delete() throws Exception {
-        var note = noteRepository.save(Note.builder()
-                .title("The Lord of the Rings: The Return of the King")
-                .text("""
-                        Gandalf and Aragorn lead the World of Men against Sauron's army to draw his gaze \
-                        from Frodo and Sam as they approach Mount Doom with the One Ring.""")
-                .priority(NotePriority.NONE)
-                .build());
+        var note = noteRepository.save(
+                Note.builder()
+                        .title("The Lord of the Rings: The Return of the King")
+                        .text("""
+                                Gandalf and Aragorn lead the World of Men against Sauron's army to draw his gaze \
+                                from Frodo and Sam as they approach Mount Doom with the One Ring.""")
+                        .priority(NotePriority.NONE)
+                        .build());
 
         mockMvc.perform(MockMvcRequestBuilders.delete(NOTES_URL + ID_URL, note.getId()))
                 .andExpect(status().isNoContent());

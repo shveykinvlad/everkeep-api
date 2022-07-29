@@ -75,7 +75,8 @@ class VerificationTokenServiceTest extends AbstractTest {
                 .hashValue(sha256Hex(value))
                 .action(action)
                 .build();
-        when(verificationTokenRepository.findByHashValueAndAction(sha256Hex(value), action)).thenReturn(Optional.of(savedToken));
+        when(verificationTokenRepository.findByHashValueAndAction(sha256Hex(value), action))
+                .thenReturn(Optional.of(savedToken));
 
         var receivedToken = verificationTokenService.get(value, VerificationToken.Action.ACCOUNT_CONFIRMATION);
 
@@ -90,7 +91,8 @@ class VerificationTokenServiceTest extends AbstractTest {
     void getNotFound() {
         var value = UUID.randomUUID().toString();
         var action = VerificationToken.Action.ACCOUNT_CONFIRMATION;
-        when(verificationTokenRepository.findByHashValueAndAction(sha256Hex(value), action)).thenReturn(Optional.empty());
+        when(verificationTokenRepository.findByHashValueAndAction(sha256Hex(value), action))
+                .thenReturn(Optional.empty());
 
         assertThrows(VerificationTokenNotFoundException.class,
                 () -> verificationTokenService.get(value, action),
@@ -107,7 +109,8 @@ class VerificationTokenServiceTest extends AbstractTest {
                 .action(action)
                 .expiryTime(expiryTime)
                 .build();
-        when(verificationTokenRepository.findByHashValueAndAction(sha256Hex(value), action)).thenReturn(Optional.of(savedToken));
+        when(verificationTokenRepository.findByHashValueAndAction(sha256Hex(value), action))
+                .thenReturn(Optional.of(savedToken));
 
         verificationTokenService.apply(value, action);
 
@@ -134,7 +137,8 @@ class VerificationTokenServiceTest extends AbstractTest {
                         .email("hyacinthus@localhost")
                         .build())
                 .build();
-        when(verificationTokenRepository.findByHashValueAndAction(sha256Hex(value), action)).thenReturn(Optional.of(token));
+        when(verificationTokenRepository.findByHashValueAndAction(sha256Hex(value), action))
+                .thenReturn(Optional.of(token));
 
         assertThrows(VerificationTokenExpiredException.class,
                 () -> verificationTokenService.apply(value, action),

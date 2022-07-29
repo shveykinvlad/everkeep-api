@@ -1,6 +1,5 @@
 package com.everkeep.controller;
 
-import static com.everkeep.controller.UserController.USERS_URL;
 import static com.everkeep.utils.Headers.X_API_KEY;
 
 import javax.validation.Valid;
@@ -23,7 +22,7 @@ import com.everkeep.controller.dto.RegistrationRequest;
 import com.everkeep.service.UserService;
 
 @RestController
-@RequestMapping(path = USERS_URL)
+@RequestMapping(path = UserController.USERS_URL)
 @RequiredArgsConstructor
 public class UserController {
 
@@ -49,7 +48,7 @@ public class UserController {
 
     @PostMapping(value = CONFIRMATION_URL)
     @Operation(summary = "Confirm user registration")
-    public void applyConfirmation(@RequestHeader(X_API_KEY) @NotBlank String token) {
+    public void confirm(@RequestHeader(X_API_KEY) @NotBlank String token) {
         userService.confirm(token);
     }
 

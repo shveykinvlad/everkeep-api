@@ -39,7 +39,7 @@ public class UserService {
         if (userExists(email)) {
             throw new UserAlreadyExistsException("User already exists", email);
         }
-        var user = createUser(email, password);
+        var user = create(email, password);
         var tokenValue = verificationTokenService.create(user, VerificationToken.Action.ACCOUNT_CONFIRMATION);
 
         mailService.sendConfirmationMail(user.getEmail(), tokenValue);
@@ -91,7 +91,7 @@ public class UserService {
         return userRepository.existsByEmail(email);
     }
 
-    private User createUser(String email, String password) {
+    private User create(String email, String password) {
         var user = User.builder()
                 .email(email)
                 .password(passwordEncoder.encode(password))

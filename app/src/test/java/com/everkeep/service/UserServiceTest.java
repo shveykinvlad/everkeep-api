@@ -99,7 +99,9 @@ class UserServiceTest extends AbstractTest {
         var email = "pyrrhus@localhost";
         when(userRepository.existsByEmail(email)).thenReturn(true);
 
-        assertThrows(UserAlreadyExistsException.class, () -> userService.register(email, "F0urthP4$$"));
+        assertThrows(UserAlreadyExistsException.class,
+                () -> userService.register(email, "F0urthP4$$"),
+                "Should throw an exception if user already exists");
     }
 
     @Test

@@ -26,15 +26,15 @@ public class MailService {
     private final MessageSource messageSource;
 
     public void sendConfirmationMail(String to, String tokenValue) {
-        var subject = getDefaultMessage(CONFIRMATION_SUBJECT_CODE);
-        var text = getDefaultMessage(CONFIRMATION_MESSAGE_CODE, integrationProperties.uiUrl(), tokenValue);
+        var subject = getMessage(CONFIRMATION_SUBJECT_CODE);
+        var text = getMessage(CONFIRMATION_MESSAGE_CODE, integrationProperties.uiUrl(), tokenValue);
 
         send(to, subject, text);
     }
 
     public void sendResetPasswordMail(String to, String tokenValue) {
-        var subject = getDefaultMessage(RESET_PASSWORD_SUBJECT_CODE);
-        var text = getDefaultMessage(RESET_PASSWORD_MESSAGE_CODE, integrationProperties.uiUrl(), to, tokenValue);
+        var subject = getMessage(RESET_PASSWORD_SUBJECT_CODE);
+        var text = getMessage(RESET_PASSWORD_MESSAGE_CODE, integrationProperties.uiUrl(), to, tokenValue);
 
         send(to, subject, text);
     }
@@ -49,7 +49,7 @@ public class MailService {
         javaMailSender.send(message);
     }
 
-    private String getDefaultMessage(String code, Object... objects) {
+    private String getMessage(String code, Object... objects) {
         return messageSource.getMessage(code, objects, Locale.getDefault());
     }
 }

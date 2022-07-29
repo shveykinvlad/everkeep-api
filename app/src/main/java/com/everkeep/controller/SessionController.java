@@ -1,6 +1,5 @@
 package com.everkeep.controller;
 
-import static com.everkeep.controller.SessionController.SESSIONS_URL;
 import static com.everkeep.utils.Headers.X_API_KEY;
 
 import javax.validation.Valid;
@@ -23,7 +22,7 @@ import com.everkeep.controller.dto.SessionResponse;
 import com.everkeep.service.SessionService;
 
 @RestController
-@RequestMapping(SESSIONS_URL)
+@RequestMapping(SessionController.SESSIONS_URL)
 @RequiredArgsConstructor
 public class SessionController {
 

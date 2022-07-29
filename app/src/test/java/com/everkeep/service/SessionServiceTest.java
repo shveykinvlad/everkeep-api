@@ -62,13 +62,13 @@ class SessionServiceTest {
         var user = new User();
         var jwt = "jwt";
         var action = VerificationToken.Action.SESSION_REFRESH;
-        var oldTokenValue = "old token";
+        var oldTokenValue = UUID.randomUUID().toString();
         var oldToken = VerificationToken.builder()
                 .hashValue(sha256Hex(oldTokenValue))
                 .action(VerificationToken.Action.SESSION_REFRESH)
                 .user(user)
                 .build();
-        var newTokenValue = "new value";
+        var newTokenValue = UUID.randomUUID().toString();
         var newToken = VerificationToken.builder()
                 .hashValue(sha256Hex(newTokenValue))
                 .action(VerificationToken.Action.SESSION_REFRESH)

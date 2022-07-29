@@ -15,7 +15,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.context.MessageSourceAutoConfiguration;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.context.MessageSource;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 
@@ -31,8 +30,6 @@ class MailServiceTest extends AbstractTest {
 
     @Autowired
     private MailService mailService;
-    @Autowired
-    private MessageSource messageSource;
     @MockBean
     private MailProperties mailProperties;
     @MockBean
@@ -58,7 +55,8 @@ class MailServiceTest extends AbstractTest {
         assertAll("Should capture confirmation mail",
                 () -> assertEquals(mailFrom, sentMail.getFrom()),
                 () -> assertEquals("Email confirmation", sentMail.getSubject()),
-                () -> assertEquals("%s/users/confirmation?token=%s".formatted(uiUrl, tokenValue), sentMail.getText()),
+                () -> assertEquals("%s/users/confirmation?token=%s".formatted(uiUrl, tokenValue),
+                        sentMail.getText()),
                 () -> assertArrayEquals(new String[]{mailTo}, sentMail.getTo())
         );
     }
@@ -79,7 +77,8 @@ class MailServiceTest extends AbstractTest {
         assertAll("Should capture reset password mail",
                 () -> assertEquals(mailFrom, sentMail.getFrom()),
                 () -> assertEquals("Password reset", sentMail.getSubject()),
-                () -> assertEquals("%s/users/password/update?email=%s&token=%s".formatted(uiUrl, mailTo, tokenValue), sentMail.getText()),
+                () -> assertEquals("%s/users/password/update?email=%s&token=%s".formatted(uiUrl, mailTo, tokenValue),
+                        sentMail.getText()),
                 () -> assertArrayEquals(new String[]{mailTo}, sentMail.getTo())
         );
     }

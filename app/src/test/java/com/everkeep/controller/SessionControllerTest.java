@@ -62,6 +62,7 @@ class SessionControllerTest extends AbstractIntegrationTest {
                         .build()
         );
         var request = new SessionRequest(email, "P4$$w0rd");
+
         mockMvc.perform(MockMvcRequestBuilders.post(SESSIONS_URL)
                         .contentType(APPLICATION_JSON)
                         .content(mapper.writeValueAsString(request)))
@@ -72,7 +73,7 @@ class SessionControllerTest extends AbstractIntegrationTest {
     }
 
     @Test
-    void refresh() throws Exception {
+    void update() throws Exception {
         var role = roleRepository.findByName(ROLE_USER);
         var user = userRepository.save(
                 User.builder()
@@ -83,7 +84,7 @@ class SessionControllerTest extends AbstractIntegrationTest {
                         .build()
         );
         var tokenValue = UUID.randomUUID().toString();
-        var token = verificationTokenRepository.save(
+        verificationTokenRepository.save(
                 VerificationToken.builder()
                         .hashValue(sha256Hex(tokenValue))
                         .action(VerificationToken.Action.SESSION_REFRESH)

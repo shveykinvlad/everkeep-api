@@ -48,6 +48,8 @@ public class JwtFilter extends OncePerRequestFilter {
 
             SecurityContextHolder.getContext()
                     .setAuthentication(authenticationToken);
+        } else {
+            log.error("Authentication header is null!");
         }
     }
 

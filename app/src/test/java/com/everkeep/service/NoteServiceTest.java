@@ -67,7 +67,8 @@ class NoteServiceTest extends AbstractTest {
                 .username("leone@localhost")
                 .build();
         when(userService.getAuthenticatedUsername()).thenReturn(savedNote.getUsername());
-        when(noteRepository.findByIdAndUsername(savedNote.getId(), savedNote.getUsername())).thenReturn(Optional.of(savedNote));
+        when(noteRepository.findByIdAndUsername(savedNote.getId(), savedNote.getUsername()))
+                .thenReturn(Optional.of(savedNote));
 
         var receivedNote = noteService.get(id);
 
