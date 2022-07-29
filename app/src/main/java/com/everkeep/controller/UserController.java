@@ -12,7 +12,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -20,8 +19,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.everkeep.controller.dto.SessionRequest;
-import com.everkeep.controller.dto.SessionResponse;
 import com.everkeep.controller.dto.RegistrationRequest;
 import com.everkeep.service.UserService;
 
@@ -33,7 +30,6 @@ public class UserController {
     public static final String USERS_URL = "/api/users";
     public static final String CONFIRMATION_URL = "/confirmation";
     public static final String PASSWORD_URL = "/password";
-    public static final String SESSIONS_URL = "/sessions";
     public static final String EMAIL_PARAM = "email";
 
     private final UserService userService;
@@ -69,24 +65,5 @@ public class UserController {
     public void updatePassword(@RequestBody @Valid RegistrationRequest registrationRequest,
                                @RequestHeader(X_API_KEY) @NotBlank String token) {
         userService.updatePassword(token, registrationRequest.password());
-    }
-
-    @PostMapping(SESSIONS_URL)
-    @Operation(summary = "Create session")
-    public SessionResponse createSession(@RequestBody @Valid SessionRequest sessionRequest) {
-        return userService.createSession(sessionRequest.email(), sessionRequest.password());
-    }
-
-    @DeleteMapping(SESSIONS_URL)
-    @ResponseStatus(HttpStatus.NO_CONTENT)
-    @Operation(summary = "Delete session")
-    public void deleteSession(@RequestHeader(X_API_KEY) @NotBlank String token) {
-        userService.deleteSession(token);
-    }
-
-    @PutMapping(SESSIONS_URL)
-    @Operation(summary = "Refresh session")
-    public SessionResponse refreshSession(@RequestHeader(X_API_KEY) @NotBlank String token) {
-        return userService.refreshSession(token);
     }
 }

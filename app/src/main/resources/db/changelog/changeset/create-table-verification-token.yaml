@@ -36,7 +36,7 @@ databaseChangeLog:
                     primaryKey: true
                     primaryKeyName: verification_token_pk
               - column:
-                  name: value
+                  name: hash_value
                   type: VARCHAR(255)
                   constraints:
                     nullable: false

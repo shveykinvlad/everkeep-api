@@ -10,5 +10,5 @@ import com.everkeep.model.VerificationToken;
 @Repository
 public interface VerificationTokenRepository extends JpaRepository<VerificationToken, Long> {
 
-    Optional<VerificationToken> findByValueAndAction(String value, VerificationToken.Action tokenAction);
+    Optional<VerificationToken> findByHashValueAndAction(String hashValue, VerificationToken.Action tokenAction);
 }

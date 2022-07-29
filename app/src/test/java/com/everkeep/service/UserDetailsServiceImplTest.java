@@ -26,7 +26,7 @@ class UserDetailsServiceImplTest {
 
     @Test
     void loadUserByUsername() {
-        var email = "one@localhost";
+        var email = "apollo@localhost";
         var savedUser = User.builder()
                 .email(email)
                 .build();
@@ -39,7 +39,7 @@ class UserDetailsServiceImplTest {
 
     @Test
     void loadUserByUsernameIfNotFound() {
-        var email = "two@localhost";
+        var email = "hermione@localhost";
         when(userRepository.findByEmail(email)).thenReturn(Optional.empty());
 
         assertThrows(UsernameNotFoundException.class, () -> userDetailsService.loadUserByUsername(email));

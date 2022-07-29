@@ -10,16 +10,18 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class SwaggerConfig {
 
-    public static final String SECURITY_SCHEME = "Bearer";
+    public static final String BEARER = "Bearer";
 
     @Bean
     public OpenAPI api() {
         return new OpenAPI()
-                .components(new Components().addSecuritySchemes(SECURITY_SCHEME, new SecurityScheme()
-                        .type(SecurityScheme.Type.HTTP)
-                        .scheme(SECURITY_SCHEME)
-                        .bearerFormat("JWT")))
-                .info(new Info().title("Everkeep API")
+                .components(new Components()
+                        .addSecuritySchemes(BEARER, new SecurityScheme()
+                                .type(SecurityScheme.Type.HTTP)
+                                .scheme(BEARER)
+                                .bearerFormat("JWT")))
+                .info(new Info()
+                        .title("Everkeep API")
                         .description("Note application"));
     }
 }

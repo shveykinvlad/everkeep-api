@@ -1,5 +1,7 @@
 package com.everkeep.service;
 
+import static com.everkeep.utils.DigestUtils.sha256Hex;
+
 import java.time.Clock;
 import java.time.OffsetDateTime;
 import java.util.UUID;
@@ -22,22 +24,23 @@ public class VerificationTokenService {
     private final VerificationTokenProperties verificationTokenProperties;
     private final Clock clock;
 
-    public VerificationToken create(User user, VerificationToken.Action tokenAction) {
+    public String create(User user, VerificationToken.Action tokenAction) {
         var value = UUID.randomUUID().toString();
         var expiryTime = OffsetDateTime.now(clock)
                 .plusSeconds(verificationTokenProperties.expiryDuration().getSeconds());
         var token = VerificationToken.builder()
-                .value(value)
+                .hashValue(sha256Hex(value))
                 .user(user)
                 .expiryTime(expiryTime)
                 .action(tokenAction)
                 .build();
+        verificationTokenRepository.save(token);
 
-        return verificationTokenRepository.save(token);
+        return value;
     }
 
     public VerificationToken get(String value, VerificationToken.Action action) {
-        return verificationTokenRepository.findByValueAndAction(value, action)
+        return verificationTokenRepository.findByHashValueAndAction(sha256Hex(value), action)
                 .orElseThrow(() -> new VerificationTokenNotFoundException("VerificationToken %s for action %s not found"
                         .formatted(value, action)));
     }
@@ -51,7 +54,7 @@ public class VerificationTokenService {
 
     private void validate(VerificationToken token) {
         if (OffsetDateTime.now().isAfter(token.getExpiryTime())) {
-            throw new VerificationTokenExpiredException("Verification token is expired", token.getValue());
+            throw new VerificationTokenExpiredException("Verification token is expired", token.getHashValue(), token.getUser().getEmail());
         }
     }
 

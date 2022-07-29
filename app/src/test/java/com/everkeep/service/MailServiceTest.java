@@ -44,8 +44,8 @@ class MailServiceTest extends AbstractTest {
 
     @Test
     void sendConfirmationMail() {
-        var mailTo = "mailTo@localhost";
-        var mailFrom = "mailFrom@localhost";
+        var mailFrom = "sender@localhost";
+        var mailTo = "receiver@localhost";
         var uiUrl = "http://localhost:4200";
         var tokenValue = UUID.randomUUID().toString();
         when(integrationProperties.uiUrl()).thenReturn(uiUrl);
@@ -65,8 +65,8 @@ class MailServiceTest extends AbstractTest {
 
     @Test
     void sendResetPasswordMail() {
-        var mailTo = "mailTo@localhost";
-        var mailFrom = "mailFrom@localhost";
+        var mailFrom = "sender@localhost";
+        var mailTo = "receiver@localhost";
         var uiUrl = "http://localhost:4200";
         var tokenValue = UUID.randomUUID().toString();
         when(integrationProperties.uiUrl()).thenReturn(uiUrl);

@@ -1,4 +1,4 @@
-package com.everkeep.service.security;
+package com.everkeep.security;
 
 import java.io.IOException;
 import javax.servlet.http.HttpServletRequest;

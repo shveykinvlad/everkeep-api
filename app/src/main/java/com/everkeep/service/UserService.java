@@ -10,14 +10,13 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.everkeep.controller.dto.SessionResponse;
 import com.everkeep.exception.UserAlreadyEnabledException;
 import com.everkeep.exception.UserAlreadyExistsException;
+import com.everkeep.exception.VerificationTokenExpiredException;
 import com.everkeep.model.User;
 import com.everkeep.model.VerificationToken;
 import com.everkeep.repository.RoleRepository;
 import com.everkeep.repository.UserRepository;
-import com.everkeep.service.security.JwtTokenProvider;
 
 @Service
 @Transactional
@@ -25,13 +24,11 @@ import com.everkeep.service.security.JwtTokenProvider;
 @Slf4j
 public class UserService {
 
-    private final AuthenticationService authenticationService;
     private final UserRepository userRepository;
     private final RoleRepository roleRepository;
-    private final PasswordEncoder passwordEncoder;
     private final VerificationTokenService verificationTokenService;
     private final MailService mailService;
-    private final JwtTokenProvider jwtTokenProvider;
+    private final PasswordEncoder passwordEncoder;
 
     public User get(String email) {
         return userRepository.findByEmail(email)
@@ -43,17 +40,22 @@ public class UserService {
             throw new UserAlreadyExistsException("User already exists", email);
         }
         var user = createUser(email, password);
-        var token = verificationTokenService.create(user, VerificationToken.Action.ACCOUNT_CONFIRMATION);
+        var tokenValue = verificationTokenService.create(user, VerificationToken.Action.ACCOUNT_CONFIRMATION);
 
-        mailService.sendConfirmationMail(user.getEmail(), token.getValue());
+        mailService.sendConfirmationMail(user.getEmail(), tokenValue);
     }
 
     public void confirm(String tokenValue) {
-        var verificationToken = verificationTokenService.apply(tokenValue, VerificationToken.Action.ACCOUNT_CONFIRMATION);
-        var user = verificationToken.getUser();
-        user.setEnabled(true);
+        try {
+            var verificationToken = verificationTokenService.apply(tokenValue, VerificationToken.Action.ACCOUNT_CONFIRMATION);
+            var user = verificationToken.getUser();
+            user.setEnabled(true);
 
-        userRepository.save(user);
+            userRepository.save(user);
+        } catch (VerificationTokenExpiredException e) {
+            resendToken(e.getEmail());
+            throw e;
+        }
     }
 
     public void resendToken(String email) {
@@ -61,16 +63,16 @@ public class UserService {
         if (user.isEnabled()) {
             throw new UserAlreadyEnabledException("User already enabled", user.getEmail());
         }
-        var token = verificationTokenService.create(user, VerificationToken.Action.ACCOUNT_CONFIRMATION);
+        var tokenValue = verificationTokenService.create(user, VerificationToken.Action.ACCOUNT_CONFIRMATION);
 
-        mailService.sendConfirmationMail(user.getEmail(), token.getValue());
+        mailService.sendConfirmationMail(user.getEmail(), tokenValue);
     }
 
     public void resetPassword(String email) {
         var user = get(email);
         var token = verificationTokenService.create(user, VerificationToken.Action.PASSWORD_RESET);
 
-        mailService.sendResetPasswordMail(user.getEmail(), token.getValue());
+        mailService.sendResetPasswordMail(user.getEmail(), token);
     }
 
     public void updatePassword(String tokenValue, String password) {
@@ -79,32 +81,6 @@ public class UserService {
         user.setPassword(passwordEncoder.encode(password));
 
         userRepository.save(user);
-    }
-
-    public SessionResponse createSession(String email, String password) {
-        var authentication = authenticationService.authenticate(email, password);
-        var user = (User) authentication.getPrincipal();
-        var jwtToken = jwtTokenProvider.generateToken(user);
-        var refreshToken = verificationTokenService.create(user, VerificationToken.Action.SESSION_REFRESH);
-
-        return new SessionResponse(jwtToken, refreshToken.getValue(), user.getEmail());
-    }
-
-    public SessionResponse refreshSession(String oldTokenValue) {
-        var oldToken = verificationTokenService.apply(oldTokenValue, VerificationToken.Action.SESSION_REFRESH);
-        var user = oldToken.getUser();
-        var jwt = jwtTokenProvider.generateToken(user);
-        var newToken = verificationTokenService.create(user, VerificationToken.Action.SESSION_REFRESH);
-
-        return SessionResponse.builder()
-                .jwt(jwt)
-                .refreshToken(newToken.getValue())
-                .email(user.getEmail())
-                .build();
-    }
-
-    public void deleteSession(String token) {
-        verificationTokenService.apply(token, VerificationToken.Action.SESSION_REFRESH);
     }
 
     public String getAuthenticatedUsername() {
@@ -124,5 +100,4 @@ public class UserService {
 
         return userRepository.save(user);
     }
-
 }

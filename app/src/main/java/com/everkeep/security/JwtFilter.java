@@ -1,4 +1,6 @@
-package com.everkeep.service.security;
+package com.everkeep.security;
+
+import static com.everkeep.security.JwtProvider.ROLES_CLAIM;
 
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
@@ -23,31 +25,37 @@ import org.springframework.web.filter.OncePerRequestFilter;
 @RequiredArgsConstructor
 public class JwtFilter extends OncePerRequestFilter {
 
-    private final JwtTokenProvider jwtTokenProvider;
+    private final JwtProvider jwtProvider;
 
     @Override
-    protected void doFilterInternal(HttpServletRequest request,
+    protected void doFilterInternal(@NonNull HttpServletRequest request,
                                     @NonNull HttpServletResponse response,
                                     @NonNull FilterChain filterChain) throws ServletException, IOException {
-        var authorizationHeader = request.getHeader(HttpHeaders.AUTHORIZATION);
-        if (authorizationHeader != null) {
-            var jwt = authorizationHeader.replace("Bearer ", "");
-            try {
-                var authenticationToken = getAuthenticationToken(jwt);
-                authenticationToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
-                SecurityContextHolder.getContext().setAuthentication(authenticationToken);
-            } catch (RuntimeException e) {
-                log.error("Authentication failed", e);
-            }
+        try {
+            authenticate(request);
+        } catch (RuntimeException ex) {
+            log.error("Authentication failed", ex);
         }
         filterChain.doFilter(request, response);
     }
 
-    private UsernamePasswordAuthenticationToken getAuthenticationToken(String jwtToken) {
-        var claims = jwtTokenProvider.getClaims(jwtToken);
+    private void authenticate(HttpServletRequest request) {
+        var authorizationHeader = request.getHeader(HttpHeaders.AUTHORIZATION);
+        if (authorizationHeader != null) {
+            var jwt = authorizationHeader.replace("Bearer ", "");
+            var authenticationToken = getAuthenticationToken(jwt);
+            authenticationToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+
+            SecurityContextHolder.getContext()
+                    .setAuthentication(authenticationToken);
+        }
+    }
+
+    private UsernamePasswordAuthenticationToken getAuthenticationToken(String jwt) {
+        var claims = jwtProvider.getClaims(jwt);
 
         @SuppressWarnings("unchecked")
-        List<String> roles = claims.get("roles", List.class);
+        List<String> roles = claims.get(ROLES_CLAIM, List.class);
         var authorities = roles.stream()
                 .map(SimpleGrantedAuthority::new)
                 .toList();

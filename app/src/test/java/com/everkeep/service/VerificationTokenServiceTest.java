@@ -1,5 +1,6 @@
 package com.everkeep.service;
 
+import static com.everkeep.utils.DigestUtils.sha256Hex;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -58,7 +59,7 @@ class VerificationTokenServiceTest extends AbstractTest {
 
         Mockito.verify(verificationTokenRepository).save(tokenCaptor.capture());
         var savedToken = tokenCaptor.getValue();
-        assertAll("Should return created token",
+        assertAll("Should save token and return the value",
                 () -> assertEquals(VerificationToken.Action.ACCOUNT_CONFIRMATION, savedToken.getAction()),
                 () -> assertEquals(user, savedToken.getUser()),
                 () -> assertEquals(OffsetDateTime.now(clock).plusSeconds(duration.getSeconds()).truncatedTo(ChronoUnit.SECONDS),
@@ -71,15 +72,15 @@ class VerificationTokenServiceTest extends AbstractTest {
         var value = UUID.randomUUID().toString();
         var action = VerificationToken.Action.ACCOUNT_CONFIRMATION;
         var savedToken = VerificationToken.builder()
-                .value(value)
+                .hashValue(sha256Hex(value))
                 .action(action)
                 .build();
-        when(verificationTokenRepository.findByValueAndAction(value, action)).thenReturn(Optional.of(savedToken));
+        when(verificationTokenRepository.findByHashValueAndAction(sha256Hex(value), action)).thenReturn(Optional.of(savedToken));
 
         var receivedToken = verificationTokenService.get(value, VerificationToken.Action.ACCOUNT_CONFIRMATION);
 
         assertAll("Should return token",
-                () -> assertEquals(value, receivedToken.getValue()),
+                () -> assertEquals(sha256Hex(value), receivedToken.getHashValue()),
                 () -> assertTrue(receivedToken.isActive()),
                 () -> assertEquals(action, receivedToken.getAction())
         );
@@ -89,7 +90,7 @@ class VerificationTokenServiceTest extends AbstractTest {
     void getNotFound() {
         var value = UUID.randomUUID().toString();
         var action = VerificationToken.Action.ACCOUNT_CONFIRMATION;
-        when(verificationTokenRepository.findByValueAndAction(value, action)).thenReturn(Optional.empty());
+        when(verificationTokenRepository.findByHashValueAndAction(sha256Hex(value), action)).thenReturn(Optional.empty());
 
         assertThrows(VerificationTokenNotFoundException.class,
                 () -> verificationTokenService.get(value, action),
@@ -102,18 +103,18 @@ class VerificationTokenServiceTest extends AbstractTest {
         var action = VerificationToken.Action.ACCOUNT_CONFIRMATION;
         var expiryTime = OffsetDateTime.MAX;
         var savedToken = VerificationToken.builder()
-                .value(value)
+                .hashValue(sha256Hex(value))
                 .action(action)
                 .expiryTime(expiryTime)
                 .build();
-        when(verificationTokenRepository.findByValueAndAction(value, action)).thenReturn(Optional.of(savedToken));
+        when(verificationTokenRepository.findByHashValueAndAction(sha256Hex(value), action)).thenReturn(Optional.of(savedToken));
 
         verificationTokenService.apply(value, action);
 
         Mockito.verify(verificationTokenRepository).save(tokenCaptor.capture());
         var appliedToken = tokenCaptor.getValue();
         assertAll("Should return applied token",
-                () -> assertEquals(value, appliedToken.getValue()),
+                () -> assertEquals(sha256Hex(value), appliedToken.getHashValue()),
                 () -> assertEquals(action, appliedToken.getAction()),
                 () -> assertFalse(appliedToken.isActive()),
                 () -> assertEquals(expiryTime, appliedToken.getExpiryTime())
@@ -126,11 +127,14 @@ class VerificationTokenServiceTest extends AbstractTest {
         var action = VerificationToken.Action.ACCOUNT_CONFIRMATION;
         var expiryTime = OffsetDateTime.MIN;
         var token = VerificationToken.builder()
-                .value(value)
+                .hashValue(sha256Hex(value))
                 .action(action)
                 .expiryTime(expiryTime)
+                .user(User.builder()
+                        .email("hyacinthus@localhost")
+                        .build())
                 .build();
-        when(verificationTokenRepository.findByValueAndAction(value, action)).thenReturn(Optional.of(token));
+        when(verificationTokenRepository.findByHashValueAndAction(sha256Hex(value), action)).thenReturn(Optional.of(token));
 
         assertThrows(VerificationTokenExpiredException.class,
                 () -> verificationTokenService.apply(value, action),

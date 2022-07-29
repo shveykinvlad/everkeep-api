@@ -15,8 +15,8 @@ import org.springframework.security.data.repository.query.SecurityEvaluationCont
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
-import com.everkeep.service.security.JwtAuthenticationEntryPoint;
-import com.everkeep.service.security.JwtFilter;
+import com.everkeep.security.JwtAuthenticationEntryPoint;
+import com.everkeep.security.JwtFilter;
 
 @Configuration
 @EnableWebSecurity
@@ -33,7 +33,7 @@ public class SecurityConfig {
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-        http
+        return http
                 .csrf().disable()
                 .httpBasic().disable()
                 .formLogin().disable()
@@ -42,14 +42,14 @@ public class SecurityConfig {
                 .authorizeRequests()
                 .antMatchers("/v3/api-docs/**", "/swagger-ui.html", "/swagger-ui/**").permitAll()
                 .antMatchers(HttpMethod.OPTIONS, "/**").permitAll()
-                .antMatchers("/api/users/**").permitAll()
+                .antMatchers("/api/users/**", "/api/sessions/**").permitAll()
                 .antMatchers("/api/notes").hasRole("USER")
                 .anyRequest().authenticated()
                 .and()
                 .exceptionHandling().authenticationEntryPoint(jwtAuthenticationEntryPoint)
                 .and()
-                .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
-        return http.build();
+                .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class)
+                .build();
     }
 
     @Bean

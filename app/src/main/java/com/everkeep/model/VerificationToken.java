@@ -35,7 +35,7 @@ public class VerificationToken {
     private Long id;
 
     @EqualsAndHashCode.Include
-    private String value;
+    private String hashValue;
 
     @ManyToOne
     @JoinColumn(name = "user_id")

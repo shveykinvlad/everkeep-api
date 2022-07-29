@@ -1,4 +1,4 @@
-package com.everkeep.service.security;
+package com.everkeep.security;
 
 import static java.nio.charset.StandardCharsets.UTF_16;
 
@@ -18,7 +18,9 @@ import com.everkeep.model.User;
 
 @Component
 @RequiredArgsConstructor
-public class JwtTokenProvider {
+public class JwtProvider {
+
+    public static final String ROLES_CLAIM = "roles";
 
     private final JwtProperties jwtProperties;
     private final Clock clock;
@@ -32,7 +34,7 @@ public class JwtTokenProvider {
     }
 
     public String generateToken(User user) {
-        var claims = Map.of("roles", user.getRolesNames());
+        var claims = Map.of(ROLES_CLAIM, user.getRolesNames());
         var creationDate = Date.from(OffsetDateTime.now(clock).toInstant());
         var expirationDate = Date.from(OffsetDateTime.now(clock)
                 .plusSeconds(jwtProperties.expiryDuration().getSeconds()).toInstant());
