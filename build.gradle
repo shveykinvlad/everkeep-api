@@ -46,7 +46,6 @@ configure(javaProjects) {
 
             // Test
             dependency "org.testcontainers:postgresql:${testContainersPostgresqlVersion}"
-            dependency "org.testcontainers:junit-jupiter:${testContainersPostgresqlVersion}"
             dependency "com.icegreen:greenmail-junit5:${greenMailVersion}"
         }
 

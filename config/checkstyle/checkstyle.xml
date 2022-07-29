@@ -10,8 +10,8 @@
 
     <!-- Supression filters -->
     <module name="SuppressionFilter">
-        <property name="file" value="${config_loc}/checkstyle_suppressions.xml"
-                  default="checkstyle_suppressions.xml" />
+        <property name="file" value="${config_loc}/checkstyle_suppression.xml"
+                  default="checkstyle_suppression.xml" />
         <property name="optional" value="true"/>
     </module>
     <module name="SuppressionSingleFilter">
