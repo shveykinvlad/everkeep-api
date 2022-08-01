@@ -10,7 +10,7 @@ buildscript {
         liquibaseVersion = '4.14.0'
         postgresqlVersion = '42.4.0'
         testContainersPostgresqlVersion = '1.17.3'
-        passayVersion = '1.6.0'
+        passayVersion = '1.6.1'
         jsonwebtokenVersion = '0.11.5'
         lombokVersion = '1.18.24'
         greenMailVersion = '1.6.10'
