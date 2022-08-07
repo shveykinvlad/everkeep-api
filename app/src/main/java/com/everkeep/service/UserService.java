@@ -1,5 +1,8 @@
 package com.everkeep.service;
 
+import static com.everkeep.model.VerificationToken.Action.ACCOUNT_CONFIRMATION;
+import static com.everkeep.model.VerificationToken.Action.PASSWORD_RESET;
+
 import java.util.Set;
 
 import lombok.RequiredArgsConstructor;
@@ -14,7 +17,6 @@ import com.everkeep.exception.UserAlreadyEnabledException;
 import com.everkeep.exception.UserAlreadyExistsException;
 import com.everkeep.exception.VerificationTokenExpiredException;
 import com.everkeep.model.User;
-import com.everkeep.model.VerificationToken;
 import com.everkeep.repository.RoleRepository;
 import com.everkeep.repository.UserRepository;
 
@@ -40,14 +42,14 @@ public class UserService {
             throw new UserAlreadyExistsException("User already exists", email);
         }
         var user = create(email, password);
-        var tokenValue = verificationTokenService.create(user, VerificationToken.Action.ACCOUNT_CONFIRMATION);
+        var tokenValue = verificationTokenService.create(user, ACCOUNT_CONFIRMATION);
 
         mailService.sendConfirmationMail(user.getEmail(), tokenValue);
     }
 
     public void confirm(String tokenValue) {
         try {
-            var verificationToken = verificationTokenService.apply(tokenValue, VerificationToken.Action.ACCOUNT_CONFIRMATION);
+            var verificationToken = verificationTokenService.apply(tokenValue, ACCOUNT_CONFIRMATION);
             var user = verificationToken.getUser();
             user.setEnabled(true);
 
@@ -63,20 +65,20 @@ public class UserService {
         if (user.isEnabled()) {
             throw new UserAlreadyEnabledException("User already enabled", user.getEmail());
         }
-        var tokenValue = verificationTokenService.create(user, VerificationToken.Action.ACCOUNT_CONFIRMATION);
+        var tokenValue = verificationTokenService.create(user, ACCOUNT_CONFIRMATION);
 
         mailService.sendConfirmationMail(user.getEmail(), tokenValue);
     }
 
     public void resetPassword(String email) {
         var user = get(email);
-        var token = verificationTokenService.create(user, VerificationToken.Action.PASSWORD_RESET);
+        var token = verificationTokenService.create(user, PASSWORD_RESET);
 
         mailService.sendResetPasswordMail(user.getEmail(), token);
     }
 
     public void updatePassword(String tokenValue, String password) {
-        var verificationToken = verificationTokenService.apply(tokenValue, VerificationToken.Action.PASSWORD_RESET);
+        var verificationToken = verificationTokenService.apply(tokenValue, PASSWORD_RESET);
         var user = verificationToken.getUser();
         user.setPassword(passwordEncoder.encode(password));
 
