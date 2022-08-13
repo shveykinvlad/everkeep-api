@@ -25,7 +25,7 @@ import com.everkeep.controller.dto.NoteDto;
 import com.everkeep.service.NoteService;
 
 @RestController
-@RequestMapping(path = NoteController.NOTES_URL)
+@RequestMapping(NoteController.NOTES_URL)
 @RequiredArgsConstructor
 public class NoteController {
 

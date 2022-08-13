@@ -179,7 +179,7 @@ class NoteControllerTest extends AbstractIntegrationTest {
 
     @Test
     @WithMockUser(username = USERNAME)
-    void delete() throws Exception {
+        void delete() throws Exception {
         var note = noteRepository.save(
                 Note.builder()
                         .title("The Lord of the Rings: The Return of the King")

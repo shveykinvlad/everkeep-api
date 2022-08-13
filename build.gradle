@@ -35,6 +35,7 @@ configure(javaProjects) {
     apply plugin: 'io.spring.dependency-management'
     apply plugin: 'checkstyle'
     apply plugin: 'com.github.spotbugs'
+    apply plugin: 'pmd'
     apply plugin: 'jacoco'
 
     group 'com.everkeep'
@@ -78,6 +79,12 @@ configure(javaProjects) {
 
     spotbugs {
         excludeFilter = file("../config/spotbugs/spotbugs-exclude.xml")
+    }
+
+    pmd {
+        consoleOutput = true
+        toolVersion = "6.48.0"
+        ruleSets = ["config/pmd/pmd.xml"]
     }
 
     test {

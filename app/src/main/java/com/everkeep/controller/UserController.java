@@ -22,7 +22,7 @@ import com.everkeep.controller.dto.RegistrationRequest;
 import com.everkeep.service.UserService;
 
 @RestController
-@RequestMapping(path = UserController.USERS_URL)
+@RequestMapping(UserController.USERS_URL)
 @RequiredArgsConstructor
 public class UserController {
 
@@ -40,26 +40,26 @@ public class UserController {
         userService.register(registrationRequest.email(), registrationRequest.password());
     }
 
-    @GetMapping(value = CONFIRMATION_URL)
+    @GetMapping(CONFIRMATION_URL)
     @Operation(summary = "Resend confirmation email")
     public void resendConfirmation(@RequestParam(EMAIL_PARAM) String email) {
         userService.resendToken(email);
     }
 
-    @PostMapping(value = CONFIRMATION_URL)
+    @PostMapping(CONFIRMATION_URL)
     @Operation(summary = "Confirm user registration")
     public void confirm(@RequestHeader(X_API_KEY) @NotBlank String token) {
         userService.confirm(token);
     }
 
-    @DeleteMapping(value = PASSWORD_URL)
+    @DeleteMapping(PASSWORD_URL)
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @Operation(summary = "Reset password")
     public void resetPassword(@RequestParam(EMAIL_PARAM) String email) {
         userService.resetPassword(email);
     }
 
-    @PostMapping(value = PASSWORD_URL)
+    @PostMapping(PASSWORD_URL)
     @Operation(summary = "Update password")
     public void updatePassword(@RequestBody @Valid RegistrationRequest registrationRequest,
                                @RequestHeader(X_API_KEY) @NotBlank String token) {

@@ -1,5 +1,8 @@
 package com.everkeep.service;
 
+import static com.everkeep.utils.SpecificationUtils.findByAttributeEquals;
+import static com.everkeep.utils.SpecificationUtils.findByAttributesLike;
+
 import java.util.Arrays;
 import java.util.List;
 
@@ -12,7 +15,6 @@ import org.springframework.transaction.annotation.Transactional;
 import com.everkeep.exception.NoteNotFoundException;
 import com.everkeep.model.Note;
 import com.everkeep.repository.NoteRepository;
-import com.everkeep.utils.SpecificationUtils;
 
 @Service
 @Transactional
@@ -32,7 +34,7 @@ public class NoteService {
     }
 
     public List<Note> search(String value) {
-        return noteRepository.findAll(isContainedInTitleOrText(value, userService.getAuthenticatedUsername()));
+        return noteRepository.findAll(findByTitleOrTextLike(value, userService.getAuthenticatedUsername()));
     }
 
     public Note save(Note note) {
@@ -51,12 +53,12 @@ public class NoteService {
         noteRepository.deleteByIdAndUsername(id, userService.getAuthenticatedUsername());
     }
 
-    private Specification<Note> isContainedInTitleOrText(String value, String username) {
-        return Specification.where(isContainedInTitleOrText(value))
-                .and(SpecificationUtils.isEqualToAttribute(username, Note.Fields.username));
+    private Specification<Note> findByTitleOrTextLike(String value, String username) {
+        return Specification.where(findByTitleOrTextLike(value))
+                .and(findByAttributeEquals(username, Note.Fields.username));
     }
 
-    private Specification<Note> isContainedInTitleOrText(String value) {
-        return SpecificationUtils.isContainedInAttributes(value, Arrays.asList(Note.Fields.title, Note.Fields.text));
+    private Specification<Note> findByTitleOrTextLike(String value) {
+        return findByAttributesLike(value, Arrays.asList(Note.Fields.title, Note.Fields.text));
     }
 }
