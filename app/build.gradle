@@ -37,3 +37,7 @@ dependencies {
 springBoot {
     buildInfo()
 }
+
+jar {
+    enabled = false
+}
