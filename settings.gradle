@@ -1,4 +1,4 @@
-rootProject.name = 'everkeep'
+rootProject.name = 'everkeep-api'
 
 include 'app'
 
