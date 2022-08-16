@@ -4,7 +4,7 @@ Notes service
 Backend: https://everkeep-api.herokuapp.com  
 Frontend: https://everkeep.herokuapp.com  
 ## Technologies
-* Java
+* Java 17
 * SpringBoot
 * Spring Security
 * Spring Data
