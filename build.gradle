@@ -117,6 +117,12 @@ configure(javaProjects) {
         }
     }
 
+    jacocoTestReport {
+        reports {
+            csv.enabled true
+        }
+    }
+
     jacocoTestCoverageVerification.dependsOn jacocoTestReport
     check.dependsOn jacocoTestCoverageVerification
 }
