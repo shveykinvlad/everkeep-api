@@ -1,10 +1,6 @@
 name: "Build"
 
 on:
-    push:
-        branches:
-            - '**'        # matches every branch
-            - '!main'   # excludes master
     pull_request:
         branches: [ "main" ]
 
