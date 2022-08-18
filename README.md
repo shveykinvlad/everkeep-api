@@ -1,5 +1,7 @@
 
 # Everkeep
+https://github.com/shveykinvlad/everkeep.yml/actions/workflows/build.yml/badge.svg
+
 Notes service  
 Backend: https://everkeep-api.herokuapp.com  
 Frontend: https://everkeep.herokuapp.com  
