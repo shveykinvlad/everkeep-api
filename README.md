@@ -1,5 +1,9 @@
 
 # Everkeep
+[![Build](https://github.com/shveykinvlad/everkeep-api/actions/workflows/build.yml/badge.svg)](https://github.com/shveykinvlad/everkeep-api/actions/workflows/build.yml)
+[![CodeQL](https://github.com/shveykinvlad/everkeep-api/actions/workflows/codeql-analysis.yml/badge.svg)](https://github.com/shveykinvlad/everkeep-api/actions/workflows/codeql-analysis.yml)
+![Coverage](.github/badges/jacoco.svg)
+
 
 Notes service  
 Backend: https://everkeep-api.herokuapp.com  
