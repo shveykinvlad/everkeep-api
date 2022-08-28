@@ -25,7 +25,7 @@
         <property name="lineSeparator" value="lf"/>
     </module>
     <module name="LineLength">
-        <property name="max" value="140"/>
+        <property name="max" value="120"/>
     </module>
     <module name="FileLength">
         <property name="max" value="500"/>
