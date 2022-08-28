@@ -1,18 +1,19 @@
 package com.everkeep.validator;
 
-import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.Mockito.doNothing;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
-
-import javax.validation.ConstraintValidatorContext;
-import java.util.stream.Stream;
-
-import com.everkeep.AbstractTest;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
+
+import com.everkeep.AbstractTest;
+
+import javax.validation.ConstraintValidatorContext;
+import java.util.stream.Stream;
+
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 class PasswordConstraintValidatorTest extends AbstractTest {
 

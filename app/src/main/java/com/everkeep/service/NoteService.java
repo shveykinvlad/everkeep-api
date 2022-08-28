@@ -1,19 +1,20 @@
 package com.everkeep.service;
 
-import static com.everkeep.utils.SpecificationUtils.findByAttributeEquals;
-import static com.everkeep.utils.SpecificationUtils.findByAttributesLike;
-
-import java.util.Arrays;
-import java.util.List;
-
-import com.everkeep.exception.NoteNotFoundException;
-import com.everkeep.model.Note;
-import com.everkeep.repository.NoteRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import com.everkeep.exception.NoteNotFoundException;
+import com.everkeep.model.Note;
+import com.everkeep.repository.NoteRepository;
+
+import java.util.Arrays;
+import java.util.List;
+
+import static com.everkeep.utils.SpecificationUtils.findByAttributeEquals;
+import static com.everkeep.utils.SpecificationUtils.findByAttributesLike;
 
 @Service
 @Transactional

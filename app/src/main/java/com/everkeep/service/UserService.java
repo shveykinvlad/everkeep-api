@@ -1,16 +1,5 @@
 package com.everkeep.service;
 
-import static com.everkeep.model.VerificationToken.Action.ACCOUNT_CONFIRMATION;
-import static com.everkeep.model.VerificationToken.Action.PASSWORD_RESET;
-
-import java.util.Set;
-
-import com.everkeep.exception.UserAlreadyEnabledException;
-import com.everkeep.exception.UserAlreadyExistsException;
-import com.everkeep.exception.VerificationTokenExpiredException;
-import com.everkeep.model.User;
-import com.everkeep.repository.RoleRepository;
-import com.everkeep.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -18,6 +7,18 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import com.everkeep.exception.UserAlreadyEnabledException;
+import com.everkeep.exception.UserAlreadyExistsException;
+import com.everkeep.exception.VerificationTokenExpiredException;
+import com.everkeep.model.User;
+import com.everkeep.repository.RoleRepository;
+import com.everkeep.repository.UserRepository;
+
+import java.util.Set;
+
+import static com.everkeep.model.VerificationToken.Action.ACCOUNT_CONFIRMATION;
+import static com.everkeep.model.VerificationToken.Action.PASSWORD_RESET;
 
 @Service
 @Transactional

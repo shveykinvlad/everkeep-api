@@ -1,10 +1,10 @@
 package com.everkeep.utils;
 
-import javax.persistence.criteria.Predicate;
-import java.util.List;
-
 import lombok.experimental.UtilityClass;
 import org.springframework.data.jpa.domain.Specification;
+
+import javax.persistence.criteria.Predicate;
+import java.util.List;
 
 @UtilityClass
 public class SpecificationUtils {

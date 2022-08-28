@@ -1,16 +1,13 @@
 package com.everkeep.service;
 
-import static com.everkeep.utils.DigestUtils.sha256Hex;
-import static org.junit.jupiter.api.Assertions.assertAll;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
-
-import java.util.Optional;
-import java.util.UUID;
+import org.junit.jupiter.api.Test;
+import org.mockito.ArgumentCaptor;
+import org.mockito.Captor;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import com.everkeep.AbstractTest;
 import com.everkeep.exception.UserAlreadyEnabledException;
@@ -21,14 +18,18 @@ import com.everkeep.model.User;
 import com.everkeep.model.VerificationToken;
 import com.everkeep.repository.RoleRepository;
 import com.everkeep.repository.UserRepository;
-import org.junit.jupiter.api.Test;
-import org.mockito.ArgumentCaptor;
-import org.mockito.Captor;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.security.crypto.password.PasswordEncoder;
+
+import java.util.Optional;
+import java.util.UUID;
+
+import static com.everkeep.utils.DigestUtils.sha256Hex;
+import static org.junit.jupiter.api.Assertions.assertAll;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 @SpringBootTest(classes = UserService.class)
 class UserServiceTest extends AbstractTest {
@@ -132,9 +133,11 @@ class UserServiceTest extends AbstractTest {
                 .build();
         var action = VerificationToken.Action.ACCOUNT_CONFIRMATION;
         when(verificationTokenService.apply(oldTokenValue, action))
-                .thenThrow(new VerificationTokenExpiredException("Verification token is expired", oldTokenValue, username));
+                .thenThrow(new VerificationTokenExpiredException("Verification token is expired", oldTokenValue,
+                        username));
         when(userRepository.findByEmail(username)).thenReturn(Optional.of(user));
-        when(verificationTokenService.create(user, VerificationToken.Action.ACCOUNT_CONFIRMATION)).thenReturn(newTokenValue);
+        when(verificationTokenService.create(user, VerificationToken.Action.ACCOUNT_CONFIRMATION)).thenReturn(
+                newTokenValue);
 
         assertThrows(VerificationTokenExpiredException.class,
                 () -> userService.confirm(oldTokenValue),

@@ -1,10 +1,11 @@
 package com.everkeep.config;
 
-import com.everkeep.config.properties.MailProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
+
+import com.everkeep.config.properties.MailProperties;
 
 @Configuration
 public class MailConfig {

@@ -1,13 +1,14 @@
 package com.everkeep.validator;
 
-import java.util.stream.Stream;
-
-import com.everkeep.AbstractTest;
-import com.everkeep.controller.dto.RegistrationRequest;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
+
+import com.everkeep.AbstractTest;
+import com.everkeep.controller.dto.RegistrationRequest;
+
+import java.util.stream.Stream;
 
 class PasswordMatchesValidatorTest extends AbstractTest {
 

@@ -1,16 +1,17 @@
 package com.everkeep.service;
 
-import static com.everkeep.model.VerificationToken.Action.SESSION_REFRESH;
-
-import com.everkeep.controller.dto.SessionResponse;
-import com.everkeep.model.User;
-import com.everkeep.security.JwtProvider;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import com.everkeep.controller.dto.SessionResponse;
+import com.everkeep.model.User;
+import com.everkeep.security.JwtProvider;
+
+import static com.everkeep.model.VerificationToken.Action.SESSION_REFRESH;
 
 @Service
 @Transactional

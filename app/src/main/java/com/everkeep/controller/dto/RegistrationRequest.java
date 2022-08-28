@@ -1,10 +1,10 @@
 package com.everkeep.controller.dto;
 
-import javax.validation.constraints.Email;
-import javax.validation.constraints.NotBlank;
-
 import com.everkeep.annotation.PasswordMatches;
 import com.everkeep.annotation.ValidPassword;
+
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotBlank;
 
 @PasswordMatches
 public record RegistrationRequest(

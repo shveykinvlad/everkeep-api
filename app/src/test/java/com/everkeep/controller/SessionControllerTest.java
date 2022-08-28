@@ -1,17 +1,9 @@
 package com.everkeep.controller;
 
-import static com.everkeep.controller.SessionController.SESSIONS_URL;
-import static com.everkeep.utils.DigestUtils.sha256Hex;
-import static org.junit.jupiter.api.Assertions.assertAll;
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.springframework.http.MediaType.APPLICATION_JSON;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-
-import java.time.Clock;
-import java.time.OffsetDateTime;
-import java.util.Set;
-import java.util.UUID;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import com.everkeep.AbstractIntegrationTest;
 import com.everkeep.config.properties.VerificationTokenProperties;
@@ -21,10 +13,19 @@ import com.everkeep.model.VerificationToken;
 import com.everkeep.repository.RoleRepository;
 import com.everkeep.repository.UserRepository;
 import com.everkeep.repository.VerificationTokenRepository;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+
+import java.time.Clock;
+import java.time.OffsetDateTime;
+import java.util.Set;
+import java.util.UUID;
+
+import static com.everkeep.controller.SessionController.SESSIONS_URL;
+import static com.everkeep.utils.DigestUtils.sha256Hex;
+import static org.junit.jupiter.api.Assertions.assertAll;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.springframework.http.MediaType.APPLICATION_JSON;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 class SessionControllerTest extends AbstractIntegrationTest {
 
@@ -89,7 +90,8 @@ class SessionControllerTest extends AbstractIntegrationTest {
                         .action(VerificationToken.Action.SESSION_REFRESH)
                         .active(true)
                         .user(user)
-                        .expiryTime(OffsetDateTime.now(clock).plusSeconds(verificationTokenProperties.expiryDuration().getSeconds()))
+                        .expiryTime(OffsetDateTime.now(clock)
+                                .plusSeconds(verificationTokenProperties.expiryDuration().getSeconds()))
                         .build()
         );
 
@@ -119,7 +121,8 @@ class SessionControllerTest extends AbstractIntegrationTest {
                         .action(VerificationToken.Action.SESSION_REFRESH)
                         .active(true)
                         .user(user)
-                        .expiryTime(OffsetDateTime.now(clock).plusSeconds(verificationTokenProperties.expiryDuration().getSeconds()))
+                        .expiryTime(OffsetDateTime.now(clock)
+                                .plusSeconds(verificationTokenProperties.expiryDuration().getSeconds()))
                         .build()
         );
 
@@ -128,9 +131,10 @@ class SessionControllerTest extends AbstractIntegrationTest {
                 .andExpect(status().isNoContent());
 
         assertAll("Should utilize token",
-                () -> assertFalse(verificationTokenRepository.findByHashValueAndAction(token.getHashValue(), token.getAction())
-                        .orElseThrow()
-                        .isActive())
+                () -> assertFalse(
+                        verificationTokenRepository.findByHashValueAndAction(token.getHashValue(), token.getAction())
+                                .orElseThrow()
+                                .isActive())
         );
     }
 
