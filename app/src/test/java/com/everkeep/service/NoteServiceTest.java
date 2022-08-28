@@ -9,6 +9,11 @@ import static org.mockito.Mockito.when;
 import java.util.List;
 import java.util.Optional;
 
+import com.everkeep.AbstractTest;
+import com.everkeep.exception.NoteNotFoundException;
+import com.everkeep.model.Note;
+import com.everkeep.model.NotePriority;
+import com.everkeep.repository.NoteRepository;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,12 +21,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.security.access.AccessDeniedException;
-
-import com.everkeep.AbstractTest;
-import com.everkeep.exception.NoteNotFoundException;
-import com.everkeep.model.Note;
-import com.everkeep.model.NotePriority;
-import com.everkeep.repository.NoteRepository;
 
 @SpringBootTest(classes = NoteService.class)
 class NoteServiceTest extends AbstractTest {

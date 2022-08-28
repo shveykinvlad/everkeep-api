@@ -3,9 +3,8 @@ package com.everkeep.controller.dto;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
-import lombok.Builder;
-
 import com.everkeep.model.NotePriority;
+import lombok.Builder;
 
 @Builder
 public record NoteDto(

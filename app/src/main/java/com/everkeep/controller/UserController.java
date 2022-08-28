@@ -1,10 +1,10 @@
 package com.everkeep.controller;
 
-import static com.everkeep.utils.Headers.X_API_KEY;
-
 import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
 
+import com.everkeep.controller.dto.RegistrationRequest;
+import com.everkeep.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -12,14 +12,10 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
-
-import com.everkeep.controller.dto.RegistrationRequest;
-import com.everkeep.service.UserService;
 
 @RestController
 @RequestMapping(UserController.USERS_URL)
@@ -48,7 +44,7 @@ public class UserController {
 
     @PostMapping(CONFIRMATION_URL)
     @Operation(summary = "Confirm user registration")
-    public void confirm(@RequestHeader(X_API_KEY) @NotBlank String token) {
+    public void confirm(@RequestParam @NotBlank String token) {
         userService.confirm(token);
     }
 
@@ -61,8 +57,7 @@ public class UserController {
 
     @PostMapping(PASSWORD_URL)
     @Operation(summary = "Update password")
-    public void updatePassword(@RequestBody @Valid RegistrationRequest registrationRequest,
-                               @RequestHeader(X_API_KEY) @NotBlank String token) {
+    public void updatePassword(@RequestBody @Valid RegistrationRequest registrationRequest, @RequestParam @NotBlank String token) {
         userService.updatePassword(token, registrationRequest.password());
     }
 }

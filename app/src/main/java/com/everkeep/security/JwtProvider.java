@@ -7,14 +7,13 @@ import java.time.OffsetDateTime;
 import java.util.Date;
 import java.util.Map;
 
+import com.everkeep.config.properties.JwtProperties;
+import com.everkeep.model.User;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
-
-import com.everkeep.config.properties.JwtProperties;
-import com.everkeep.model.User;
 
 @Component
 @RequiredArgsConstructor
