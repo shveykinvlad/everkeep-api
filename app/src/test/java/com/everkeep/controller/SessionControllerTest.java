@@ -2,7 +2,6 @@ package com.everkeep.controller;
 
 import static com.everkeep.controller.SessionController.SESSIONS_URL;
 import static com.everkeep.utils.DigestUtils.sha256Hex;
-import static com.everkeep.utils.Headers.X_API_KEY;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
@@ -14,11 +13,6 @@ import java.time.OffsetDateTime;
 import java.util.Set;
 import java.util.UUID;
 
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
-
 import com.everkeep.AbstractIntegrationTest;
 import com.everkeep.config.properties.VerificationTokenProperties;
 import com.everkeep.controller.dto.SessionRequest;
@@ -27,10 +21,15 @@ import com.everkeep.model.VerificationToken;
 import com.everkeep.repository.RoleRepository;
 import com.everkeep.repository.UserRepository;
 import com.everkeep.repository.VerificationTokenRepository;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 class SessionControllerTest extends AbstractIntegrationTest {
 
     private static final String ROLE_USER = "ROLE_USER";
+    private static final String TOKEN_PARAM = "token";
 
     @Autowired
     private RoleRepository roleRepository;
@@ -95,7 +94,7 @@ class SessionControllerTest extends AbstractIntegrationTest {
         );
 
         mockMvc.perform(MockMvcRequestBuilders.put(SESSIONS_URL)
-                        .header(X_API_KEY, tokenValue))
+                        .param(TOKEN_PARAM, tokenValue))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.email").value(user.getEmail()))
                 .andExpect(jsonPath("$.jwt").exists())
@@ -125,7 +124,7 @@ class SessionControllerTest extends AbstractIntegrationTest {
         );
 
         mockMvc.perform(MockMvcRequestBuilders.delete(SESSIONS_URL)
-                        .header(X_API_KEY, tokenValue))
+                        .param(TOKEN_PARAM, tokenValue))
                 .andExpect(status().isNoContent());
 
         assertAll("Should utilize token",

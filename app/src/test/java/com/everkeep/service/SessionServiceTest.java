@@ -8,6 +8,9 @@ import static org.mockito.Mockito.when;
 
 import java.util.UUID;
 
+import com.everkeep.model.User;
+import com.everkeep.model.VerificationToken;
+import com.everkeep.security.JwtProvider;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -15,10 +18,6 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.TestingAuthenticationToken;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-
-import com.everkeep.model.User;
-import com.everkeep.model.VerificationToken;
-import com.everkeep.security.JwtProvider;
 
 @SpringBootTest(classes = SessionService.class)
 class SessionServiceTest {

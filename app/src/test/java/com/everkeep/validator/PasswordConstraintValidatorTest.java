@@ -8,12 +8,11 @@ import static org.mockito.Mockito.when;
 import javax.validation.ConstraintValidatorContext;
 import java.util.stream.Stream;
 
+import com.everkeep.AbstractTest;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
-
-import com.everkeep.AbstractTest;
 
 class PasswordConstraintValidatorTest extends AbstractTest {
 

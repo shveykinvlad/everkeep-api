@@ -6,15 +6,14 @@ import java.time.Clock;
 import java.time.OffsetDateTime;
 import java.util.UUID;
 
-import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Service;
-
 import com.everkeep.config.properties.VerificationTokenProperties;
 import com.everkeep.exception.VerificationTokenExpiredException;
 import com.everkeep.exception.VerificationTokenNotFoundException;
 import com.everkeep.model.User;
 import com.everkeep.model.VerificationToken;
 import com.everkeep.repository.VerificationTokenRepository;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor

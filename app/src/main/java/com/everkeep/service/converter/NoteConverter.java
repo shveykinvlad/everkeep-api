@@ -2,10 +2,9 @@ package com.everkeep.service.converter;
 
 import java.util.List;
 
-import lombok.experimental.UtilityClass;
-
 import com.everkeep.controller.dto.NoteDto;
 import com.everkeep.model.Note;
+import lombok.experimental.UtilityClass;
 
 @UtilityClass
 public class NoteConverter {

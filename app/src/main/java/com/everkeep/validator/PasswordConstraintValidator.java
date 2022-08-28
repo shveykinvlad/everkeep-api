@@ -4,6 +4,7 @@ import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
 import java.util.List;
 
+import com.everkeep.annotation.ValidPassword;
 import org.passay.CharacterRule;
 import org.passay.EnglishCharacterData;
 import org.passay.LengthRule;
@@ -11,8 +12,6 @@ import org.passay.PasswordData;
 import org.passay.PasswordValidator;
 import org.passay.Rule;
 import org.passay.WhitespaceRule;
-
-import com.everkeep.annotation.ValidPassword;
 
 public class PasswordConstraintValidator implements ConstraintValidator<ValidPassword, String> {
 

@@ -5,7 +5,6 @@ import static com.everkeep.controller.UserController.EMAIL_PARAM;
 import static com.everkeep.controller.UserController.PASSWORD_URL;
 import static com.everkeep.controller.UserController.USERS_URL;
 import static com.everkeep.utils.DigestUtils.sha256Hex;
-import static com.everkeep.utils.Headers.X_API_KEY;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -19,12 +18,6 @@ import java.time.OffsetDateTime;
 import java.util.Set;
 import java.util.UUID;
 
-import com.icegreen.greenmail.util.GreenMailUtil;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
-
 import com.everkeep.AbstractIntegrationTest;
 import com.everkeep.config.properties.VerificationTokenProperties;
 import com.everkeep.controller.dto.RegistrationRequest;
@@ -33,6 +26,11 @@ import com.everkeep.model.VerificationToken;
 import com.everkeep.repository.RoleRepository;
 import com.everkeep.repository.UserRepository;
 import com.everkeep.repository.VerificationTokenRepository;
+import com.icegreen.greenmail.util.GreenMailUtil;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 class UserControllerTest extends AbstractIntegrationTest {
 
@@ -40,6 +38,7 @@ class UserControllerTest extends AbstractIntegrationTest {
     private static final String PASSWORD_RESET_MAIL_MESSAGE_REGEX = "http://localhost:4200/users/password/update\\?email=.*&token=.*";
 
     private static final String ROLE_USER = "ROLE_USER";
+    private static final String TOKEN_PARAM = "token";
 
     @Autowired
     private UserRepository userRepository;
@@ -103,7 +102,7 @@ class UserControllerTest extends AbstractIntegrationTest {
         );
 
         mockMvc.perform(MockMvcRequestBuilders.post(USERS_URL + CONFIRMATION_URL)
-                        .header(X_API_KEY, tokenValue))
+                        .param(TOKEN_PARAM, tokenValue))
                 .andExpect(status().isOk());
 
         assertAll("Should enable user and utilize token",
@@ -195,7 +194,7 @@ class UserControllerTest extends AbstractIntegrationTest {
                 user.getEmail()
         );
         mockMvc.perform(MockMvcRequestBuilders.post(USERS_URL + PASSWORD_URL)
-                        .header(X_API_KEY, tokenValue)
+                        .param(TOKEN_PARAM, tokenValue)
                         .contentType(APPLICATION_JSON)
                         .content(mapper.writeValueAsString(request)))
                 .andExpect(status().isOk());

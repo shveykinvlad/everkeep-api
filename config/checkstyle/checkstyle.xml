@@ -16,7 +16,6 @@
     </module>
     <module name="SuppressionSingleFilter">
         <property name="checks" value="MagicNumberCheck"/>
-        <property name="files" value=".*[\\/]src[\\/](test|it)[\\/]"/>
     </module>
 
     <!-- Filters (http://checkstyle.sourceforge.net/config_filters.html) -->
@@ -131,7 +130,7 @@
             <property name="thirdPartyPackageRegExp" value=".*"/>
             <property name="separateLineBetweenGroups" value="true"/>
             <property name="sortImportsInGroupAlphabetically" value="false"/>
-            <property name="specialImportsRegExp" value="com.everkeep.*"/>
+            <property name="specialImportsRegExp" value="^$"/>
             <property name="customImportOrderRules" value="STATIC###STANDARD_JAVA_PACKAGE###THIRD_PARTY_PACKAGE###SPECIAL_IMPORTS"/>
             <property name="standardPackageRegExp" value="^(java|javax)"/>
         </module>
