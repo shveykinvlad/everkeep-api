@@ -1,10 +1,7 @@
 package com.everkeep.service;
 
-import static com.everkeep.utils.DigestUtils.sha256Hex;
-
-import java.time.Clock;
-import java.time.OffsetDateTime;
-import java.util.UUID;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
 
 import com.everkeep.config.properties.VerificationTokenProperties;
 import com.everkeep.exception.VerificationTokenExpiredException;
@@ -12,8 +9,12 @@ import com.everkeep.exception.VerificationTokenNotFoundException;
 import com.everkeep.model.User;
 import com.everkeep.model.VerificationToken;
 import com.everkeep.repository.VerificationTokenRepository;
-import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Service;
+
+import java.time.Clock;
+import java.time.OffsetDateTime;
+import java.util.UUID;
+
+import static com.everkeep.utils.DigestUtils.sha256Hex;
 
 @Service
 @RequiredArgsConstructor
@@ -53,7 +54,8 @@ public class VerificationTokenService {
 
     private void validate(VerificationToken token) {
         if (OffsetDateTime.now().isAfter(token.getExpiryTime())) {
-            throw new VerificationTokenExpiredException("Verification token is expired", token.getHashValue(), token.getUser().getEmail());
+            throw new VerificationTokenExpiredException("Verification token is expired", token.getHashValue(),
+                    token.getUser().getEmail());
         }
     }
 

@@ -1,19 +1,5 @@
 package com.everkeep.service;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertIterableEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
-
-import java.util.List;
-import java.util.Optional;
-
-import com.everkeep.AbstractTest;
-import com.everkeep.exception.NoteNotFoundException;
-import com.everkeep.model.Note;
-import com.everkeep.model.NotePriority;
-import com.everkeep.repository.NoteRepository;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,6 +7,21 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.security.access.AccessDeniedException;
+
+import com.everkeep.AbstractTest;
+import com.everkeep.exception.NoteNotFoundException;
+import com.everkeep.model.Note;
+import com.everkeep.model.NotePriority;
+import com.everkeep.repository.NoteRepository;
+
+import java.util.List;
+import java.util.Optional;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertIterableEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 @SpringBootTest(classes = NoteService.class)
 class NoteServiceTest extends AbstractTest {
@@ -91,7 +92,8 @@ class NoteServiceTest extends AbstractTest {
                 .title("Forrest Gump")
                 .text("""
                         The presidencies of Kennedy and Johnson, the Vietnam War, \
-                        the Watergate scandal and other historical events unfold from the perspective of an Alabama man with an IQ of 75, \
+                        the Watergate scandal and other historical events unfold from the perspective \
+                        of an Alabama man with an IQ of 75, \
                         whose only desire is to be reunited with his childhood sweetheart.""")
                 .priority(NotePriority.NONE)
                 .username("zemeckis@localhost")
@@ -152,7 +154,8 @@ class NoteServiceTest extends AbstractTest {
                 .title("The Matrix")
                 .text("""
                         When a beautiful stranger leads computer hacker Neo to a forbidding underworld, \
-                        he discovers the shocking truth--the life he knows is the elaborate deception of an evil cyber-intelligence.""")
+                        he discovers the shocking truth--the life he knows is the \
+                        elaborate deception of an evil cyber-intelligence.""")
                 .priority(NotePriority.NONE)
                 .username("wachowski@localhost")
                 .build();

@@ -1,5 +1,25 @@
 package com.everkeep.controller;
 
+import com.icegreen.greenmail.util.GreenMailUtil;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+
+import com.everkeep.AbstractIntegrationTest;
+import com.everkeep.config.properties.VerificationTokenProperties;
+import com.everkeep.controller.dto.RegistrationRequest;
+import com.everkeep.model.User;
+import com.everkeep.model.VerificationToken;
+import com.everkeep.repository.RoleRepository;
+import com.everkeep.repository.UserRepository;
+import com.everkeep.repository.VerificationTokenRepository;
+
+import java.time.Clock;
+import java.time.OffsetDateTime;
+import java.util.Set;
+import java.util.UUID;
+
 import static com.everkeep.controller.UserController.CONFIRMATION_URL;
 import static com.everkeep.controller.UserController.EMAIL_PARAM;
 import static com.everkeep.controller.UserController.PASSWORD_URL;
@@ -13,29 +33,12 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import java.time.Clock;
-import java.time.OffsetDateTime;
-import java.util.Set;
-import java.util.UUID;
-
-import com.everkeep.AbstractIntegrationTest;
-import com.everkeep.config.properties.VerificationTokenProperties;
-import com.everkeep.controller.dto.RegistrationRequest;
-import com.everkeep.model.User;
-import com.everkeep.model.VerificationToken;
-import com.everkeep.repository.RoleRepository;
-import com.everkeep.repository.UserRepository;
-import com.everkeep.repository.VerificationTokenRepository;
-import com.icegreen.greenmail.util.GreenMailUtil;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
-
 class UserControllerTest extends AbstractIntegrationTest {
 
-    private static final String CONFIRMATION_MAIL_MESSAGE_REGEX = "http://localhost:4200/users/confirmation\\?token=.*";
-    private static final String PASSWORD_RESET_MAIL_MESSAGE_REGEX = "http://localhost:4200/users/password/update\\?email=.*&token=.*";
+    private static final String CONFIRMATION_MAIL_MESSAGE_REGEX
+            = "http://localhost:4200/users/confirmation\\?token=.*";
+    private static final String PASSWORD_RESET_MAIL_MESSAGE_REGEX
+            = "http://localhost:4200/users/password/update\\?email=.*&token=.*";
 
     private static final String ROLE_USER = "ROLE_USER";
     private static final String TOKEN_PARAM = "token";
@@ -97,7 +100,8 @@ class UserControllerTest extends AbstractIntegrationTest {
                         .action(VerificationToken.Action.ACCOUNT_CONFIRMATION)
                         .active(true)
                         .user(user)
-                        .expiryTime(OffsetDateTime.now(clock).plusSeconds(verificationTokenProperties.expiryDuration().getSeconds()))
+                        .expiryTime(OffsetDateTime.now(clock)
+                                .plusSeconds(verificationTokenProperties.expiryDuration().getSeconds()))
                         .build()
         );
 
@@ -109,9 +113,10 @@ class UserControllerTest extends AbstractIntegrationTest {
                 () -> assertTrue(userRepository.findByEmail(user.getEmail())
                         .orElseThrow()
                         .isEnabled()),
-                () -> assertFalse(verificationTokenRepository.findByHashValueAndAction(token.getHashValue(), token.getAction())
-                        .orElseThrow()
-                        .isActive())
+                () -> assertFalse(
+                        verificationTokenRepository.findByHashValueAndAction(token.getHashValue(), token.getAction())
+                                .orElseThrow()
+                                .isActive())
         );
     }
 
@@ -203,9 +208,10 @@ class UserControllerTest extends AbstractIntegrationTest {
                 () -> assertNotEquals(oldEncodedPassword, userRepository.findByEmail(user.getEmail())
                         .orElseThrow()
                         .getPassword()),
-                () -> assertFalse(verificationTokenRepository.findByHashValueAndAction(token.getHashValue(), token.getAction())
-                        .orElseThrow()
-                        .isActive())
+                () -> assertFalse(
+                        verificationTokenRepository.findByHashValueAndAction(token.getHashValue(), token.getAction())
+                                .orElseThrow()
+                                .isActive())
         );
     }
 }

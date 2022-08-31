@@ -1,19 +1,12 @@
 package com.everkeep.service;
 
-import static com.everkeep.utils.DigestUtils.sha256Hex;
-import static org.junit.jupiter.api.Assertions.assertAll;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.mockito.Mockito.when;
-
-import java.time.Clock;
-import java.time.Duration;
-import java.time.OffsetDateTime;
-import java.time.temporal.ChronoUnit;
-import java.util.Optional;
-import java.util.UUID;
+import org.junit.jupiter.api.Test;
+import org.mockito.ArgumentCaptor;
+import org.mockito.Captor;
+import org.mockito.Mockito;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 
 import com.everkeep.AbstractTest;
 import com.everkeep.config.TimeConfig;
@@ -23,13 +16,21 @@ import com.everkeep.exception.VerificationTokenNotFoundException;
 import com.everkeep.model.User;
 import com.everkeep.model.VerificationToken;
 import com.everkeep.repository.VerificationTokenRepository;
-import org.junit.jupiter.api.Test;
-import org.mockito.ArgumentCaptor;
-import org.mockito.Captor;
-import org.mockito.Mockito;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
+
+import java.time.Clock;
+import java.time.Duration;
+import java.time.OffsetDateTime;
+import java.time.temporal.ChronoUnit;
+import java.util.Optional;
+import java.util.UUID;
+
+import static com.everkeep.utils.DigestUtils.sha256Hex;
+import static org.junit.jupiter.api.Assertions.assertAll;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.Mockito.when;
 
 @SpringBootTest(classes = {
         VerificationTokenService.class,
@@ -61,7 +62,8 @@ class VerificationTokenServiceTest extends AbstractTest {
         assertAll("Should save token and return the value",
                 () -> assertEquals(VerificationToken.Action.ACCOUNT_CONFIRMATION, savedToken.getAction()),
                 () -> assertEquals(user, savedToken.getUser()),
-                () -> assertEquals(OffsetDateTime.now(clock).plusSeconds(duration.getSeconds()).truncatedTo(ChronoUnit.SECONDS),
+                () -> assertEquals(
+                        OffsetDateTime.now(clock).plusSeconds(duration.getSeconds()).truncatedTo(ChronoUnit.SECONDS),
                         savedToken.getExpiryTime().truncatedTo(ChronoUnit.SECONDS))
         );
     }

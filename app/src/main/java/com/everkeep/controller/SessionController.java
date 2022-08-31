@@ -1,11 +1,5 @@
 package com.everkeep.controller;
 
-import javax.validation.Valid;
-import javax.validation.constraints.NotBlank;
-
-import com.everkeep.controller.dto.SessionRequest;
-import com.everkeep.controller.dto.SessionResponse;
-import com.everkeep.service.SessionService;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -17,6 +11,13 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
+
+import com.everkeep.controller.dto.SessionRequest;
+import com.everkeep.controller.dto.SessionResponse;
+import com.everkeep.service.SessionService;
+
+import javax.validation.Valid;
+import javax.validation.constraints.NotBlank;
 
 @RestController
 @RequestMapping(SessionController.SESSIONS_URL)
