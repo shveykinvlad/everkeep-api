@@ -3,10 +3,10 @@
 [![Build](https://github.com/shveykinvlad/everkeep-api/actions/workflows/build.yml/badge.svg)](https://github.com/shveykinvlad/everkeep-api/actions/workflows/build.yml)
 [![CodeQL](https://github.com/shveykinvlad/everkeep-api/actions/workflows/codeql-analysis.yml/badge.svg)](https://github.com/shveykinvlad/everkeep-api/actions/workflows/codeql-analysis.yml)
 
-Notes service  
+### Notes service  
 Backend: https://everkeep-api.herokuapp.com  
 Frontend: https://everkeep.herokuapp.com  
-## Technologies
+#### Technologies
 * Java 17
 * SpringBoot
 * Spring Security
@@ -18,7 +18,7 @@ Frontend: https://everkeep.herokuapp.com
 * Docker
 * Swagger
 * Lombok
-## Functionality
+#### Functionality
 * REST
 * Validation
 * Object mapping
@@ -32,5 +32,16 @@ Frontend: https://everkeep.herokuapp.com
 * Mail sender
 * Integration tests
 * CRUD
+
+## How to run locally
+#### Prerequisites
+* Docker
+#### Steps
+1. open project folder: `cd <path-to-project>`;
+2. set up environment variables in `.env` file;
+    * INTEGRATION_UI_URL: URL to the root of a local instance of the [Everkeep fronted application](https://github.com/shveykinvlad/everkeep);
+    * JWT_SECRET: secret key instance for use with [HMAC-SHA algorithms](https://www.rfc-editor.org/rfc/rfc7518#section-3.2)
+4. run database and app in docker containers: `docker-compose up`;
+5. stop database and app docker containers: `docker-compose down`;
 
 
