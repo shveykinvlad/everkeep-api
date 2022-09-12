@@ -41,8 +41,11 @@ public class VerificationTokenService {
 
     public VerificationToken get(String value, VerificationToken.Action action) {
         return verificationTokenRepository.findByHashValueAndAction(sha256Hex(value), action)
-                .orElseThrow(() -> new VerificationTokenNotFoundException("VerificationToken %s for action %s not found"
-                        .formatted(value, action)));
+                .orElseThrow(
+                        () -> new VerificationTokenNotFoundException(
+                                "VerificationToken %s for action %s not found".formatted(value, action)
+                        )
+                );
     }
 
     public VerificationToken apply(String value, VerificationToken.Action active) {
@@ -54,8 +57,11 @@ public class VerificationTokenService {
 
     private void validate(VerificationToken token) {
         if (OffsetDateTime.now().isAfter(token.getExpiryTime())) {
-            throw new VerificationTokenExpiredException("Verification token is expired", token.getHashValue(),
-                    token.getUser().getEmail());
+            throw new VerificationTokenExpiredException(
+                    "Verification token is expired",
+                    token.getHashValue(),
+                    token.getUser().getEmail()
+            );
         }
     }
 

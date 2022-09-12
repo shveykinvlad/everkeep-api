@@ -43,8 +43,10 @@ public class NoteService {
 
     public Note update(Note note) {
         if (noteRepository.findByIdAndUsername(note.getId(), userService.getAuthenticatedUsername()).isEmpty()) {
-            throw new AccessDeniedException("%s have no permissions for note id = %d"
-                    .formatted(userService.getAuthenticatedUsername(), note.getId()));
+            throw new AccessDeniedException(
+                    "%s have no permissions for note id = %d"
+                            .formatted(userService.getAuthenticatedUsername(), note.getId())
+            );
         }
         return noteRepository.save(note);
     }

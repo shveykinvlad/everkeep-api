@@ -50,7 +50,8 @@ class SessionServiceTest {
 
         var sessionResponse = sessionService.create(email, password);
 
-        assertAll("Should return access token",
+        assertAll(
+                "Should return access token",
                 () -> assertEquals(jwt, sessionResponse.jwt()),
                 () -> assertEquals(tokenValue, sessionResponse.refreshToken()),
                 () -> assertEquals(email, sessionResponse.email())
@@ -80,7 +81,8 @@ class SessionServiceTest {
 
         var sessionResponse = sessionService.update(oldTokenValue);
 
-        assertAll("Should refresh access token",
+        assertAll(
+                "Should refresh access token",
                 () -> assertEquals(jwt, sessionResponse.jwt()),
                 () -> assertEquals(newTokenValue, sessionResponse.refreshToken()),
                 () -> assertEquals(newToken.getUser().getEmail(), sessionResponse.email()));

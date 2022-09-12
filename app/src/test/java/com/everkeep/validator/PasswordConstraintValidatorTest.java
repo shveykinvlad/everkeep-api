@@ -40,6 +40,7 @@ class PasswordConstraintValidatorTest extends AbstractTest {
                 Arguments.of("Pa$$word", false),
                 Arguments.of("p4$$w0rd", false),
                 Arguments.of("P4$$W0RD", false),
-                Arguments.of("P4$$w0rd ", false));
+                Arguments.of("P4$$w0rd ", false)
+        );
     }
 }

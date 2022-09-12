@@ -130,11 +130,13 @@ class SessionControllerTest extends AbstractIntegrationTest {
                         .param(TOKEN_PARAM, tokenValue))
                 .andExpect(status().isNoContent());
 
-        assertAll("Should utilize token",
+        assertAll(
+                "Should utilize token",
                 () -> assertFalse(
                         verificationTokenRepository.findByHashValueAndAction(token.getHashValue(), token.getAction())
                                 .orElseThrow()
-                                .isActive())
+                                .isActive()
+                )
         );
     }
 

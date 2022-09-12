@@ -12,5 +12,4 @@ import javax.validation.constraints.NotEmpty;
 public record IntegrationProperties(
         @NotEmpty
         String uiUrl
-) {
-}
+) { }

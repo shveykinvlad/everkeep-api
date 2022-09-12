@@ -23,6 +23,7 @@ class PasswordMatchesValidatorTest extends AbstractTest {
     private static Stream<Arguments> isValid() {
         return Stream.of(
                 Arguments.of(new RegistrationRequest("pass", "pass", "email@email.com"), true),
-                Arguments.of(new RegistrationRequest("pass", "word", "email@email.com"), false));
+                Arguments.of(new RegistrationRequest("pass", "word", "email@email.com"), false)
+        );
     }
 }
