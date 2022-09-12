@@ -17,5 +17,4 @@ public record JwtProperties(
 
         @NotNull
         Duration expiryDuration
-) {
-}
+) { }

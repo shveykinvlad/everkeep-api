@@ -99,9 +99,11 @@ class UserServiceTest extends AbstractTest {
         var email = "pyrrhus@localhost";
         when(userRepository.existsByEmail(email)).thenReturn(true);
 
-        assertThrows(UserAlreadyExistsException.class,
+        assertThrows(
+                UserAlreadyExistsException.class,
                 () -> userService.register(email, "F0urthP4$$"),
-                "Should throw an exception if user already exists");
+                "Should throw an exception if user already exists"
+        );
     }
 
     @Test
@@ -118,7 +120,8 @@ class UserServiceTest extends AbstractTest {
         userService.confirm(tokenValue);
 
         verify(userRepository).save(userCaptor.capture());
-        assertAll("Should enable user",
+        assertAll(
+                "Should enable user",
                 () -> assertTrue(userCaptor.getValue().isEnabled())
         );
     }
@@ -133,15 +136,16 @@ class UserServiceTest extends AbstractTest {
                 .build();
         var action = VerificationToken.Action.ACCOUNT_CONFIRMATION;
         when(verificationTokenService.apply(oldTokenValue, action))
-                .thenThrow(new VerificationTokenExpiredException("Verification token is expired", oldTokenValue,
-                        username));
+                .thenThrow(new VerificationTokenExpiredException("Verification token is expired", oldTokenValue, username));
         when(userRepository.findByEmail(username)).thenReturn(Optional.of(user));
-        when(verificationTokenService.create(user, VerificationToken.Action.ACCOUNT_CONFIRMATION)).thenReturn(
-                newTokenValue);
+        when(verificationTokenService.create(user, VerificationToken.Action.ACCOUNT_CONFIRMATION))
+                .thenReturn(newTokenValue);
 
-        assertThrows(VerificationTokenExpiredException.class,
+        assertThrows(
+                VerificationTokenExpiredException.class,
                 () -> userService.confirm(oldTokenValue),
-                "Should throw an exception if token is expired");
+                "Should throw an exception if token is expired"
+        );
 
         verify(mailService).sendConfirmationMail(username, newTokenValue);
     }
@@ -207,7 +211,8 @@ class UserServiceTest extends AbstractTest {
         userService.updatePassword(tokenValue, password);
 
         verify(userRepository).save(userCaptor.capture());
-        assertAll("Should return updated password",
+        assertAll(
+                "Should return updated password",
                 () -> assertEquals(encodedPassword, userCaptor.getValue().getPassword())
         );
     }

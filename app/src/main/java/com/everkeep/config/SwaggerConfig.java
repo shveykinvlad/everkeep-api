@@ -15,13 +15,20 @@ public class SwaggerConfig {
     @Bean
     public OpenAPI api() {
         return new OpenAPI()
-                .components(new Components()
-                        .addSecuritySchemes(BEARER, new SecurityScheme()
-                                .type(SecurityScheme.Type.HTTP)
-                                .scheme(BEARER)
-                                .bearerFormat("JWT")))
-                .info(new Info()
-                        .title("Everkeep API")
-                        .description("Note application"));
+                .components(
+                        new Components()
+                                .addSecuritySchemes(
+                                        BEARER,
+                                        new SecurityScheme()
+                                                .type(SecurityScheme.Type.HTTP)
+                                                .scheme(BEARER)
+                                                .bearerFormat("JWT")
+                                )
+                )
+                .info(
+                        new Info()
+                                .title("Everkeep API")
+                                .description("Note application")
+                );
     }
 }

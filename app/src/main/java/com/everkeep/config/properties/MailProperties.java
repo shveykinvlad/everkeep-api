@@ -25,5 +25,4 @@ public record MailProperties(
 
         @NotEmpty
         String password
-) {
-}
+) { }

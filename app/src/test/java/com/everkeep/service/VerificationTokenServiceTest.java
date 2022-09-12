@@ -64,7 +64,8 @@ class VerificationTokenServiceTest extends AbstractTest {
                 () -> assertEquals(user, savedToken.getUser()),
                 () -> assertEquals(
                         OffsetDateTime.now(clock).plusSeconds(duration.getSeconds()).truncatedTo(ChronoUnit.SECONDS),
-                        savedToken.getExpiryTime().truncatedTo(ChronoUnit.SECONDS))
+                        savedToken.getExpiryTime().truncatedTo(ChronoUnit.SECONDS)
+                )
         );
     }
 
@@ -81,7 +82,8 @@ class VerificationTokenServiceTest extends AbstractTest {
 
         var receivedToken = verificationTokenService.get(value, VerificationToken.Action.ACCOUNT_CONFIRMATION);
 
-        assertAll("Should return token",
+        assertAll(
+                "Should return token",
                 () -> assertEquals(sha256Hex(value), receivedToken.getHashValue()),
                 () -> assertTrue(receivedToken.isActive()),
                 () -> assertEquals(action, receivedToken.getAction())
@@ -95,9 +97,11 @@ class VerificationTokenServiceTest extends AbstractTest {
         when(verificationTokenRepository.findByHashValueAndAction(sha256Hex(value), action))
                 .thenReturn(Optional.empty());
 
-        assertThrows(VerificationTokenNotFoundException.class,
+        assertThrows(
+                VerificationTokenNotFoundException.class,
                 () -> verificationTokenService.get(value, action),
-                "Should throw an exception if token not found");
+                "Should throw an exception if token not found"
+        );
     }
 
     @Test
@@ -117,7 +121,8 @@ class VerificationTokenServiceTest extends AbstractTest {
 
         Mockito.verify(verificationTokenRepository).save(tokenCaptor.capture());
         var appliedToken = tokenCaptor.getValue();
-        assertAll("Should return applied token",
+        assertAll(
+                "Should return applied token",
                 () -> assertEquals(sha256Hex(value), appliedToken.getHashValue()),
                 () -> assertEquals(action, appliedToken.getAction()),
                 () -> assertFalse(appliedToken.isActive()),
@@ -141,8 +146,10 @@ class VerificationTokenServiceTest extends AbstractTest {
         when(verificationTokenRepository.findByHashValueAndAction(sha256Hex(value), action))
                 .thenReturn(Optional.of(token));
 
-        assertThrows(VerificationTokenExpiredException.class,
+        assertThrows(
+                VerificationTokenExpiredException.class,
                 () -> verificationTokenService.apply(value, action),
-                "Should throw an exception if the token is expired");
+                "Should throw an exception if the token is expired"
+        );
     }
 }

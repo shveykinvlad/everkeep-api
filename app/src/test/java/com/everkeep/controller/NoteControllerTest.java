@@ -126,7 +126,8 @@ class NoteControllerTest extends AbstractIntegrationTest {
                         .text("""
                                 The jury in a New York City murder trial is frustrated by a single member \
                                 whose skeptical caution forces them to more carefully consider the evidence \
-                                before jumping to a hasty verdict.""")
+                                before jumping to a hasty verdict.
+                                """)
                         .priority(NotePriority.NONE)
                         .build());
 
@@ -141,7 +142,8 @@ class NoteControllerTest extends AbstractIntegrationTest {
                 .andExpect(jsonPath("$.priority").value(noteDto.priority().name()));
 
         var note = noteRepository.findAll().get(0);
-        assertAll("Should persist username and creation timestamp",
+        assertAll(
+                "Should persist username and creation timestamp",
                 () -> assertEquals(USERNAME, note.getUsername()),
                 () -> assertNotNull(note.getCreationTimestamp())
         );
@@ -156,7 +158,8 @@ class NoteControllerTest extends AbstractIntegrationTest {
                         .text("""
                                 In German-occupied Poland during World War II, \
                                 industrialist Oskar Schindler gradually becomes concerned for his Jewish workforce \
-                                after witnessing their persecution by the Nazis.""")
+                                after witnessing their persecution by the Nazis.
+                                """)
                         .priority(NotePriority.NONE)
                         .build()
         );
@@ -186,7 +189,8 @@ class NoteControllerTest extends AbstractIntegrationTest {
                         .title("The Lord of the Rings: The Return of the King")
                         .text("""
                                 Gandalf and Aragorn lead the World of Men against Sauron's army to draw his gaze \
-                                from Frodo and Sam as they approach Mount Doom with the One Ring.""")
+                                from Frodo and Sam as they approach Mount Doom with the One Ring.
+                                """)
                         .priority(NotePriority.NONE)
                         .build());
 

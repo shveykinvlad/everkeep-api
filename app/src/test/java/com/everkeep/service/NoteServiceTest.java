@@ -41,7 +41,8 @@ class NoteServiceTest extends AbstractTest {
                 .title("Pulp Fiction")
                 .text("""
                         The lives of two mob hitmen, a boxer, a gangster and his wife, \
-                        and a pair of diner bandits intertwine in four tales of violence and redemption.""")
+                        and a pair of diner bandits intertwine in four tales of violence and redemption.
+                        """)
                 .priority(NotePriority.NONE)
                 .username(username)
                 .build();
@@ -62,7 +63,8 @@ class NoteServiceTest extends AbstractTest {
                 .title("The Good, the Bad and the Ugly")
                 .text("""
                         A bounty hunting scam joins two men in an uneasy alliance against a third in a race \
-                        to find a fortune in gold buried in a remote cemetery.""")
+                        to find a fortune in gold buried in a remote cemetery.
+                        """)
                 .priority(NotePriority.NONE)
                 .username("leone@localhost")
                 .build();
@@ -94,7 +96,8 @@ class NoteServiceTest extends AbstractTest {
                         The presidencies of Kennedy and Johnson, the Vietnam War, \
                         the Watergate scandal and other historical events unfold from the perspective \
                         of an Alabama man with an IQ of 75, \
-                        whose only desire is to be reunited with his childhood sweetheart.""")
+                        whose only desire is to be reunited with his childhood sweetheart.
+                        """)
                 .priority(NotePriority.NONE)
                 .username("zemeckis@localhost")
                 .build();
@@ -114,7 +117,8 @@ class NoteServiceTest extends AbstractTest {
                 .title("Fight Club")
                 .text("""
                         An insomniac office worker and a devil-may-care soap maker form \
-                        an underground fight club that evolves into much more.""")
+                        an underground fight club that evolves into much more.
+                        """)
                 .priority(NotePriority.NONE)
                 .username("fincher@localhost")
                 .build();
@@ -133,7 +137,8 @@ class NoteServiceTest extends AbstractTest {
                 .text("""
                         A thief who steals corporate secrets through the use of dream-sharing technology \
                         is given the inverse task of planting an idea into the mind of a C.E.O., \
-                        but his tragic past may doom the project and his team to disaster.""")
+                        but his tragic past may doom the project and his team to disaster.
+                        """)
                 .priority(NotePriority.NONE)
                 .username("nolan@localhost")
                 .build();
@@ -155,7 +160,8 @@ class NoteServiceTest extends AbstractTest {
                 .text("""
                         When a beautiful stranger leads computer hacker Neo to a forbidding underworld, \
                         he discovers the shocking truth--the life he knows is the \
-                        elaborate deception of an evil cyber-intelligence.""")
+                        elaborate deception of an evil cyber-intelligence.
+                        """)
                 .priority(NotePriority.NONE)
                 .username("wachowski@localhost")
                 .build();

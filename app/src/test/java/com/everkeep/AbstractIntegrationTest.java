@@ -23,8 +23,7 @@ public abstract class AbstractIntegrationTest extends AbstractTest {
 
     @RegisterExtension
     protected static final GreenMailExtension GREEN_MAIL = new GreenMailExtension(ServerSetupTest.SMTP)
-            .withConfiguration(GreenMailConfiguration.aConfig()
-                    .withUser(EMAIL_USER, EMAIL_PASSWORD))
+            .withConfiguration(GreenMailConfiguration.aConfig().withUser(EMAIL_USER, EMAIL_PASSWORD))
             .withPerMethodLifecycle(true);
 
     @Autowired

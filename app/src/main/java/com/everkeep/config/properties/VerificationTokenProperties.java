@@ -13,5 +13,4 @@ import java.time.Duration;
 public record VerificationTokenProperties(
         @NotNull
         Duration expiryDuration
-) {
-}
+) { }

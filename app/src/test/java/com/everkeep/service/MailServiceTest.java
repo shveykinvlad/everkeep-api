@@ -55,8 +55,10 @@ class MailServiceTest extends AbstractTest {
         assertAll("Should capture confirmation mail",
                 () -> assertEquals(mailFrom, sentMail.getFrom()),
                 () -> assertEquals("Email confirmation", sentMail.getSubject()),
-                () -> assertEquals("%s/users/confirmation?token=%s".formatted(uiUrl, tokenValue),
-                        sentMail.getText()),
+                () -> assertEquals(
+                        "%s/users/confirmation?token=%s".formatted(uiUrl, tokenValue),
+                        sentMail.getText()
+                ),
                 () -> assertArrayEquals(new String[]{mailTo}, sentMail.getTo())
         );
     }
@@ -77,8 +79,10 @@ class MailServiceTest extends AbstractTest {
         assertAll("Should capture reset password mail",
                 () -> assertEquals(mailFrom, sentMail.getFrom()),
                 () -> assertEquals("Password reset", sentMail.getSubject()),
-                () -> assertEquals("%s/users/password/update?email=%s&token=%s".formatted(uiUrl, mailTo, tokenValue),
-                        sentMail.getText()),
+                () -> assertEquals(
+                        "%s/users/password/update?email=%s&token=%s".formatted(uiUrl, mailTo, tokenValue),
+                        sentMail.getText()
+                ),
                 () -> assertArrayEquals(new String[]{mailTo}, sentMail.getTo())
         );
     }
