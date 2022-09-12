@@ -14,7 +14,7 @@ buildscript {
         jsonwebtokenVersion = '0.11.5'
         lombokVersion = '1.18.24'
         greenMailVersion = '1.6.10'
-        spotbugsVersion = '5.0.10'
+        spotbugsVersion = '5.0.12'
     }
 
     dependencies {
