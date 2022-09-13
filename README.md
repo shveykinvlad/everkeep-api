@@ -38,7 +38,8 @@ Frontend: https://everkeep.herokuapp.com
 * Docker
 #### Steps
 1. open project folder: `cd <path-to-project>`;
-2. set up environment variables in `.env` file;
+2. build image: `./gradlew bootBuildImage --imageName=everkeep-api`
+3. set up environment variables in `.env` file;
     * INTEGRATION_UI_URL: URL to the root of a local instance of the [Everkeep fronted application](https://github.com/shveykinvlad/everkeep);
     * JWT_SECRET: secret key instance for use with [HMAC-SHA algorithms](https://www.rfc-editor.org/rfc/rfc7518#section-3.2)
 4. run database and app in docker containers: `docker-compose up`;
