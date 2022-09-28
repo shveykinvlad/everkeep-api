@@ -1,5 +1,6 @@
 package com.everkeep.validator;
 
+import jakarta.validation.ConstraintValidatorContext;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
@@ -7,7 +8,6 @@ import org.junit.jupiter.params.provider.MethodSource;
 
 import com.everkeep.AbstractTest;
 
-import javax.validation.ConstraintValidatorContext;
 import java.util.stream.Stream;
 
 import static org.mockito.ArgumentMatchers.anyString;

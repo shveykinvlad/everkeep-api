@@ -1,6 +1,6 @@
 package com.everkeep.controller.dto;
 
-import javax.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotBlank;
 
 public record SessionRequest(
         @NotBlank

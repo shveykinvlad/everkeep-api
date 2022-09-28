@@ -1,5 +1,6 @@
 package com.everkeep.controller;
 
+import jakarta.validation.ConstraintViolationException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -17,7 +18,6 @@ import com.everkeep.exception.UserAlreadyExistsException;
 import com.everkeep.exception.VerificationTokenExpiredException;
 import com.everkeep.exception.VerificationTokenNotFoundException;
 
-import javax.validation.ConstraintViolationException;
 import java.time.OffsetDateTime;
 
 @ControllerAdvice

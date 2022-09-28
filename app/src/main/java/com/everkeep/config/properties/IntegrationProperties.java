@@ -1,14 +1,11 @@
 package com.everkeep.config.properties;
 
+import jakarta.validation.constraints.NotEmpty;
 import org.springframework.boot.context.properties.ConfigurationProperties;
-import org.springframework.boot.context.properties.ConstructorBinding;
 import org.springframework.validation.annotation.Validated;
 
-import javax.validation.constraints.NotEmpty;
-
-@ConfigurationProperties(prefix = "integration")
 @Validated
-@ConstructorBinding
+@ConfigurationProperties(prefix = "integration")
 public record IntegrationProperties(
         @NotEmpty
         String uiUrl

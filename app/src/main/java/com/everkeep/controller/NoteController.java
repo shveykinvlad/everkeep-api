@@ -2,6 +2,7 @@ package com.everkeep.controller;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -18,7 +19,6 @@ import org.springframework.web.bind.annotation.RestController;
 import com.everkeep.controller.dto.NoteDto;
 import com.everkeep.service.NoteService;
 
-import javax.validation.Valid;
 import java.util.List;
 
 import static com.everkeep.config.SwaggerConfig.BEARER;

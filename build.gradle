@@ -1,10 +1,11 @@
 buildscript {
     repositories {
         gradlePluginPortal()
+        maven { url 'https://repo.spring.io/milestone' }
     }
 
     ext {
-        springBootVersion = '2.7.4'
+        springBootVersion = '3.0.0-M5'
         springDependencyManagementVersion = '1.0.14.RELEASE'
         springdocVersion = '1.6.11'
         liquibaseVersion = '4.16.1'
@@ -13,7 +14,7 @@ buildscript {
         passayVersion = '1.6.2'
         jsonwebtokenVersion = '0.11.5'
         lombokVersion = '1.18.24'
-        greenMailVersion = '1.6.10'
+        greenMailVersion = '2.0.0-alpha-2'
         spotbugsVersion = '5.0.12'
     }
 
@@ -66,6 +67,7 @@ configure(javaProjects) {
 
         repositories {
             mavenCentral()
+            maven { url 'https://repo.spring.io/milestone' }
         }
     }
 
