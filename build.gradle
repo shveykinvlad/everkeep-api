@@ -33,6 +33,7 @@ ext {
 configure(javaProjects) {
 
     apply plugin: 'java'
+    apply plugin: 'org.springframework.boot'
     apply plugin: 'io.spring.dependency-management'
     apply plugin: 'checkstyle'
     apply plugin: 'com.github.spotbugs'
