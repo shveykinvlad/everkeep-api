@@ -9,7 +9,7 @@ spring:
     port: 3025
     protocol: smtp
 
-jwt:
+authentication:
   secret: TVFX8dwOWzOQbMecjnnZ3foXeBVDZK0ItpdXxlz6IgGjVJNU4cTo3Evj7nIE0n
 
 integration:

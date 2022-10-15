@@ -59,7 +59,8 @@ class VerificationTokenServiceTest extends AbstractTest {
 
         Mockito.verify(verificationTokenRepository).save(tokenCaptor.capture());
         var savedToken = tokenCaptor.getValue();
-        assertAll("Should save token and return the value",
+        assertAll(
+                "Should save token and return the value",
                 () -> assertEquals(VerificationToken.Action.ACCOUNT_CONFIRMATION, savedToken.getAction()),
                 () -> assertEquals(user, savedToken.getUser()),
                 () -> assertEquals(

@@ -52,7 +52,8 @@ class MailServiceTest extends AbstractTest {
 
         verify(javaMailSender).send(mailCaptor.capture());
         var sentMail = mailCaptor.getValue();
-        assertAll("Should capture confirmation mail",
+        assertAll(
+                "Should capture confirmation mail",
                 () -> assertEquals(mailFrom, sentMail.getFrom()),
                 () -> assertEquals("Email confirmation", sentMail.getSubject()),
                 () -> assertEquals(
@@ -76,7 +77,8 @@ class MailServiceTest extends AbstractTest {
 
         verify(javaMailSender).send(mailCaptor.capture());
         var sentMail = mailCaptor.getValue();
-        assertAll("Should capture reset password mail",
+        assertAll(
+                "Should capture reset password mail",
                 () -> assertEquals(mailFrom, sentMail.getFrom()),
                 () -> assertEquals("Password reset", sentMail.getSubject()),
                 () -> assertEquals(

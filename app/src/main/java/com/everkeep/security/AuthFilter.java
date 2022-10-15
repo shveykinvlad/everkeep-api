@@ -23,7 +23,7 @@ import static com.everkeep.security.JwtProvider.ROLES_CLAIM;
 @Slf4j
 @Component
 @RequiredArgsConstructor
-public class JwtFilter extends OncePerRequestFilter {
+public class AuthFilter extends OncePerRequestFilter {
 
     private final JwtProvider jwtProvider;
 

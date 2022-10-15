@@ -7,7 +7,7 @@ import org.springframework.validation.annotation.Validated;
 import java.time.Duration;
 
 @Validated
-@ConfigurationProperties("verification-token")
+@ConfigurationProperties("verification")
 public record VerificationTokenProperties(
         @NotNull
         Duration expiryDuration

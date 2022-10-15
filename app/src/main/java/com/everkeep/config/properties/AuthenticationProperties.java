@@ -8,8 +8,8 @@ import org.springframework.validation.annotation.Validated;
 import java.time.Duration;
 
 @Validated
-@ConfigurationProperties("jwt")
-public record JwtProperties(
+@ConfigurationProperties("authentication")
+public record AuthenticationProperties(
         @NotEmpty
         String secret,
 

@@ -63,12 +63,14 @@ class SessionControllerTest extends AbstractIntegrationTest {
         );
         var request = new SessionRequest(email, "P4$$w0rd");
 
-        mockMvc.perform(MockMvcRequestBuilders.post(SESSIONS_URL)
-                        .contentType(APPLICATION_JSON)
-                        .content(mapper.writeValueAsString(request)))
+        mockMvc.perform(
+                        MockMvcRequestBuilders.post(SESSIONS_URL)
+                                .contentType(APPLICATION_JSON)
+                                .content(mapper.writeValueAsString(request))
+                )
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.email").value(user.getEmail()))
-                .andExpect(jsonPath("$.jwt").exists())
+                .andExpect(jsonPath("$.authToken").exists())
                 .andExpect(jsonPath("$.refreshToken").exists());
     }
 
@@ -95,11 +97,13 @@ class SessionControllerTest extends AbstractIntegrationTest {
                         .build()
         );
 
-        mockMvc.perform(MockMvcRequestBuilders.put(SESSIONS_URL)
-                        .param(TOKEN_PARAM, tokenValue))
+        mockMvc.perform(
+                        MockMvcRequestBuilders.put(SESSIONS_URL)
+                                .param(TOKEN_PARAM, tokenValue)
+                )
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.email").value(user.getEmail()))
-                .andExpect(jsonPath("$.jwt").exists())
+                .andExpect(jsonPath("$.authToken").exists())
                 .andExpect(jsonPath("$.refreshToken").exists());
     }
 
@@ -121,13 +125,17 @@ class SessionControllerTest extends AbstractIntegrationTest {
                         .action(VerificationToken.Action.SESSION_REFRESH)
                         .active(true)
                         .user(user)
-                        .expiryTime(OffsetDateTime.now(clock)
-                                .plusSeconds(verificationTokenProperties.expiryDuration().getSeconds()))
+                        .expiryTime(
+                                OffsetDateTime.now(clock)
+                                        .plusSeconds(verificationTokenProperties.expiryDuration().getSeconds())
+                        )
                         .build()
         );
 
-        mockMvc.perform(MockMvcRequestBuilders.delete(SESSIONS_URL)
-                        .param(TOKEN_PARAM, tokenValue))
+        mockMvc.perform(
+                        MockMvcRequestBuilders.delete(SESSIONS_URL)
+                                .param(TOKEN_PARAM, tokenValue)
+                )
                 .andExpect(status().isNoContent());
 
         assertAll(
