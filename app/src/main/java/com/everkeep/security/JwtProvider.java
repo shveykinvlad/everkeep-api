@@ -6,7 +6,7 @@ import io.jsonwebtoken.security.Keys;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
-import com.everkeep.config.properties.JwtProperties;
+import com.everkeep.config.properties.AuthenticationProperties;
 import com.everkeep.model.User;
 
 import java.time.Clock;
@@ -22,12 +22,12 @@ public class JwtProvider {
 
     public static final String ROLES_CLAIM = "roles";
 
-    private final JwtProperties jwtProperties;
+    private final AuthenticationProperties authProperties;
     private final Clock clock;
 
     public Claims getClaims(String jwt) {
         return Jwts.parserBuilder()
-                .setSigningKey(jwtProperties.secret().getBytes(UTF_16))
+                .setSigningKey(authProperties.secret().getBytes(UTF_16))
                 .build()
                 .parseClaimsJws(jwt)
                 .getBody();
@@ -37,7 +37,7 @@ public class JwtProvider {
         var claims = Map.of(ROLES_CLAIM, user.getRolesNames());
         var creationDate = Date.from(OffsetDateTime.now(clock).toInstant());
         var expirationDate = Date.from(
-                OffsetDateTime.now(clock).plusSeconds(jwtProperties.expiryDuration().getSeconds()).toInstant()
+                OffsetDateTime.now(clock).plusSeconds(authProperties.expiryDuration().getSeconds()).toInstant()
         );
 
         return Jwts.builder()
@@ -45,7 +45,7 @@ public class JwtProvider {
                 .setSubject(user.getEmail())
                 .setIssuedAt(creationDate)
                 .setExpiration(expirationDate)
-                .signWith(Keys.hmacShaKeyFor(jwtProperties.secret().getBytes(UTF_16)))
+                .signWith(Keys.hmacShaKeyFor(authProperties.secret().getBytes(UTF_16)))
                 .compact();
     }
 }

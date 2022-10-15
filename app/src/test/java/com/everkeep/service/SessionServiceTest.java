@@ -36,7 +36,7 @@ class SessionServiceTest {
     void create() {
         var email = "erebus@localhost";
         var password = "E1ghthP4$$";
-        var jwt = "jwt";
+        var authToken = "authToken";
         var user = User.builder()
                 .email(email)
                 .password(password)
@@ -45,14 +45,14 @@ class SessionServiceTest {
         var action = VerificationToken.Action.SESSION_REFRESH;
         when(authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(email, password)))
                 .thenReturn(new TestingAuthenticationToken(user, password));
-        when(jwtProvider.generateToken(user)).thenReturn(jwt);
+        when(jwtProvider.generateToken(user)).thenReturn(authToken);
         when(verificationTokenService.create(user, action)).thenReturn(tokenValue);
 
         var sessionResponse = sessionService.create(email, password);
 
         assertAll(
                 "Should return access token",
-                () -> assertEquals(jwt, sessionResponse.jwt()),
+                () -> assertEquals(authToken, sessionResponse.authToken()),
                 () -> assertEquals(tokenValue, sessionResponse.refreshToken()),
                 () -> assertEquals(email, sessionResponse.email())
         );
@@ -61,7 +61,7 @@ class SessionServiceTest {
     @Test
     void update() {
         var user = new User();
-        var jwt = "jwt";
+        var authToken = "authToken";
         var action = VerificationToken.Action.SESSION_REFRESH;
         var oldTokenValue = UUID.randomUUID().toString();
         var oldToken = VerificationToken.builder()
@@ -76,14 +76,14 @@ class SessionServiceTest {
                 .user(user)
                 .build();
         when(verificationTokenService.apply(oldTokenValue, action)).thenReturn(oldToken);
-        when(jwtProvider.generateToken(user)).thenReturn(jwt);
+        when(jwtProvider.generateToken(user)).thenReturn(authToken);
         when(verificationTokenService.create(user, action)).thenReturn(newTokenValue);
 
         var sessionResponse = sessionService.update(oldTokenValue);
 
         assertAll(
                 "Should refresh access token",
-                () -> assertEquals(jwt, sessionResponse.jwt()),
+                () -> assertEquals(authToken, sessionResponse.authToken()),
                 () -> assertEquals(newTokenValue, sessionResponse.refreshToken()),
                 () -> assertEquals(newToken.getUser().getEmail(), sessionResponse.email()));
     }

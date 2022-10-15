@@ -107,8 +107,10 @@ class NoteControllerTest extends AbstractIntegrationTest {
                         .priority(NotePriority.NONE)
                         .build());
 
-        mockMvc.perform(MockMvcRequestBuilders.get(NOTES_URL + SEARCH_URL)
-                        .param(VALUE_PARAM, note.getTitle()))
+        mockMvc.perform(
+                        MockMvcRequestBuilders.get(NOTES_URL + SEARCH_URL)
+                                .param(VALUE_PARAM, note.getTitle())
+                )
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(APPLICATION_JSON))
                 .andExpect(jsonPath("$[0].id").value(note.getId()))
@@ -131,9 +133,11 @@ class NoteControllerTest extends AbstractIntegrationTest {
                         .priority(NotePriority.NONE)
                         .build());
 
-        mockMvc.perform(MockMvcRequestBuilders.post(NOTES_URL)
-                        .content(mapper.writeValueAsString(noteDto))
-                        .contentType(APPLICATION_JSON))
+        mockMvc.perform(
+                        MockMvcRequestBuilders.post(NOTES_URL)
+                                .content(mapper.writeValueAsString(noteDto))
+                                .contentType(APPLICATION_JSON)
+                )
                 .andExpect(status().isCreated())
                 .andExpect(content().contentType(APPLICATION_JSON))
                 .andExpect(jsonPath("$.id").exists())
@@ -170,9 +174,11 @@ class NoteControllerTest extends AbstractIntegrationTest {
                 .priority(NotePriority.HIGH)
                 .build();
 
-        mockMvc.perform(MockMvcRequestBuilders.put(NOTES_URL + ID_URL, note.getId())
-                        .content(mapper.writeValueAsString(noteDto))
-                        .contentType(APPLICATION_JSON))
+        mockMvc.perform(
+                        MockMvcRequestBuilders.put(NOTES_URL + ID_URL, note.getId())
+                                .content(mapper.writeValueAsString(noteDto))
+                                .contentType(APPLICATION_JSON)
+                )
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(APPLICATION_JSON))
                 .andExpect(jsonPath("$.id").exists())

@@ -69,9 +69,11 @@ class UserControllerTest extends AbstractIntegrationTest {
                 email
         );
 
-        mockMvc.perform(MockMvcRequestBuilders.post(USERS_URL)
-                        .content(mapper.writeValueAsString(request))
-                        .contentType(APPLICATION_JSON))
+        mockMvc.perform(
+                        MockMvcRequestBuilders.post(USERS_URL)
+                                .content(mapper.writeValueAsString(request))
+                                .contentType(APPLICATION_JSON)
+                )
                 .andExpect(status().isCreated());
 
         var receivedMessage = GREEN_MAIL.getReceivedMessages()[0];
@@ -109,8 +111,10 @@ class UserControllerTest extends AbstractIntegrationTest {
                         .build()
         );
 
-        mockMvc.perform(MockMvcRequestBuilders.post(USERS_URL + CONFIRMATION_URL)
-                        .param(TOKEN_PARAM, tokenValue))
+        mockMvc.perform(
+                        MockMvcRequestBuilders.post(USERS_URL + CONFIRMATION_URL)
+                                .param(TOKEN_PARAM, tokenValue)
+                )
                 .andExpect(status().isOk());
 
         assertAll(
@@ -141,8 +145,10 @@ class UserControllerTest extends AbstractIntegrationTest {
                         .build()
         );
 
-        mockMvc.perform(MockMvcRequestBuilders.get(USERS_URL + CONFIRMATION_URL)
-                        .param(EMAIL_PARAM, user.getEmail()))
+        mockMvc.perform(
+                        MockMvcRequestBuilders.get(USERS_URL + CONFIRMATION_URL)
+                                .param(EMAIL_PARAM, user.getEmail())
+                )
                 .andExpect(status().isOk());
 
         var receivedMessage = GREEN_MAIL.getReceivedMessages()[0];
@@ -168,8 +174,10 @@ class UserControllerTest extends AbstractIntegrationTest {
                         .build()
         );
 
-        mockMvc.perform(MockMvcRequestBuilders.delete(USERS_URL + PASSWORD_URL)
-                        .param(EMAIL_PARAM, user.getEmail()))
+        mockMvc.perform(
+                        MockMvcRequestBuilders.delete(USERS_URL + PASSWORD_URL)
+                                .param(EMAIL_PARAM, user.getEmail())
+                )
                 .andExpect(status().isNoContent());
 
         var receivedMessage = GREEN_MAIL.getReceivedMessages()[0];
@@ -210,10 +218,12 @@ class UserControllerTest extends AbstractIntegrationTest {
                 "N3WP4$$w0rd",
                 user.getEmail()
         );
-        mockMvc.perform(MockMvcRequestBuilders.post(USERS_URL + PASSWORD_URL)
-                        .param(TOKEN_PARAM, tokenValue)
-                        .contentType(APPLICATION_JSON)
-                        .content(mapper.writeValueAsString(request)))
+        mockMvc.perform(
+                        MockMvcRequestBuilders.post(USERS_URL + PASSWORD_URL)
+                                .param(TOKEN_PARAM, tokenValue)
+                                .contentType(APPLICATION_JSON)
+                                .content(mapper.writeValueAsString(request))
+                )
                 .andExpect(status().isOk());
 
         assertAll(

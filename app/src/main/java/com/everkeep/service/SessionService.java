@@ -25,27 +25,27 @@ public class SessionService {
     public SessionResponse create(String email, String password) {
         var authentication = authenticationManager.authenticate(getAuthentication(email, password));
         var user = (User) authentication.getPrincipal();
-        var jwt = jwtProvider.generateToken(user);
+        var authToken = jwtProvider.generateToken(user);
         var refreshToken = verificationTokenService.create(user, SESSION_REFRESH);
 
-        return new SessionResponse(jwt, refreshToken, user.getEmail());
+        return new SessionResponse(authToken, refreshToken, user.getEmail());
     }
 
-    public SessionResponse update(String tokenValue) {
-        var oldToken = verificationTokenService.apply(tokenValue, SESSION_REFRESH);
-        var user = oldToken.getUser();
-        var jwt = jwtProvider.generateToken(user);
-        var newToken = verificationTokenService.create(user, SESSION_REFRESH);
+    public SessionResponse update(String refreshToken) {
+        var oldRefreshToken = verificationTokenService.apply(refreshToken, SESSION_REFRESH);
+        var user = oldRefreshToken.getUser();
+        var authToken = jwtProvider.generateToken(user);
+        var newRefreshToken = verificationTokenService.create(user, SESSION_REFRESH);
 
         return SessionResponse.builder()
-                .jwt(jwt)
-                .refreshToken(newToken)
+                .authToken(authToken)
+                .refreshToken(newRefreshToken)
                 .email(user.getEmail())
                 .build();
     }
 
-    public void delete(String token) {
-        verificationTokenService.apply(token, SESSION_REFRESH);
+    public void delete(String refreshToken) {
+        verificationTokenService.apply(refreshToken, SESSION_REFRESH);
     }
 
     private Authentication getAuthentication(String email, String password) {
