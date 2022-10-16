@@ -18,14 +18,14 @@ import com.everkeep.controller.dto.SessionRequest;
 import com.everkeep.controller.dto.SessionResponse;
 import com.everkeep.service.SessionService;
 
-import static com.everkeep.utils.Headers.REFRESH_TOKEN;
-
 @RestController
 @RequestMapping(SessionController.SESSIONS_URL)
 @RequiredArgsConstructor
 public class SessionController {
 
     public static final String SESSIONS_URL = "/api/sessions";
+
+    public static final String REFRESH_TOKEN_HEADER = "Refresh-Token";
 
     private final SessionService sessionService;
 
@@ -37,14 +37,14 @@ public class SessionController {
 
     @PutMapping
     @Operation(summary = "Update session")
-    public SessionResponse update(@RequestHeader(REFRESH_TOKEN) @NotBlank String refreshToken) {
+    public SessionResponse update(@RequestHeader(REFRESH_TOKEN_HEADER) @NotBlank String refreshToken) {
         return sessionService.update(refreshToken);
     }
 
     @DeleteMapping
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @Operation(summary = "Delete session")
-    public void delete(@RequestHeader(REFRESH_TOKEN) @NotBlank String refreshToken) {
+    public void delete(@RequestHeader(REFRESH_TOKEN_HEADER) @NotBlank String refreshToken) {
         sessionService.delete(refreshToken);
     }
 }

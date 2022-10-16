@@ -19,9 +19,9 @@ import java.time.OffsetDateTime;
 import java.util.Set;
 import java.util.UUID;
 
+import static com.everkeep.controller.SessionController.REFRESH_TOKEN_HEADER;
 import static com.everkeep.controller.SessionController.SESSIONS_URL;
 import static com.everkeep.utils.DigestUtils.sha256Hex;
-import static com.everkeep.utils.Headers.REFRESH_TOKEN;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
@@ -99,7 +99,7 @@ class SessionControllerTest extends AbstractIntegrationTest {
 
         mockMvc.perform(
                         MockMvcRequestBuilders.put(SESSIONS_URL)
-                                .header(REFRESH_TOKEN, tokenValue)
+                                .header(REFRESH_TOKEN_HEADER, tokenValue)
                 )
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.email").value(user.getEmail()))
@@ -134,7 +134,7 @@ class SessionControllerTest extends AbstractIntegrationTest {
 
         mockMvc.perform(
                         MockMvcRequestBuilders.delete(SESSIONS_URL)
-                                .header(REFRESH_TOKEN, tokenValue)
+                                .header(REFRESH_TOKEN_HEADER, tokenValue)
                 )
                 .andExpect(status().isNoContent());
 
