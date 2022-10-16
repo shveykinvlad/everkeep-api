@@ -9,14 +9,16 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.everkeep.controller.dto.SessionRequest;
 import com.everkeep.controller.dto.SessionResponse;
 import com.everkeep.service.SessionService;
+
+import static com.everkeep.utils.Headers.REFRESH_TOKEN;
 
 @RestController
 @RequestMapping(SessionController.SESSIONS_URL)
@@ -35,14 +37,14 @@ public class SessionController {
 
     @PutMapping
     @Operation(summary = "Update session")
-    public SessionResponse update(@RequestParam @NotBlank String token) {
-        return sessionService.update(token);
+    public SessionResponse update(@RequestHeader(REFRESH_TOKEN) @NotBlank String refreshToken) {
+        return sessionService.update(refreshToken);
     }
 
     @DeleteMapping
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @Operation(summary = "Delete session")
-    public void delete(@RequestParam @NotBlank String token) {
-        sessionService.delete(token);
+    public void delete(@RequestHeader(REFRESH_TOKEN) @NotBlank String refreshToken) {
+        sessionService.delete(refreshToken);
     }
 }
