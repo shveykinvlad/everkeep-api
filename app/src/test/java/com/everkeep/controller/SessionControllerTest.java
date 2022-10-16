@@ -21,6 +21,7 @@ import java.util.UUID;
 
 import static com.everkeep.controller.SessionController.SESSIONS_URL;
 import static com.everkeep.utils.DigestUtils.sha256Hex;
+import static com.everkeep.utils.Headers.REFRESH_TOKEN;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
@@ -30,7 +31,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 class SessionControllerTest extends AbstractIntegrationTest {
 
     private static final String ROLE_USER = "ROLE_USER";
-    private static final String TOKEN_PARAM = "token";
 
     @Autowired
     private RoleRepository roleRepository;
@@ -99,7 +99,7 @@ class SessionControllerTest extends AbstractIntegrationTest {
 
         mockMvc.perform(
                         MockMvcRequestBuilders.put(SESSIONS_URL)
-                                .param(TOKEN_PARAM, tokenValue)
+                                .header(REFRESH_TOKEN, tokenValue)
                 )
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.email").value(user.getEmail()))
@@ -134,7 +134,7 @@ class SessionControllerTest extends AbstractIntegrationTest {
 
         mockMvc.perform(
                         MockMvcRequestBuilders.delete(SESSIONS_URL)
-                                .param(TOKEN_PARAM, tokenValue)
+                                .header(REFRESH_TOKEN, tokenValue)
                 )
                 .andExpect(status().isNoContent());
 
