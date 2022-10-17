@@ -68,7 +68,7 @@ class SessionControllerTest extends AbstractIntegrationTest {
                                 .contentType(APPLICATION_JSON)
                                 .content(mapper.writeValueAsString(request))
                 )
-                .andExpect(status().isOk())
+                .andExpect(status().isCreated())
                 .andExpect(jsonPath("$.email").value(user.getEmail()))
                 .andExpect(jsonPath("$.authToken").exists())
                 .andExpect(jsonPath("$.refreshToken").exists());

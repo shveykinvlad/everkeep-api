@@ -7,7 +7,7 @@ buildscript {
     ext {
         springBootVersion = '3.0.0-M5'
         springDependencyManagementVersion = '1.0.14.RELEASE'
-        springdocVersion = '1.6.11'
+        springdocVersion = '2.0.0-M6'
         liquibaseVersion = '4.16.1'
         postgresqlVersion = '42.5.0'
         testContainersPostgresqlVersion = '1.17.5'
@@ -33,7 +33,6 @@ ext {
 configure(javaProjects) {
 
     apply plugin: 'java'
-    apply plugin: 'org.springframework.boot'
     apply plugin: 'io.spring.dependency-management'
     apply plugin: 'checkstyle'
     apply plugin: 'com.github.spotbugs'
@@ -55,7 +54,8 @@ configure(javaProjects) {
 
             // Utilities
             dependency "org.projectlombok:lombok:${lombokVersion}"
-            dependency "org.springdoc:springdoc-openapi-ui:${springdocVersion}"
+            dependency "org.springdoc:springdoc-openapi-starter-webmvc-api:${springdocVersion}"
+            dependency "org.springdoc:springdoc-openapi-starter-webmvc-ui:${springdocVersion}"
             dependency "org.passay:passay:${passayVersion}"
             dependency "io.jsonwebtoken:jjwt-api:${jsonwebtokenVersion}"
             dependency "io.jsonwebtoken:jjwt-impl:${jsonwebtokenVersion}"

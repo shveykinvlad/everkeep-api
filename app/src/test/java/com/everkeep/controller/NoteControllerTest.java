@@ -19,7 +19,7 @@ import com.everkeep.service.converter.NoteConverter;
 import static com.everkeep.controller.NoteController.ID_URL;
 import static com.everkeep.controller.NoteController.NOTES_URL;
 import static com.everkeep.controller.NoteController.SEARCH_URL;
-import static com.everkeep.controller.NoteController.VALUE_PARAM;
+import static com.everkeep.controller.NoteController.TITLE_PARAM;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -109,7 +109,7 @@ class NoteControllerTest extends AbstractIntegrationTest {
 
         mockMvc.perform(
                         MockMvcRequestBuilders.get(NOTES_URL + SEARCH_URL)
-                                .param(VALUE_PARAM, note.getTitle())
+                                .param(TITLE_PARAM, note.getTitle())
                 )
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(APPLICATION_JSON))
@@ -121,7 +121,7 @@ class NoteControllerTest extends AbstractIntegrationTest {
 
     @Test
     @WithMockUser(username = USERNAME)
-    void save() throws Exception {
+    void create() throws Exception {
         var noteDto = NoteConverter.convert(
                 Note.builder()
                         .title("12 Angry Men")

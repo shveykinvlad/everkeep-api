@@ -30,20 +30,21 @@ public class SessionController {
     private final SessionService sessionService;
 
     @PostMapping
-    @Operation(summary = "Create session")
+    @ResponseStatus(HttpStatus.CREATED)
+    @Operation(summary = "Create")
     public SessionResponse create(@RequestBody @Valid SessionRequest request) {
         return sessionService.create(request.email(), request.password());
     }
 
     @PutMapping
-    @Operation(summary = "Update session")
+    @Operation(summary = "Update")
     public SessionResponse update(@RequestHeader(REFRESH_TOKEN_HEADER) @NotBlank String refreshToken) {
         return sessionService.update(refreshToken);
     }
 
     @DeleteMapping
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    @Operation(summary = "Delete session")
+    @Operation(summary = "Delete")
     public void delete(@RequestHeader(REFRESH_TOKEN_HEADER) @NotBlank String refreshToken) {
         sessionService.delete(refreshToken);
     }
