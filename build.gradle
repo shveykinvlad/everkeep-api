@@ -7,7 +7,7 @@ buildscript {
     ext {
         springBootVersion = '3.0.0-M5'
         springDependencyManagementVersion = '1.0.14.RELEASE'
-        springdocVersion = '1.6.11'
+        springdocVersion = '1.6.12'
         liquibaseVersion = '4.16.1'
         postgresqlVersion = '42.5.0'
         testContainersPostgresqlVersion = '1.17.5'
