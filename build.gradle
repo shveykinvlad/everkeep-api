@@ -5,8 +5,8 @@ buildscript {
     }
 
     ext {
+        // Dependencies
         springBootVersion = '3.0.0-M5'
-        springDependencyManagementVersion = '1.0.14.RELEASE'
         springdocVersion = '2.0.0-M6'
         liquibaseVersion = '4.17.0'
         postgresqlVersion = '42.5.0'
@@ -15,7 +15,13 @@ buildscript {
         jsonwebtokenVersion = '0.11.5'
         lombokVersion = '1.18.24'
         greenMailVersion = '2.0.0-alpha-2'
+
+        // Plugins
+        springDependencyManagementVersion = '1.0.14.RELEASE'
+        checkstyleVersion = '10.3.4'
+        pmdVersion = '6.50.0'
         spotbugsVersion = '5.0.12'
+        gatlingVersion = '3.8.4'
     }
 
     dependencies {
@@ -23,11 +29,12 @@ buildscript {
         classpath "org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}"
         classpath "io.spring.gradle:dependency-management-plugin:${springDependencyManagementVersion}"
         classpath "com.github.spotbugs.snom:spotbugs-gradle-plugin:${spotbugsVersion}"
+        classpath "gradle.plugin.io.gatling.gradle:gatling-gradle-plugin:${gatlingVersion}"
     }
 }
 
 ext {
-    javaProjects = [project(':app')]
+    javaProjects = [project(':app'), project(':performance-tests')]
 }
 
 configure(javaProjects) {
@@ -43,10 +50,6 @@ configure(javaProjects) {
     version '1.0-SNAPSHOT'
 
     dependencyManagement {
-        imports {
-            mavenBom "org.springframework.boot:spring-boot-dependencies:${springBootVersion}"
-        }
-
         dependencies {
             // Database
             dependency "org.liquibase:liquibase-core:${liquibaseVersion}"
@@ -64,6 +67,7 @@ configure(javaProjects) {
             // Test
             dependency "org.testcontainers:postgresql:${testContainersPostgresqlVersion}"
             dependency "com.icegreen:greenmail-junit5:${greenMailVersion}"
+            dependency "io.gatling.highcharts:gatling-charts-highcharts:${gatlingVersion}"
         }
 
         repositories {
@@ -76,7 +80,7 @@ configure(javaProjects) {
     targetCompatibility = JavaVersion.VERSION_17
 
     checkstyle {
-        toolVersion = '9.2.1'
+        toolVersion = checkstyleVersion
         ignoreFailures = false
     }
 
@@ -86,7 +90,7 @@ configure(javaProjects) {
 
     pmd {
         consoleOutput = true
-        toolVersion = "6.48.0"
+        toolVersion = pmdVersion
         ruleSets = ["config/pmd/pmd.xml"]
     }
 
