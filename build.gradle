@@ -34,7 +34,7 @@ buildscript {
 }
 
 ext {
-    javaProjects = [project(':app'), project(':performance-tests')]
+    javaProjects = [project(':app')]
 }
 
 configure(javaProjects) {
