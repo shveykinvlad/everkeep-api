@@ -219,7 +219,7 @@ class UserControllerTest extends AbstractIntegrationTest {
                 user.getEmail()
         );
         mockMvc.perform(
-                        MockMvcRequestBuilders.post(USERS_URL + PASSWORD_URL)
+                        MockMvcRequestBuilders.put(USERS_URL + PASSWORD_URL)
                                 .param(TOKEN_PARAM, tokenValue)
                                 .contentType(APPLICATION_JSON)
                                 .content(mapper.writeValueAsString(request))
