@@ -1,5 +1,15 @@
 package com.everkeep.service;
 
+import static org.junit.jupiter.api.Assertions.assertAll;
+import static org.junit.jupiter.api.Assertions.assertArrayEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+
+import com.everkeep.AbstractTest;
+import com.everkeep.config.properties.IntegrationProperties;
+import com.everkeep.config.properties.MailProperties;
+import java.util.UUID;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Captor;
@@ -9,18 +19,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
-
-import com.everkeep.AbstractTest;
-import com.everkeep.config.properties.IntegrationProperties;
-import com.everkeep.config.properties.MailProperties;
-
-import java.util.UUID;
-
-import static org.junit.jupiter.api.Assertions.assertAll;
-import static org.junit.jupiter.api.Assertions.assertArrayEquals;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
 
 @SpringBootTest(classes = {
         MailService.class,
@@ -60,7 +58,7 @@ class MailServiceTest extends AbstractTest {
                         "%s/users/confirmation?token=%s".formatted(uiUrl, tokenValue),
                         sentMail.getText()
                 ),
-                () -> assertArrayEquals(new String[]{mailTo}, sentMail.getTo())
+                () -> assertArrayEquals(new String[] {mailTo}, sentMail.getTo())
         );
     }
 
@@ -85,7 +83,7 @@ class MailServiceTest extends AbstractTest {
                         "%s/users/password/update?email=%s&token=%s".formatted(uiUrl, mailTo, tokenValue),
                         sentMail.getText()
                 ),
-                () -> assertArrayEquals(new String[]{mailTo}, sentMail.getTo())
+                () -> assertArrayEquals(new String[] {mailTo}, sentMail.getTo())
         );
     }
 }

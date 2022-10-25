@@ -1,5 +1,15 @@
 package com.everkeep.service;
 
+import static com.everkeep.utils.DigestUtils.sha256Hex;
+import static org.junit.jupiter.api.Assertions.assertAll;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+
+import com.everkeep.model.User;
+import com.everkeep.model.VerificationToken;
+import com.everkeep.security.JwtProvider;
+import java.util.UUID;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -7,18 +17,6 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.TestingAuthenticationToken;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-
-import com.everkeep.model.User;
-import com.everkeep.model.VerificationToken;
-import com.everkeep.security.JwtProvider;
-
-import java.util.UUID;
-
-import static com.everkeep.utils.DigestUtils.sha256Hex;
-import static org.junit.jupiter.api.Assertions.assertAll;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
 
 @SpringBootTest(classes = SessionService.class)
 class SessionServiceTest {

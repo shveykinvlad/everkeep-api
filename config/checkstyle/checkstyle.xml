@@ -16,6 +16,7 @@
     </module>
     <module name="SuppressionSingleFilter">
         <property name="checks" value="MagicNumberCheck"/>
+        <property name="files" value=".*[\\/]src[\\/](test|it)[\\/]"/>
     </module>
 
     <!-- Filters (http://checkstyle.sourceforge.net/config_filters.html) -->
@@ -121,18 +122,13 @@
         </module>
 
         <!-- Imports (http://checkstyle.sourceforge.net/config_imports.html) -->
-        <module name="AvoidStarImport">
-            <property name="excludes" value="java.util.*"/>
-        </module>
+        <module name="AvoidStarImport"/>
         <module name="IllegalImport"/>
         <module name="CustomImportOrder">
-            <property name="severity" value="warning"/>
-            <property name="thirdPartyPackageRegExp" value=".*"/>
+            <property name="sortImportsInGroupAlphabetically" value="true"/>
             <property name="separateLineBetweenGroups" value="true"/>
-            <property name="sortImportsInGroupAlphabetically" value="false"/>
-            <property name="specialImportsRegExp" value="^com.everkeep.*$"/>
-            <property name="customImportOrderRules" value="THIRD_PARTY_PACKAGE###SPECIAL_IMPORTS###STANDARD_JAVA_PACKAGE###STATIC"/>
-            <property name="standardPackageRegExp" value="^(java|javax)"/>
+            <property name="customImportOrderRules" value="STATIC###THIRD_PARTY_PACKAGE"/>
+            <property name="tokens" value="IMPORT, STATIC_IMPORT, PACKAGE_DEF"/>
         </module>
         <module name="RedundantImport"/>
         <module name="UnusedImports"/>

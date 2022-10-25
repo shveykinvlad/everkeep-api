@@ -1,9 +1,13 @@
 package com.everkeep.controller;
 
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+import static com.everkeep.controller.SessionController.REFRESH_TOKEN_HEADER;
+import static com.everkeep.controller.SessionController.SESSIONS_URL;
+import static com.everkeep.utils.DigestUtils.sha256Hex;
+import static org.junit.jupiter.api.Assertions.assertAll;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.springframework.http.MediaType.APPLICATION_JSON;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.everkeep.AbstractIntegrationTest;
 import com.everkeep.config.properties.VerificationTokenProperties;
@@ -13,20 +17,14 @@ import com.everkeep.model.VerificationToken;
 import com.everkeep.repository.RoleRepository;
 import com.everkeep.repository.UserRepository;
 import com.everkeep.repository.VerificationTokenRepository;
-
 import java.time.Clock;
 import java.time.OffsetDateTime;
 import java.util.Set;
 import java.util.UUID;
-
-import static com.everkeep.controller.SessionController.REFRESH_TOKEN_HEADER;
-import static com.everkeep.controller.SessionController.SESSIONS_URL;
-import static com.everkeep.utils.DigestUtils.sha256Hex;
-import static org.junit.jupiter.api.Assertions.assertAll;
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.springframework.http.MediaType.APPLICATION_JSON;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 class SessionControllerTest extends AbstractIntegrationTest {
 

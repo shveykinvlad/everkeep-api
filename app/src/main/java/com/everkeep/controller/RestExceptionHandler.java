@@ -1,6 +1,13 @@
 package com.everkeep.controller;
 
+import com.everkeep.controller.dto.ErrorDto;
+import com.everkeep.exception.NoteNotFoundException;
+import com.everkeep.exception.UserAlreadyEnabledException;
+import com.everkeep.exception.UserAlreadyExistsException;
+import com.everkeep.exception.VerificationTokenExpiredException;
+import com.everkeep.exception.VerificationTokenNotFoundException;
 import jakarta.validation.ConstraintViolationException;
+import java.time.OffsetDateTime;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -10,15 +17,6 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
-
-import com.everkeep.controller.dto.ErrorDto;
-import com.everkeep.exception.NoteNotFoundException;
-import com.everkeep.exception.UserAlreadyEnabledException;
-import com.everkeep.exception.UserAlreadyExistsException;
-import com.everkeep.exception.VerificationTokenExpiredException;
-import com.everkeep.exception.VerificationTokenNotFoundException;
-
-import java.time.OffsetDateTime;
 
 @ControllerAdvice
 @RequiredArgsConstructor

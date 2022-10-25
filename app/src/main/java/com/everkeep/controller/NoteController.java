@@ -1,8 +1,14 @@
 package com.everkeep.controller;
 
+import static com.everkeep.config.SwaggerConfig.BEARER;
+import static com.everkeep.service.converter.NoteConverter.convert;
+
+import com.everkeep.controller.dto.NoteDto;
+import com.everkeep.service.NoteService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -15,14 +21,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
-
-import com.everkeep.controller.dto.NoteDto;
-import com.everkeep.service.NoteService;
-
-import java.util.List;
-
-import static com.everkeep.config.SwaggerConfig.BEARER;
-import static com.everkeep.service.converter.NoteConverter.convert;
 
 @RestController
 @RequestMapping(NoteController.NOTES_URL)

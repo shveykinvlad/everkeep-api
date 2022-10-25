@@ -1,20 +1,18 @@
 package com.everkeep.security;
 
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.security.Keys;
-import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Component;
+import static java.nio.charset.StandardCharsets.UTF_16;
 
 import com.everkeep.config.properties.AuthenticationProperties;
 import com.everkeep.model.User;
-
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.security.Keys;
 import java.time.Clock;
 import java.time.OffsetDateTime;
 import java.util.Date;
 import java.util.Map;
-
-import static java.nio.charset.StandardCharsets.UTF_16;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Component;
 
 @Component
 @RequiredArgsConstructor

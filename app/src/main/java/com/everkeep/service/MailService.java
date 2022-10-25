@@ -1,15 +1,13 @@
 package com.everkeep.service;
 
+import com.everkeep.config.properties.IntegrationProperties;
+import com.everkeep.config.properties.MailProperties;
+import java.util.Locale;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.MessageSource;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
-
-import com.everkeep.config.properties.IntegrationProperties;
-import com.everkeep.config.properties.MailProperties;
-
-import java.util.Locale;
 
 @Service
 @RequiredArgsConstructor

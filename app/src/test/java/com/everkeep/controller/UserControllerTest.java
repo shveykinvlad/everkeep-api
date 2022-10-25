@@ -1,25 +1,5 @@
 package com.everkeep.controller;
 
-import com.icegreen.greenmail.util.GreenMailUtil;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
-
-import com.everkeep.AbstractIntegrationTest;
-import com.everkeep.config.properties.VerificationTokenProperties;
-import com.everkeep.controller.dto.RegistrationRequest;
-import com.everkeep.model.User;
-import com.everkeep.model.VerificationToken;
-import com.everkeep.repository.RoleRepository;
-import com.everkeep.repository.UserRepository;
-import com.everkeep.repository.VerificationTokenRepository;
-
-import java.time.Clock;
-import java.time.OffsetDateTime;
-import java.util.Set;
-import java.util.UUID;
-
 import static com.everkeep.controller.UserController.CONFIRMATION_URL;
 import static com.everkeep.controller.UserController.EMAIL_PARAM;
 import static com.everkeep.controller.UserController.PASSWORD_URL;
@@ -32,6 +12,24 @@ import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
+import com.everkeep.AbstractIntegrationTest;
+import com.everkeep.config.properties.VerificationTokenProperties;
+import com.everkeep.controller.dto.RegistrationRequest;
+import com.everkeep.model.User;
+import com.everkeep.model.VerificationToken;
+import com.everkeep.repository.RoleRepository;
+import com.everkeep.repository.UserRepository;
+import com.everkeep.repository.VerificationTokenRepository;
+import com.icegreen.greenmail.util.GreenMailUtil;
+import java.time.Clock;
+import java.time.OffsetDateTime;
+import java.util.Set;
+import java.util.UUID;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 class UserControllerTest extends AbstractIntegrationTest {
 

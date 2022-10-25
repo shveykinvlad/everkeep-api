@@ -1,21 +1,5 @@
 package com.everkeep.controller;
 
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.test.context.support.WithMockUser;
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
-
-import com.everkeep.AbstractIntegrationTest;
-import com.everkeep.controller.dto.NoteDto;
-import com.everkeep.model.Note;
-import com.everkeep.model.NotePriority;
-import com.everkeep.model.User;
-import com.everkeep.repository.NoteRepository;
-import com.everkeep.repository.UserRepository;
-import com.everkeep.service.converter.NoteConverter;
-
 import static com.everkeep.controller.NoteController.ID_URL;
 import static com.everkeep.controller.NoteController.NOTES_URL;
 import static com.everkeep.controller.NoteController.SEARCH_URL;
@@ -28,6 +12,21 @@ import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
+import com.everkeep.AbstractIntegrationTest;
+import com.everkeep.controller.dto.NoteDto;
+import com.everkeep.model.Note;
+import com.everkeep.model.NotePriority;
+import com.everkeep.model.User;
+import com.everkeep.repository.NoteRepository;
+import com.everkeep.repository.UserRepository;
+import com.everkeep.service.converter.NoteConverter;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.test.context.support.WithMockUser;
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 class NoteControllerTest extends AbstractIntegrationTest {
 
