@@ -135,7 +135,8 @@ class UserServiceTest extends AbstractTest {
         var action = VerificationToken.Action.ACCOUNT_CONFIRMATION;
         when(verificationTokenService.apply(oldTokenValue, action))
                 .thenThrow(new VerificationTokenExpiredException("Verification token is expired", oldTokenValue, username));
-        when(userRepository.findByEmail(username)).thenReturn(Optional.of(user));
+        when(userRepository.findByEmail(username))
+                .thenReturn(Optional.of(user));
         when(verificationTokenService.create(user, VerificationToken.Action.ACCOUNT_CONFIRMATION))
                 .thenReturn(newTokenValue);
 
