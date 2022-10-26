@@ -20,7 +20,7 @@ buildscript {
         springDependencyManagementVersion = '1.0.14.RELEASE'
         checkstyleVersion = '10.3.4'
         pmdVersion = '6.50.0'
-        spotbugsVersion = '5.0.12'
+        spotbugsVersion = '5.0.13'
         gatlingVersion = '3.8.4'
     }
 
