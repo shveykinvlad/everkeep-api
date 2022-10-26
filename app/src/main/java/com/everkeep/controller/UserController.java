@@ -1,5 +1,7 @@
 package com.everkeep.controller;
 
+import com.everkeep.controller.dto.RegistrationRequest;
+import com.everkeep.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
@@ -14,9 +16,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
-
-import com.everkeep.controller.dto.RegistrationRequest;
-import com.everkeep.service.UserService;
 
 @RestController
 @RequestMapping(UserController.USERS_URL)

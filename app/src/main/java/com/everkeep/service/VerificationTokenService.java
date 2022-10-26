@@ -1,7 +1,6 @@
 package com.everkeep.service;
 
-import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Service;
+import static com.everkeep.utils.DigestUtils.sha256Hex;
 
 import com.everkeep.config.properties.VerificationTokenProperties;
 import com.everkeep.exception.VerificationTokenExpiredException;
@@ -9,12 +8,11 @@ import com.everkeep.exception.VerificationTokenNotFoundException;
 import com.everkeep.model.User;
 import com.everkeep.model.VerificationToken;
 import com.everkeep.repository.VerificationTokenRepository;
-
 import java.time.Clock;
 import java.time.OffsetDateTime;
 import java.util.UUID;
-
-import static com.everkeep.utils.DigestUtils.sha256Hex;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor

@@ -1,8 +1,7 @@
 package com.everkeep.controller.dto;
 
-import lombok.Builder;
-
 import java.time.OffsetDateTime;
+import lombok.Builder;
 
 @Builder
 public record ErrorDto(
