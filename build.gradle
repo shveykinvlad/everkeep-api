@@ -10,7 +10,7 @@ buildscript {
         springdocVersion = '2.0.0-RC2'
         liquibaseVersion = '4.17.2'
         postgresqlVersion = '42.5.0'
-        testContainersPostgresqlVersion = '1.17.5'
+        testContainersPostgresqlVersion = '1.17.6'
         passayVersion = '1.6.2'
         jsonwebtokenVersion = '0.11.5'
         lombokVersion = '1.18.24'
