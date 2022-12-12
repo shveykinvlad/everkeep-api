@@ -8,7 +8,7 @@ buildscript {
         // Dependencies
         springBootVersion = '3.0.0-RC2'
         springdocVersion = '2.0.0'
-        liquibaseVersion = '4.17.2'
+        liquibaseVersion = '4.18.0'
         postgresqlVersion = '42.5.0'
         testContainersPostgresqlVersion = '1.17.6'
         passayVersion = '1.6.2'
