@@ -14,7 +14,7 @@ buildscript {
         passayVersion = '1.6.2'
         jsonwebtokenVersion = '0.11.5'
         lombokVersion = '1.18.24'
-        greenMailVersion = '2.0.0-alpha-2'
+        greenMailVersion = '2.0.0-alpha-3'
 
         // Plugins
         springDependencyManagementVersion = '1.1.0'
