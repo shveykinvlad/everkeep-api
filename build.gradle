@@ -21,7 +21,6 @@ buildscript {
         checkstyleVersion = '10.3.4'
         pmdVersion = '6.50.0'
         spotbugsVersion = '5.0.13'
-        gatlingVersion = '3.8.4'
     }
 
     dependencies {
@@ -29,7 +28,6 @@ buildscript {
         classpath "org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}"
         classpath "io.spring.gradle:dependency-management-plugin:${springDependencyManagementVersion}"
         classpath "com.github.spotbugs.snom:spotbugs-gradle-plugin:${spotbugsVersion}"
-        classpath "gradle.plugin.io.gatling.gradle:gatling-gradle-plugin:${gatlingVersion}"
     }
 }
 
@@ -67,7 +65,6 @@ configure(javaProjects) {
             // Test
             dependency "org.testcontainers:postgresql:${testContainersPostgresqlVersion}"
             dependency "com.icegreen:greenmail-junit5:${greenMailVersion}"
-            dependency "io.gatling.highcharts:gatling-charts-highcharts:${gatlingVersion}"
         }
 
         repositories {
