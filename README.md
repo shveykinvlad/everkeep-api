@@ -3,8 +3,6 @@
 [![Build](https://github.com/shveykinvlad/everkeep-api/actions/workflows/build.yml/badge.svg)](https://github.com/shveykinvlad/everkeep-api/actions/workflows/build.yml)
 
 ### Notes service  
-Backend: https://everkeep-api.herokuapp.com  
-Frontend: https://everkeep.herokuapp.com  
 #### Technologies
 * Java 17
 * SpringBoot
