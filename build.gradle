@@ -13,7 +13,7 @@ buildscript {
         testContainersPostgresqlVersion = '1.17.6'
         passayVersion = '1.6.2'
         jsonwebtokenVersion = '0.11.5'
-        lombokVersion = '1.18.24'
+        lombokVersion = '1.18.26'
         greenMailVersion = '2.0.0-alpha-3'
 
         // Plugins

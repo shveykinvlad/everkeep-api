@@ -4,7 +4,9 @@ server:
 
 spring:
   datasource:
-    url: ${DATABASE_URL:}
+    url: ${SPRING_DATASOURCE_URL:}
+    username: ${SPRING_DATASOURCE_USERNAME:}
+    password: ${SPRING_DATASOURCE_PASSWORD:}
     driverClassName: org.postgresql.Driver
   jpa:
     open-in-view: false
@@ -22,11 +24,11 @@ springdoc:
     disable-swagger-default-url: true
 
 authentication:
-  secret: ${AUTH_SECRET:}
-  expiry-duration: ${AUTH_EXPIRY_DURATION:PT15M}
+  secret: ${AUTHENTICATION_SECRET:}
+  expiry-duration: ${AUTHENTICATION_EXPIRY_DURATION:PT15M}
 
 verification:
-  expiry-duration: ${VERIFICATION_TOKEN_EXPIRY_DURATION:P30D}
+  expiry-duration: ${VERIFICATION_EXPIRY_DURATION:P30D}
 
 integration:
-  uiUrl: ${INTEGRATION_UI_URL:}
+  ui-url: ${INTEGRATION_UI_URL:}
