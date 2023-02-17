@@ -40,6 +40,6 @@ jobs:
           password: ${{ secrets.DOCKERHUB_TOKEN }}
     
       - name: Execute Gradle build
-        run: ./gradlew bootBuildImage --imageName=shveikinvlad/everkeep-api --publishImage=true
+        run: ./gradlew bootBuildImage --imageName=shveikinvlad/everkeep-api --publishImage
 
 
