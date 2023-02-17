@@ -41,5 +41,3 @@
     * AUTHENTICATION_SECRET: secret key instance for use with [HMAC-SHA algorithms](https://www.rfc-editor.org/rfc/rfc7518#section-3.2)
 4. run database and app in docker containers: `docker-compose up`;
 5. stop database and app docker containers: `docker-compose down`;
-
-
