@@ -1,0 +1,45 @@
+name: "Build"
+
+on:
+  push:
+    branches: [ "main" ]
+
+jobs:
+  build:
+    name: Docker
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ 'ubuntu-latest' ]
+        distribution: [ 'liberica' ]
+        java_version: [ 17 ]
+
+    runs-on: ${{ matrix.os }}
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Set up JDK
+        uses: actions/setup-java@v3
+        with:
+          java-version: ${{ matrix.java_version }}
+          distribution: ${{ matrix.distribution }}
+          cache: 'gradle'
+
+      - name: Validate Gradle wrapper
+        uses: gradle/wrapper-validation-action@v1
+
+      - name: Setup Gradle
+        uses: gradle/gradle-build-action@v2
+
+      - name: Docker login
+        uses: docker/login-action@v2
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+    
+      - name: Execute Gradle build
+        run: ./gradlew bootBuildImage --imageName=shveikinvlad/everkeep-api --publishImage=true
+
+
