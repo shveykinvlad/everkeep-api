@@ -35,12 +35,15 @@ jobs:
         uses: gradle/gradle-build-action@v2
 
       - name: Build image
-        run: ./gradlew bootBuildImage --imageName=shveikinvlad/everkeep-api
+        run: ./gradlew bootBuildImage --imageName=$IMAGE_NAME
+        env:
+          IMAGE_NAME: ${{ matrix.image_name }}
 
       - name: Push image
         run: |
             docker login -u $DOCKERHUB_USERNAME -p $DOCKERHUB_TOKEN
-            docker push shveikinvlad/everkeep-api:latest
+            docker push $IMAGE_NAME:latest
         env:
-            DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
-            DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
+          DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
+          DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
+          IMAGE_NAME: ${{ matrix.image_name }}
