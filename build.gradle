@@ -6,11 +6,11 @@ buildscript {
     ext {
         // Dependencies
         springBootVersion = '3.0.2'
-        springdocVersion = '2.0.2'
+        springdocVersion = '2.1.0'
         liquibaseVersion = '4.19.0'
         postgresqlVersion = '42.6.0'
         testContainersPostgresqlVersion = '1.17.6'
-        passayVersion = '1.6.2'
+        passayVersion = '1.6.3'
         jsonwebtokenVersion = '0.11.5'
         lombokVersion = '1.18.26'
         greenMailVersion = '2.0.0-alpha-3'
@@ -19,7 +19,7 @@ buildscript {
         springDependencyManagementVersion = '1.1.0'
         checkstyleVersion = '10.3.4'
         pmdVersion = '6.50.0'
-        spotbugsVersion = '5.0.13'
+        spotbugsVersion = '5.0.14'
     }
 
     dependencies {
