@@ -39,7 +39,7 @@ jobs:
 
       - name: Push image
         run: |
-            docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD
+            docker login -u $DOCKERHUB_USERNAME -p $DOCKERHUB_TOKEN
             docker push shveikinvlad/everkeep-api:latest
         env:
             DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
