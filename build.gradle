@@ -19,7 +19,7 @@ buildscript {
         springDependencyManagementVersion = '1.1.0'
         checkstyleVersion = '10.3.4'
         pmdVersion = '6.50.0'
-        spotbugsVersion = '5.0.13'
+        spotbugsVersion = '5.0.14'
     }
 
     dependencies {
