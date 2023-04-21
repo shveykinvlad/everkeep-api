@@ -8,7 +8,7 @@ buildscript {
         springBootVersion = '3.0.2'
         springdocVersion = '2.1.0'
         liquibaseVersion = '4.19.0'
-        postgresqlVersion = '42.5.3'
+        postgresqlVersion = '42.6.0'
         testContainersPostgresqlVersion = '1.17.6'
         passayVersion = '1.6.3'
         jsonwebtokenVersion = '0.11.5'
