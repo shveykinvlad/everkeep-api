@@ -13,6 +13,7 @@ jobs:
         os: [ 'ubuntu-latest' ]
         distribution: [ 'liberica' ]
         java_version: [ 17 ]
+        image_name: [ 'shveikinvlad/everkeep-api' ]
 
     runs-on: ${{ matrix.os }}
 
@@ -33,13 +34,13 @@ jobs:
       - name: Setup Gradle
         uses: gradle/gradle-build-action@v2
 
-      - name: Docker login
-        uses: docker/login-action@v2
-        with:
-          username: ${{ secrets.DOCKERHUB_USERNAME }}
-          password: ${{ secrets.DOCKERHUB_TOKEN }}
-    
-      - name: Execute Gradle build
-        run: ./gradlew bootBuildImage --imageName=shveikinvlad/everkeep-api --publishImage
+      - name: Build image
+        run: ./gradlew bootBuildImage --imageName=shveikinvlad/everkeep-api
 
-
+      - name: Push image
+        run: |
+            @docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD
+            @docker push shveikinvlad/everkeep-api:latest
+        env:
+            DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
+            DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
