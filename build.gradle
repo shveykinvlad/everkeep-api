@@ -16,7 +16,7 @@ buildscript {
         greenMailVersion = '2.0.0'
 
         // Plugins
-        springDependencyManagementVersion = '1.1.0'
+        springDependencyManagementVersion = '1.1.1'
         checkstyleVersion = '10.3.4'
         pmdVersion = '6.50.0'
         spotbugsVersion = '5.0.14'
